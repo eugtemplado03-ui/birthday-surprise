@@ -1,0 +1,25 @@
+{
+  "recipientName": "Sweetheart",
+  "senderSignature": "Forever Yours, with all my love ❤️",
+  "letterDate": "August 29, 2026",
+  "letterBody": "Happy Birthday to the one who makes my everyday bloom like fresh lilies and roses! 🌸✨\n\nFrom every laugh we've shared to all our little sweet moments, having you in my life is the greatest gift in the universe. Today is all about celebrating you, your kindness, your radiant smile, and the warmth you bring into my world.\n\nMay this new year of your life be blessed with endless happiness, blooming love, good health, and all the dreams your heart desires!\n\nI hope this little surprise brings the biggest smile to your beautiful face! 🎂🌸🎉",
+  "creatorPin": "1234",
+  "photos": [
+    {
+      "url": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"400\" viewBox=\"0 0 400 400\"><defs><linearGradient id=\"g1\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"%23ff9a9e\"/><stop offset=\"99%\" stop-color=\"%23fecfef\"/></linearGradient></defs><rect width=\"100%\" height=\"100%\" fill=\"url(%23g1)\"/><circle cx=\"200\" cy=\"180\" r=\"75\" fill=\"%23ffffff\" opacity=\"0.9\"/><text x=\"200\" y=\"195\" font-size=\"65\" text-anchor=\"middle\">🌸</text><text x=\"200\" y=\"310\" font-size=\"22\" text-anchor=\"middle\" fill=\"%23d63384\" font-weight=\"bold\" font-family=\"sans-serif\">Sweetest Smile</text></svg>",
+      "caption": "Sweetest Smile in the World 🌸"
+    },
+    {
+      "url": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"400\" viewBox=\"0 0 400 400\"><defs><linearGradient id=\"g2\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"%23ffd1dc\"/><stop offset=\"100%\" stop-color=\"%23ffb3c6\"/></linearGradient></defs><rect width=\"100%\" height=\"100%\" fill=\"url(%23g2)\"/><circle cx=\"200\" cy=\"180\" r=\"75\" fill=\"%23ffffff\" opacity=\"0.9\"/><text x=\"200\" y=\"195\" font-size=\"65\" text-anchor=\"middle\">🌹</text><text x=\"200\" y=\"310\" font-size=\"22\" text-anchor=\"middle\" fill=\"%23c2185b\" font-weight=\"bold\" font-family=\"sans-serif\">Precious Moments</text></svg>",
+      "caption": "Precious Moments with You 🌹"
+    },
+    {
+      "url": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"400\" viewBox=\"0 0 400 400\"><defs><linearGradient id=\"g3\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"%23ffe4e8\"/><stop offset=\"100%\" stop-color=\"%23ffccd5\"/></linearGradient></defs><rect width=\"100%\" height=\"100%\" fill=\"url(%23g3)\"/><circle cx=\"200\" cy=\"180\" r=\"75\" fill=\"%23ffffff\" opacity=\"0.9\"/><text x=\"200\" y=\"195\" font-size=\"65\" text-anchor=\"middle\">🌺</text><text x=\"200\" y=\"310\" font-size=\"22\" text-anchor=\"middle\" fill=\"%23ad1457\" font-weight=\"bold\" font-family=\"sans-serif\">Pink Lily Dreams</text></svg>",
+      "caption": "Cozy Talks & Beautiful Sunset 🌺"
+    },
+    {
+      "url": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"400\" viewBox=\"0 0 400 400\"><defs><linearGradient id=\"g4\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0%\" stop-color=\"%23fbc2eb\"/><stop offset=\"100%\" stop-color=\"%23ff8da1\"/></linearGradient></defs><rect width=\"100%\" height=\"100%\" fill=\"url(%23g4)\"/><circle cx=\"200\" cy=\"180\" r=\"75\" fill=\"%23ffffff\" opacity=\"0.9\"/><text x=\"200\" y=\"195\" font-size=\"65\" text-anchor=\"middle\">💖</text><text x=\"200\" y=\"310\" font-size=\"22\" text-anchor=\"middle\" fill=\"%23880e4f\" font-weight=\"bold\" font-family=\"sans-serif\">Always & Forever</text></svg>",
+      "caption": "Making Magical Memories Forever 💖"
+    }
+  ]
+}
