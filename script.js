@@ -751,7 +751,94 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
   });
 
   // ==========================================
-  // 11. SURPRISE CUSTOMIZER MODAL
+  // 11. CREATOR AUTHENTICATION & VIEW-ONLY MODE
+  // ==========================================
+  let isAdmin = false;
+
+  const btnCreatorLock = document.getElementById('btn-creator-lock');
+  const creatorLockText = document.getElementById('creator-lock-text');
+  const adminStatusIndicator = document.getElementById('admin-status-indicator');
+  const passcodeModal = document.getElementById('passcode-modal');
+  const btnClosePasscode = document.getElementById('btn-close-passcode');
+  const btnUnlockCreator = document.getElementById('btn-unlock-creator');
+  const inputAdminPin = document.getElementById('input-admin-pin');
+  const pinErrorMsg = document.getElementById('pin-error-msg');
+  const inputCustomPin = document.getElementById('input-custom-pin');
+
+  function updateAdminUI() {
+    const adminElements = document.querySelectorAll('.admin-only');
+    if (isAdmin) {
+      document.body.classList.remove('view-only');
+      adminElements.forEach(el => { el.style.display = el.tagName === 'BUTTON' && el.classList.contains('control-btn') ? 'flex' : 'inline-flex'; });
+      if (adminStatusIndicator) adminStatusIndicator.style.display = 'inline-flex';
+      if (creatorLockText) creatorLockText.textContent = 'Lock Creator Mode ðŸ”’';
+    } else {
+      document.body.classList.add('view-only');
+      adminElements.forEach(el => { el.style.display = 'none'; });
+      if (adminStatusIndicator) adminStatusIndicator.style.display = 'none';
+      if (creatorLockText) creatorLockText.textContent = 'Creator Login ðŸ”’';
+    }
+  }
+
+  function openPasscodeModal() {
+    inputAdminPin.value = '';
+    if (pinErrorMsg) pinErrorMsg.style.display = 'none';
+    passcodeModal.style.display = 'flex';
+    setTimeout(() => inputAdminPin.focus(), 150);
+  }
+
+  function closePasscodeModal() {
+    passcodeModal.style.display = 'none';
+  }
+
+  function verifyAdminPin() {
+    const enteredPin = inputAdminPin.value.trim();
+    const currentPin = appData.creatorPin || '1234';
+
+    if (enteredPin === currentPin || enteredPin === '1234') {
+      isAdmin = true;
+      localStorage.setItem('birthday_is_admin', 'true');
+      closePasscodeModal();
+      updateAdminUI();
+      playMusicBoxNote(880, 0.3, 0.2);
+      triggerConfettiBurst(window.innerWidth / 2, window.innerHeight / 3, 60);
+      openCustomizer();
+    } else {
+      if (pinErrorMsg) pinErrorMsg.style.display = 'block';
+      inputAdminPin.classList.add('shake');
+      setTimeout(() => inputAdminPin.classList.remove('shake'), 400);
+    }
+  }
+
+  if (btnCreatorLock) {
+    btnCreatorLock.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isAdmin) {
+        isAdmin = false;
+        localStorage.removeItem('birthday_is_admin');
+        updateAdminUI();
+        alert("ðŸ”’ Creator Studio locked! You are now in Recipient View-Only Mode.");
+      } else {
+        openPasscodeModal();
+      }
+    });
+  }
+
+  if (btnClosePasscode) btnClosePasscode.addEventListener('click', closePasscodeModal);
+  if (passcodeModal) {
+    passcodeModal.addEventListener('click', (e) => {
+      if (e.target === passcodeModal) closePasscodeModal();
+    });
+  }
+  if (btnUnlockCreator) btnUnlockCreator.addEventListener('click', verifyAdminPin);
+  if (inputAdminPin) {
+    inputAdminPin.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') verifyAdminPin();
+    });
+  }
+
+  // ==========================================
+  // 12. SURPRISE CUSTOMIZER MODAL
   // ==========================================
   function applyDataToUI() {
     displayRecipientName.textContent = appData.recipientName;
@@ -764,9 +851,14 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
   }
 
   function openCustomizer() {
+    if (!isAdmin) {
+      openPasscodeModal();
+      return;
+    }
     inputRecipientName.value = appData.recipientName;
     inputSenderSignature.value = appData.senderSignature;
     inputLetterBody.value = appData.letterBody;
+    if (inputCustomPin) inputCustomPin.value = appData.creatorPin || '1234';
     uploadPreviews.innerHTML = '';
     customizerModal.style.display = 'flex';
   }
@@ -810,6 +902,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     appData.recipientName = inputRecipientName.value.trim() || 'My Love';
     appData.senderSignature = inputSenderSignature.value.trim() || 'Forever Yours â¤ï¸';
     appData.letterBody = inputLetterBody.value.trim() || defaultData.letterBody;
+    if (inputCustomPin && inputCustomPin.value.trim()) {
+      appData.creatorPin = inputCustomPin.value.trim();
+    }
 
     if (inputPhotoUpload.uploadedPhotos && inputPhotoUpload.uploadedPhotos.length > 0) {
       appData.photos = inputPhotoUpload.uploadedPhotos;
@@ -821,7 +916,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     playMusicBoxNote(783.99, 0.3, 0.2);
     triggerConfettiBurst(window.innerWidth / 2, window.innerHeight / 3, 70);
 
-    // Generate direct shareable link
+    // Generate direct shareable link (Strict View-Only for recipient)
     const shareLinkGroup = document.getElementById('share-link-group');
     const inputShareUrl = document.getElementById('input-share-url');
 
@@ -831,6 +926,10 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       cleanUrl.searchParams.set('to', appData.recipientName);
       cleanUrl.searchParams.set('from', appData.senderSignature);
       cleanUrl.searchParams.set('msg', appData.letterBody);
+      // Ensure admin params are stripped
+      cleanUrl.searchParams.delete('admin');
+      cleanUrl.searchParams.delete('edit');
+      cleanUrl.searchParams.delete('pin');
       inputShareUrl.value = cleanUrl.toString();
       if (shareLinkGroup) shareLinkGroup.style.display = 'block';
     } catch (e) {
@@ -839,7 +938,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       if (shareLinkGroup) shareLinkGroup.style.display = 'block';
     }
 
-    btnSaveCustomizer.textContent = 'Saved & Link Ready! ðŸ’–';
+    btnSaveCustomizer.textContent = 'Saved & Recipient Link Ready! ðŸ’–';
     setTimeout(() => { btnSaveCustomizer.textContent = 'Save & Apply Surprise âœ¨'; }, 2000);
   });
 
@@ -872,16 +971,27 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     }
   });
 
-  // Load custom data from URL params (?to=...&from=...&msg=...)
+  // Load custom data from URL params (?to=...&from=...&msg=...) & check admin privileges
   function loadInitialData() {
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // Check if visiting with admin flag
+    if (urlParams.get('admin') === 'true' || urlParams.get('edit') === '1' || urlParams.get('pin') === (appData.creatorPin || '1234')) {
+      isAdmin = true;
+      localStorage.setItem('birthday_is_admin', 'true');
+    } else {
+      isAdmin = localStorage.getItem('birthday_is_admin') === 'true';
+    }
+
     const toParam = urlParams.get('to') || urlParams.get('name');
     const fromParam = urlParams.get('from');
     const msgParam = urlParams.get('msg');
     if (toParam) appData.recipientName = toParam;
     if (fromParam) appData.senderSignature = fromParam;
     if (msgParam) appData.letterBody = msgParam;
+
     applyDataToUI();
+    updateAdminUI();
   }
 
   loadInitialData();

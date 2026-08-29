@@ -1569,3 +1569,20 @@ body {
     max-height: 160px;
   }
 }
+
+/* ========================================================
+   CREATOR ACCESS & VIEW-ONLY PROTECTION
+   ======================================================== */
+.admin-badge-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 45, 117, 0.12);
+  color: var(--primary-deep);
+  border: 1px dashed var(--primary-pink);
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  animation: popIn 0.3s var(--ease-spring);
+}

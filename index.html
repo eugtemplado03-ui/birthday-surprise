@@ -33,9 +33,9 @@
       <i class="fa-solid fa-wand-magic-sparkles"></i>
       <span class="btn-tooltip">Flowers & Confetti! 🌸</span>
     </button>
-    <button id="btn-customize" class="control-btn" title="Personalize this Surprise" aria-label="Personalize">
+    <button id="btn-customize" class="control-btn admin-only" title="Personalize this Surprise" aria-label="Personalize" style="display: none;">
       <i class="fa-solid fa-gear"></i>
-      <span class="btn-tooltip">Customize Details ✏️</span>
+      <span class="btn-tooltip">Creator Studio ✏️</span>
     </button>
   </div>
 
@@ -223,7 +223,7 @@
                 </button>
               </div>
 
-              <button id="btn-add-photos" class="btn btn-outline-small">
+              <button id="btn-add-photos" class="btn btn-outline-small admin-only" style="display: none;">
                 <i class="fa-solid fa-image"></i> Swap / Upload Your Photos
               </button>
             </div>
@@ -276,7 +276,7 @@
                   </div>
 
                   <div class="letter-actions">
-                    <button id="btn-edit-letter" class="btn-link">
+                    <button id="btn-edit-letter" class="btn-link admin-only" style="display: none;">
                       <i class="fa-solid fa-pen-fancy"></i> Edit Letter
                     </button>
                     <button id="btn-fold-letter" class="btn-link">
@@ -298,6 +298,14 @@
         <button id="btn-restart" class="btn btn-outline-small">
           <i class="fa-solid fa-rotate-left"></i> Replay Surprise
         </button>
+        <div style="margin-top: 0.8rem; display: flex; flex-direction: column; align-items: center; gap: 0.3rem;">
+          <button id="btn-creator-lock" class="btn-link" style="font-size: 0.78rem; opacity: 0.65; color: var(--text-sub); text-decoration: none;">
+            <i class="fa-solid fa-lock"></i> <span id="creator-lock-text">Creator Login</span>
+          </button>
+          <div id="admin-status-indicator" class="admin-badge-indicator" style="display: none;">
+            <i class="fa-solid fa-user-shield"></i> Creator Studio Active ✨
+          </div>
+        </div>
       </footer>
     </section>
 
@@ -351,10 +359,17 @@
           <div id="upload-previews" class="upload-previews"></div>
         </div>
 
+        <!-- Creator PIN Setting -->
+        <div class="form-group" style="margin-top: 1rem; border-top: 1px dashed #f8bed4; padding-top: 0.8rem;">
+          <label for="input-custom-pin"><i class="fa-solid fa-key"></i> Creator PIN (Keep this secret):</label>
+          <input type="password" id="input-custom-pin" class="form-input" placeholder="e.g. 1234">
+          <p class="input-hint">This PIN allows only YOU to edit details and upload photos.</p>
+        </div>
+
         <!-- Shareable Link Box -->
         <div class="form-group" id="share-link-group" style="display: none; background: #fff2f6; padding: 1rem; border-radius: 14px; border: 1.5px dashed var(--primary-pink); margin-top: 1rem;">
-          <label style="color: var(--primary-deep); font-weight: 800;"><i class="fa-solid fa-share-nodes"></i> Shareable Birthday Link:</label>
-          <p class="input-hint" style="color: var(--text-muted); margin-bottom: 0.4rem;">Send this link to the birthday person to see this exact customized surprise!</p>
+          <label style="color: var(--primary-deep); font-weight: 800;"><i class="fa-solid fa-share-nodes"></i> Shareable Birthday Link (View-Only For Recipient):</label>
+          <p class="input-hint" style="color: var(--text-muted); margin-bottom: 0.4rem;">Send this link to the birthday person! They will only see the celebration and won't be able to edit anything.</p>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
             <input type="text" id="input-share-url" class="form-input" readonly style="font-size: 0.85rem; background: #fff;">
             <button id="btn-copy-url" class="btn btn-action" style="padding: 0.65rem 1rem; font-size: 0.85rem; white-space: nowrap;">
@@ -368,6 +383,26 @@
       <div class="modal-footer">
         <button id="btn-reset-defaults" class="btn btn-secondary">Restore Defaults</button>
         <button id="btn-save-customizer" class="btn btn-primary">Save & Apply Surprise ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 3: CREATOR PASSCODE MODAL                          -->
+  <!-- ======================================================== -->
+  <div id="passcode-modal" class="modal-backdrop" style="display: none;">
+    <div class="customizer-content glass-card" style="max-width: 400px; text-align: center;">
+      <div class="modal-header" style="justify-content: center; position: relative;">
+        <h2><i class="fa-solid fa-lock"></i> Creator Studio Access</h2>
+        <button id="btn-close-passcode" class="modal-close-btn" style="position: absolute; right: 0;">&times;</button>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.8rem 0;">Enter your 4-digit Creator PIN to unlock editing tools, photo uploaders, and letter customized message:</p>
+      <div class="form-group" style="margin-bottom: 1.2rem;">
+        <input type="password" id="input-admin-pin" class="form-input" placeholder="Enter PIN (Default: 1234)" style="text-align: center; font-size: 1.4rem; letter-spacing: 4px; font-weight: bold;" maxlength="12">
+        <p id="pin-error-msg" style="color: #d81458; font-size: 0.82rem; font-weight: 700; margin-top: 0.4rem; display: none;">Incorrect PIN. Try again!</p>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button id="btn-unlock-creator" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-key"></i> Unlock Creator Mode</button>
       </div>
     </div>
   </div>

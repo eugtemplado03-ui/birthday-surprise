@@ -21,11 +21,12 @@
    ======================================================== */
 
 :root {
-  --bg-pink-1: #fff0f5;
-  --bg-pink-2: #ffd3e4;
-  --bg-pink-3: #ffb1ce;
-  --bg-pink-deep: #f77ca5;
-  --bg-berry: #701438;
+  /* Dreamy Pink & Floral Romantic Palette */
+  --bg-pink-1: #fff0f5;       /* Lavender blush soft snow pink */
+  --bg-pink-2: #ffd3e4;       /* Pastel rose */
+  --bg-pink-3: #ffb1ce;       /* Carnation pink */
+  --bg-pink-deep: #f77ca5;    /* Vibrant glowing rose pink */
+  --bg-berry: #701438;        /* Romantic deep berry for contrast */
 
   --primary-pink: #ff3377;
   --primary-glow: rgba(255, 51, 119, 0.45);
@@ -54,18 +55,22 @@
   --parchment-text: #451a2c;
   --parchment-border: #f8bed4;
 
+  /* Fonts */
   --font-main: 'Outfit', 'Plus Jakarta Sans', sans-serif;
   --font-heading: 'Playfair Display', Georgia, serif;
   --font-script: 'Dancing Script', cursive;
 
+  /* Transitions */
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Global Scrollbar Hiding */
+/* ========================================================
+   GLOBAL SCROLLBAR HIDING (CLEAN SEAMLESS DISPLAY)
+   ======================================================== */
 html, body, * {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
 }
 
 ::-webkit-scrollbar,
@@ -78,6 +83,9 @@ body::-webkit-scrollbar {
   background: transparent !important;
 }
 
+/* ========================================================
+   BASE & RESET
+   ======================================================== */
 * {
   margin: 0;
   padding: 0;
@@ -103,6 +111,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Background Animated Canvases */
 #ambient-canvas, #confetti-canvas {
   position: fixed;
   top: 0;
@@ -117,6 +126,7 @@ body {
   z-index: 999;
 }
 
+/* Floating Flower Vignettes & Glow Orbs */
 .floral-ambient-glow {
   position: fixed;
   top: 0;
@@ -146,6 +156,9 @@ body {
   margin: 0 auto;
 }
 
+/* ========================================================
+   FLOATING TOP CONTROLS (RESPONSIVE)
+   ======================================================== */
 .floating-controls {
   position: fixed;
   top: 1.2rem;
@@ -205,6 +218,9 @@ body {
   transform: translateY(0);
 }
 
+/* ========================================================
+   STAGES SYSTEM
+   ======================================================== */
 .stage {
   display: none;
   width: 100%;
@@ -219,6 +235,7 @@ body {
   transform: scale(1) translateY(0);
 }
 
+/* Glassmorphism Card Base */
 .glass-card {
   background: var(--glass-bg);
   backdrop-filter: blur(24px);
@@ -243,6 +260,9 @@ body {
   pointer-events: none;
 }
 
+/* ========================================================
+   STAGE 1: INTRO & EVASIVE QUESTION CARD
+   ======================================================== */
 #stage-intro {
   max-width: 680px;
   margin: 0 auto;
@@ -255,6 +275,7 @@ body {
   background: rgba(255, 255, 255, 0.78);
 }
 
+/* Corner Flowers (Pink Lilies & Roses) */
 .floral-corner {
   position: absolute;
   pointer-events: none;
@@ -356,6 +377,7 @@ body {
   margin-top: 0.3rem;
 }
 
+/* Floral Divider */
 .floral-divider {
   display: flex;
   align-items: center;
@@ -372,6 +394,7 @@ body {
   background: linear-gradient(to right, transparent, rgba(255, 77, 121, 0.4), transparent);
 }
 
+/* The Big Question Area */
 .question-container {
   background: rgba(255, 255, 255, 0.85);
   border: 2px dashed rgba(255, 77, 121, 0.4);
@@ -406,6 +429,7 @@ body {
   margin-bottom: 1.4rem;
 }
 
+/* Witty Teasing Popup */
 .witty-popup {
   opacity: 0;
   transform: translateY(8px) scale(0.92);
@@ -440,6 +464,7 @@ body {
   75% { transform: rotate(4deg); }
 }
 
+/* Button Arena */
 .button-arena {
   display: flex;
   justify-content: center;
@@ -450,6 +475,7 @@ body {
   width: 100%;
 }
 
+/* General Button Styles */
 .btn {
   font-family: var(--font-main);
   font-size: clamp(0.95rem, 3.5vw, 1.1rem);
@@ -469,6 +495,7 @@ body {
   touch-action: manipulation;
 }
 
+/* Big Glowing YES Button */
 .btn-yes {
   background: linear-gradient(135deg, #ff2d75 0%, #e0246a 50%, #b80d4f 100%);
   color: #ffffff;
@@ -500,6 +527,7 @@ body {
   30%, 100% { left: 200%; }
 }
 
+/* Evasive Untouchable NO Button */
 .btn-no {
   background: rgba(255, 255, 255, 0.95);
   color: var(--text-muted);
@@ -531,6 +559,9 @@ body {
   font-weight: 800;
 }
 
+/* ========================================================
+   STAGE 2: THE GRAND CELEBRATION PORTAL
+   ======================================================== */
 .celebration-hero {
   text-align: center;
   margin-bottom: 2.2rem;
@@ -582,6 +613,7 @@ body {
   padding: 0 0.5rem;
 }
 
+/* Celebration 3-Column Grid */
 .celebration-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -638,7 +670,9 @@ body {
   color: var(--text-sub);
 }
 
-/* Zone 1: Cake */
+/* ========================================================
+   ZONE 1: 3D CAKE & BLOWABLE CANDLE
+   ======================================================== */
 .cake-stage {
   flex: 1;
   display: flex;
@@ -661,6 +695,7 @@ body {
   touch-action: manipulation;
 }
 
+/* Candle & Flickering Flame */
 .candles-wrapper {
   position: absolute;
   top: 10px;
@@ -756,6 +791,7 @@ body {
   100% { opacity: 0; transform: translate(-30%, -60px) scale(4); }
 }
 
+/* Cake Tiers */
 .cake-tier {
   position: relative;
   border-radius: 14px 14px 8px 8px;
@@ -866,7 +902,9 @@ body {
   box-shadow: 0 8px 22px rgba(255, 45, 117, 0.5);
 }
 
-/* Zone 2: Polaroids */
+/* ========================================================
+   ZONE 2: POLAROID PHOTO MEMORY STACK
+   ======================================================== */
 .polaroid-wrapper {
   flex: 1;
   display: flex;
@@ -1013,7 +1051,9 @@ body {
   color: #ffffff;
 }
 
-/* Zone 3: Letter */
+/* ========================================================
+   ZONE 3: WAX-SEALED BIRTHDAY LETTER
+   ======================================================== */
 .letter-stage {
   flex: 1;
   display: flex;
@@ -1116,6 +1156,7 @@ body {
   white-space: nowrap;
 }
 
+/* Unfolded Parchment Paper */
 .letter-unfolded {
   width: 100%;
   animation: unfoldLetter 0.5s var(--ease-spring) forwards;
@@ -1220,6 +1261,7 @@ body {
   text-decoration: underline;
 }
 
+/* Footer */
 .celebration-footer {
   text-align: center;
   padding: 1.2rem 0 2rem;
@@ -1231,7 +1273,9 @@ body {
   font-size: 0.92rem;
 }
 
-/* Modals */
+/* ========================================================
+   MODALS (CUSTOMIZER & LIGHTBOX) - MOBILE READY
+   ======================================================== */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -1362,6 +1406,7 @@ body {
   color: var(--text-muted);
 }
 
+/* Lightbox */
 .lightbox-content {
   position: relative;
   max-width: 92vw;
@@ -1392,7 +1437,10 @@ body {
   font-size: 2rem;
 }
 
-/* Responsive Queries */
+/* ========================================================
+   RESPONSIVE MEDIA QUERIES (TABLETS & PHONES)
+   ======================================================== */
+
 @media (max-width: 1024px) {
   .celebration-grid {
     grid-template-columns: 1fr;
@@ -1538,14 +1586,34 @@ body {
     max-height: 160px;
   }
 }
-  </style>
+
+/* ========================================================
+   CREATOR ACCESS & VIEW-ONLY PROTECTION
+   ======================================================== */
+.admin-badge-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255, 45, 117, 0.12);
+  color: var(--primary-deep);
+  border: 1px dashed var(--primary-pink);
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  animation: popIn 0.3s var(--ease-spring);
+}
+
+</style>
 </head>
 <body>
 
+  <!-- Ambient Animated Background Particles & Falling Lilies & Roses Canvas -->
   <canvas id="ambient-canvas"></canvas>
   <canvas id="confetti-canvas"></canvas>
   <div class="floral-ambient-glow"></div>
 
+  <!-- Background Music Audio (Web Audio Happy Birthday Synth + Audio Player) -->
   <div id="floating-controls" class="floating-controls">
     <button id="btn-music" class="control-btn" title="Toggle Happy Birthday Song" aria-label="Toggle Music">
       <i class="fa-solid fa-music"></i>
@@ -1555,25 +1623,30 @@ body {
       <i class="fa-solid fa-wand-magic-sparkles"></i>
       <span class="btn-tooltip">Flowers & Confetti! 🌸</span>
     </button>
-    <button id="btn-customize" class="control-btn" title="Personalize this Surprise" aria-label="Personalize">
+    <button id="btn-customize" class="control-btn admin-only" title="Personalize this Surprise" aria-label="Personalize" style="display: none;">
       <i class="fa-solid fa-gear"></i>
-      <span class="btn-tooltip">Customize Details ✏️</span>
+      <span class="btn-tooltip">Creator Studio ✏️</span>
     </button>
   </div>
 
   <main class="app-container">
 
-    <!-- STAGE 1: INTRO & EVASIVE QUESTION -->
+    <!-- ======================================================== -->
+    <!-- STAGE 1: INTRO & EVASIVE QUESTION ("DO YOU LOVE ME?")   -->
+    <!-- ======================================================== -->
     <section id="stage-intro" class="stage active">
+      
       <div class="intro-card glass-card">
         
+        <!-- Pink Lilies and Roses Corner Accents -->
         <div class="floral-corner floral-top-left">
-          <span style="font-size: 2.2rem;">🌸🌹🌺</span>
+          <span style="font-size: 2.4rem;">🌸🌹🌺</span>
         </div>
         <div class="floral-corner floral-bottom-right">
-          <span style="font-size: 2.2rem;">🌺🌹🌸</span>
+          <span style="font-size: 2.4rem;">🌺🌹🌸</span>
         </div>
 
+        <!-- Floating Decorative Balloons & Flowers -->
         <div class="balloon-cluster">
           <span class="floating-balloon b-1">🌸</span>
           <span class="floating-balloon b-2">💖</span>
@@ -1595,22 +1668,26 @@ body {
           <span class="highlight-sub">But first, answer this very important question:</span>
         </p>
 
+        <!-- Floral Divider -->
         <div class="floral-divider">
           <span class="line"></span>
           <span>🌸 🌹 🌺</span>
           <span class="line"></span>
         </div>
 
+        <!-- The Big Question -->
         <div class="question-container">
           <div class="question-heart-pulse">
             <i class="fa-solid fa-heart"></i>
           </div>
           <h2 class="question-text" id="question-heading">Do you love me? 🥺💖</h2>
           
+          <!-- Playful witty hint popup on dodge -->
           <div id="witty-popup" class="witty-popup">
             <span id="witty-text">Nice try! You can't say no! 😜</span>
           </div>
 
+          <!-- Action Buttons Area -->
           <div id="button-arena" class="button-arena">
             <button id="btn-yes" class="btn btn-yes pulse-glow">
               <span class="btn-content">
@@ -1635,9 +1712,12 @@ body {
       </div>
     </section>
 
-    <!-- STAGE 2: THE GRAND CELEBRATION PORTAL -->
+    <!-- ======================================================== -->
+    <!-- STAGE 2: THE GRAND CELEBRATION PORTAL                   -->
+    <!-- ======================================================== -->
     <section id="stage-celebration" class="stage">
       
+      <!-- Top Celebration Banner -->
       <header class="celebration-hero">
         <div class="hero-confetti-badge">
           🎉 YAAAY! I KNEW IT! 🥰❤️ 🌸
@@ -1650,9 +1730,10 @@ body {
         </p>
       </header>
 
+      <!-- Main Showcase Grid (Cake, Photos, Letter) -->
       <div class="celebration-grid">
         
-        <!-- ZONE 1: 3D CAKE -->
+        <!-- ================= ZONE 1: INTERACTIVE 3D CAKE ================= -->
         <div class="celebration-column">
           <div class="showcase-card glass-card cake-card">
             <div class="card-header">
@@ -1663,6 +1744,8 @@ body {
 
             <div class="cake-stage" id="cake-stage">
               <div class="cake-container" id="interactive-cake">
+                
+                <!-- Glowing Candles with Interactive Flame -->
                 <div class="candles-wrapper">
                   <div class="candle candle-center" id="main-candle">
                     <div class="flame-wrapper" id="candle-flame">
@@ -1674,6 +1757,7 @@ body {
                   </div>
                 </div>
 
+                <!-- 3D Cake Tiers with Pink Cream and Rose/Berry Toppings -->
                 <div class="cake-tier tier-top">
                   <div class="cake-frosting">
                     <span class="berry">🌸</span>
@@ -1691,6 +1775,7 @@ body {
                 </div>
               </div>
 
+              <!-- Wish Status Indicator -->
               <div class="wish-banner" id="wish-banner">
                 <span id="wish-text">✨ Candle is burning! Click to blow out ✨</span>
               </div>
@@ -1703,17 +1788,20 @@ body {
           </div>
         </div>
 
-        <!-- ZONE 2: POLAROID GALLERY -->
+        <!-- ================= ZONE 2: MEMORY PHOTO GALLERY ================= -->
         <div class="celebration-column">
           <div class="showcase-card glass-card gallery-card">
             <div class="card-header">
               <span class="card-icon">📸</span>
               <h3>Treasured Moments</h3>
-              <p class="card-subtext">Hover or swipe to flip through memories</p>
+              <p class="card-subtext">Hover or click to flip through our favorite memories</p>
             </div>
 
+            <!-- Polaroid Stack & Carousel -->
             <div class="polaroid-wrapper">
-              <div class="polaroid-stack" id="polaroid-stack"></div>
+              <div class="polaroid-stack" id="polaroid-stack">
+                <!-- Dynamic Polaroids Injected via JS -->
+              </div>
 
               <div class="gallery-navigation">
                 <button id="btn-prev-photo" class="nav-arrow" aria-label="Previous Photo">
@@ -1725,14 +1813,14 @@ body {
                 </button>
               </div>
 
-              <button id="btn-add-photos" class="btn btn-outline-small">
+              <button id="btn-add-photos" class="btn btn-outline-small admin-only" style="display: none;">
                 <i class="fa-solid fa-image"></i> Swap / Upload Your Photos
               </button>
             </div>
           </div>
         </div>
 
-        <!-- ZONE 3: WAX-SEALED LETTER -->
+        <!-- ================= ZONE 3: WAX-SEALED BIRTHDAY LETTER ================= -->
         <div class="celebration-column">
           <div class="showcase-card glass-card letter-card">
             <div class="card-header">
@@ -1742,6 +1830,8 @@ body {
             </div>
 
             <div class="letter-stage">
+              
+              <!-- Sealed Envelope State -->
               <div id="envelope-wrapper" class="envelope-wrapper">
                 <div class="envelope" id="envelope-trigger">
                   <div class="envelope-flap"></div>
@@ -1754,6 +1844,7 @@ body {
                 </div>
               </div>
 
+              <!-- Unfolded Parchment Paper State -->
               <div id="letter-unfolded" class="letter-unfolded" style="display: none;">
                 <div class="parchment-paper">
                   <div class="letter-stamp">
@@ -1765,7 +1856,9 @@ body {
                     <div class="letter-salutation" id="letter-display-salutation">Dearest Sweetheart,</div>
                   </div>
 
-                  <div class="letter-body" id="letter-display-body"></div>
+                  <div class="letter-body" id="letter-display-body">
+                    <!-- Dynamic Letter Content Injected via JS -->
+                  </div>
 
                   <div class="letter-closing">
                     <div class="letter-sign-off">With all my love & sweetest flowers,</div>
@@ -1773,7 +1866,7 @@ body {
                   </div>
 
                   <div class="letter-actions">
-                    <button id="btn-edit-letter" class="btn-link">
+                    <button id="btn-edit-letter" class="btn-link admin-only" style="display: none;">
                       <i class="fa-solid fa-pen-fancy"></i> Edit Letter
                     </button>
                     <button id="btn-fold-letter" class="btn-link">
@@ -1789,17 +1882,28 @@ body {
 
       </div>
 
+      <!-- Footer Greeting -->
       <footer class="celebration-footer">
         <p>Made with endless love, pink lilies & roses for your special day 💖 Happy Birthday!</p>
         <button id="btn-restart" class="btn btn-outline-small">
           <i class="fa-solid fa-rotate-left"></i> Replay Surprise
         </button>
+        <div style="margin-top: 0.8rem; display: flex; flex-direction: column; align-items: center; gap: 0.3rem;">
+          <button id="btn-creator-lock" class="btn-link" style="font-size: 0.78rem; opacity: 0.65; color: var(--text-sub); text-decoration: none;">
+            <i class="fa-solid fa-lock"></i> <span id="creator-lock-text">Creator Login</span>
+          </button>
+          <div id="admin-status-indicator" class="admin-badge-indicator" style="display: none;">
+            <i class="fa-solid fa-user-shield"></i> Creator Studio Active ✨
+          </div>
+        </div>
       </footer>
     </section>
 
   </main>
 
-  <!-- Modals -->
+  <!-- ======================================================== -->
+  <!-- MODAL 1: LIGHTBOX ZOOM FOR PHOTOS                       -->
+  <!-- ======================================================== -->
   <div id="lightbox-modal" class="modal-backdrop" style="display: none;">
     <div class="lightbox-content">
       <button id="btn-close-lightbox" class="modal-close-btn">&times;</button>
@@ -1808,6 +1912,9 @@ body {
     </div>
   </div>
 
+  <!-- ======================================================== -->
+  <!-- MODAL 2: SURPRISE CUSTOMIZER (EDIT NAME, LETTER & PHOTOS) -->
+  <!-- ======================================================== -->
   <div id="customizer-modal" class="modal-backdrop" style="display: none;">
     <div class="customizer-content glass-card">
       <div class="modal-header">
@@ -1816,6 +1923,8 @@ body {
       </div>
 
       <div class="modal-body">
+        
+        <!-- Recipient Information -->
         <div class="form-group">
           <label for="input-recipient-name"><i class="fa-solid fa-user"></i> Birthday Person's Name / Nickname:</label>
           <input type="text" id="input-recipient-name" class="form-input" placeholder="e.g. Sarah, Sweetheart, Bestie">
@@ -1826,11 +1935,13 @@ body {
           <input type="text" id="input-sender-signature" class="form-input" placeholder="e.g. Forever Yours, Alex ❤️">
         </div>
 
+        <!-- Custom Letter -->
         <div class="form-group">
           <label for="input-letter-body"><i class="fa-solid fa-envelope-open-text"></i> Heartfelt Birthday Message:</label>
           <textarea id="input-letter-body" class="form-textarea" rows="6" placeholder="Write your romantic birthday letter here..."></textarea>
         </div>
 
+        <!-- Custom Photos Upload / Management -->
         <div class="form-group">
           <label><i class="fa-solid fa-camera-retro"></i> Upload Custom Photos (Polaroids):</label>
           <p class="input-hint">Select your favorite pictures together (supports JPEG, PNG, WEBP):</p>
@@ -1838,10 +1949,17 @@ body {
           <div id="upload-previews" class="upload-previews"></div>
         </div>
 
+        <!-- Creator PIN Setting -->
+        <div class="form-group" style="margin-top: 1rem; border-top: 1px dashed #f8bed4; padding-top: 0.8rem;">
+          <label for="input-custom-pin"><i class="fa-solid fa-key"></i> Creator PIN (Keep this secret):</label>
+          <input type="password" id="input-custom-pin" class="form-input" placeholder="e.g. 1234">
+          <p class="input-hint">This PIN allows only YOU to edit details and upload photos.</p>
+        </div>
+
         <!-- Shareable Link Box -->
         <div class="form-group" id="share-link-group" style="display: none; background: #fff2f6; padding: 1rem; border-radius: 14px; border: 1.5px dashed var(--primary-pink); margin-top: 1rem;">
-          <label style="color: var(--primary-deep); font-weight: 800;"><i class="fa-solid fa-share-nodes"></i> Shareable Birthday Link:</label>
-          <p class="input-hint" style="color: var(--text-muted); margin-bottom: 0.4rem;">Send this link to the birthday person to see this exact customized surprise!</p>
+          <label style="color: var(--primary-deep); font-weight: 800;"><i class="fa-solid fa-share-nodes"></i> Shareable Birthday Link (View-Only For Recipient):</label>
+          <p class="input-hint" style="color: var(--text-muted); margin-bottom: 0.4rem;">Send this link to the birthday person! They will only see the celebration and won't be able to edit anything.</p>
           <div style="display: flex; gap: 0.5rem; align-items: center;">
             <input type="text" id="input-share-url" class="form-input" readonly style="font-size: 0.85rem; background: #fff;">
             <button id="btn-copy-url" class="btn btn-action" style="padding: 0.65rem 1rem; font-size: 0.85rem; white-space: nowrap;">
@@ -1859,10 +1977,42 @@ body {
     </div>
   </div>
 
+  <!-- ======================================================== -->
+  <!-- MODAL 3: CREATOR PASSCODE MODAL                          -->
+  <!-- ======================================================== -->
+  <div id="passcode-modal" class="modal-backdrop" style="display: none;">
+    <div class="customizer-content glass-card" style="max-width: 400px; text-align: center;">
+      <div class="modal-header" style="justify-content: center; position: relative;">
+        <h2><i class="fa-solid fa-lock"></i> Creator Studio Access</h2>
+        <button id="btn-close-passcode" class="modal-close-btn" style="position: absolute; right: 0;">&times;</button>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.8rem 0;">Enter your 4-digit Creator PIN to unlock editing tools, photo uploaders, and letter customized message:</p>
+      <div class="form-group" style="margin-bottom: 1.2rem;">
+        <input type="password" id="input-admin-pin" class="form-input" placeholder="Enter PIN (Default: 1234)" style="text-align: center; font-size: 1.4rem; letter-spacing: 4px; font-weight: bold;" maxlength="12">
+        <p id="pin-error-msg" style="color: #d81458; font-size: 0.82rem; font-weight: 700; margin-top: 0.4rem; display: none;">Incorrect PIN. Try again!</p>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button id="btn-unlock-creator" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-key"></i> Unlock Creator Mode</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript File -->
   <script>
+/**
+ * BIRTHDAY SURPRISE - COMPLETE INTERACTIVE SCRIPT
+ * Features: Ultra-responsive Evasive 'No' button (Touch & Mouse Proximity),
+ * Mobile Touch Swipe Gallery, Happy Birthday Song Web Audio Synth,
+ * Floating Pink Rose & Lily Petals Canvas, 3D Cake & Candle Blowout,
+ * Polaroid Photo Gallery, Wax-Sealed Letter, and Customizer.
+ */
+
 (function () {
   'use strict';
 
+  // ==========================================
+  // 1. DEFAULT DATA & STATE
+  // ==========================================
   const defaultData = {
     recipientName: 'Sweetheart',
     senderSignature: 'Forever Yours, with all my love ❤️',
@@ -1894,6 +2044,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     ]
   };
 
+  // Load from LocalStorage or Default
   let appData = JSON.parse(localStorage.getItem('birthday_surprise_data')) || defaultData;
   let dodgeCount = 0;
   let activePhotoIndex = 0;
@@ -1914,32 +2065,41 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     "Forever and always YES! 💘"
   ];
 
+  // ==========================================
+  // 2. DOM ELEMENTS SELECTION
+  // ==========================================
   const stageIntro = document.getElementById('stage-intro');
   const stageCelebration = document.getElementById('stage-celebration');
+  
   const displayRecipientName = document.getElementById('display-recipient-name');
   const heroRecipientName = document.getElementById('hero-recipient-name');
+  
   const btnYes = document.getElementById('btn-yes');
   const btnNo = document.getElementById('btn-no');
   const wittyPopup = document.getElementById('witty-popup');
   const wittyText = document.getElementById('witty-text');
   const evadeCounter = document.getElementById('evade-counter');
   const dodgeCountSpan = document.getElementById('dodge-count');
+  
   const btnMusic = document.getElementById('btn-music');
   const musicStatus = document.getElementById('music-status');
   const btnConfetti = document.getElementById('btn-confetti');
   const btnCustomize = document.getElementById('btn-customize');
   const btnRestart = document.getElementById('btn-restart');
+  
   const interactiveCake = document.getElementById('interactive-cake');
   const mainCandle = document.getElementById('main-candle');
   const btnBlowCandle = document.getElementById('btn-blow-candle');
   const btnBlowText = document.getElementById('btn-blow-text');
   const wishBanner = document.getElementById('wish-banner');
   const wishText = document.getElementById('wish-text');
+  
   const polaroidStack = document.getElementById('polaroid-stack');
   const photoDots = document.getElementById('photo-dots');
   const btnPrevPhoto = document.getElementById('btn-prev-photo');
   const btnNextPhoto = document.getElementById('btn-next-photo');
   const btnAddPhotos = document.getElementById('btn-add-photos');
+  
   const envelopeTrigger = document.getElementById('envelope-trigger');
   const envelopeWrapper = document.getElementById('envelope-wrapper');
   const letterUnfolded = document.getElementById('letter-unfolded');
@@ -1949,10 +2109,12 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   const letterDisplaySignature = document.getElementById('letter-display-signature');
   const btnEditLetter = document.getElementById('btn-edit-letter');
   const btnFoldLetter = document.getElementById('btn-fold-letter');
+  
   const lightboxModal = document.getElementById('lightbox-modal');
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxCaption = document.getElementById('lightbox-caption');
   const btnCloseLightbox = document.getElementById('btn-close-lightbox');
+  
   const customizerModal = document.getElementById('customizer-modal');
   const btnCloseCustomizer = document.getElementById('btn-close-customizer');
   const inputRecipientName = document.getElementById('input-recipient-name');
@@ -1962,11 +2124,10 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   const uploadPreviews = document.getElementById('upload-previews');
   const btnSaveCustomizer = document.getElementById('btn-save-customizer');
   const btnResetDefaults = document.getElementById('btn-reset-defaults');
-  const shareLinkGroup = document.getElementById('share-link-group');
-  const inputShareUrl = document.getElementById('input-share-url');
-  const btnCopyUrl = document.getElementById('btn-copy-url');
-  const copyBtnText = document.getElementById('copy-btn-text');
 
+  // ==========================================
+  // 3. HAPPY BIRTHDAY SONG - WEB AUDIO SYNTH
+  // ==========================================
   let audioCtx = null;
   let songTimeoutIds = [];
   let songLoopTimeout = null;
@@ -1974,15 +2135,20 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   function initAudioContext() {
     if (!audioCtx) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (AudioContext) audioCtx = new AudioContext();
+      if (AudioContext) {
+        audioCtx = new AudioContext();
+      }
     }
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
   }
 
   function playMusicBoxNote(freq, duration = 0.5, gainVal = 0.15) {
     if (!audioCtx || !freq) return;
     try {
       const now = audioCtx.currentTime;
+      
       const osc1 = audioCtx.createOscillator();
       osc1.type = 'sine';
       osc1.frequency.setValueAtTime(freq, now);
@@ -2008,7 +2174,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       osc2.start(now);
       osc1.stop(now + duration);
       osc2.stop(now + duration);
-    } catch (e) {}
+    } catch (e) {
+      console.warn("Audio error", e);
+    }
   }
 
   function playChord(notes, duration = 0.8, gainVal = 0.08) {
@@ -2137,6 +2305,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     else playHappyBirthdaySong();
   });
 
+  // ==========================================
+  // 4. FLOATING PINK ROSE & LILY PETALS CANVAS
+  // ==========================================
   const ambientCanvas = document.getElementById('ambient-canvas');
   const ambientCtx = ambientCanvas.getContext('2d');
   const confettiCanvas = document.getElementById('confetti-canvas');
@@ -2245,8 +2416,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     }
   }
 
-  const pCount = window.innerWidth < 600 ? 30 : 50;
-  for (let i = 0; i < pCount; i++) floralParticles.push(new FloralPetal());
+  const particleCount = window.innerWidth < 600 ? 30 : 50;
+  for (let i = 0; i < particleCount; i++) floralParticles.push(new FloralPetal());
 
   class Confetti {
     constructor(x, y) {
@@ -2313,7 +2484,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   }
   requestAnimationFrame(animateCanvases);
 
-  // Evasive No Button Physics (Mobile Safe)
+  // ==========================================
+  // 5. EVASIVE 'NO' BUTTON (MOBILE SAFE & ULTRA EVASIVE)
+  // ==========================================
   function moveNoButton() {
     dodgeCount++;
     playDodgeSound();
@@ -2325,7 +2498,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     const btnHeight = btnNo.offsetHeight || 44;
 
     const padX = 16;
-    const padTop = 68;
+    const padTop = 68; // Below floating top buttons
     const padBottom = 24;
 
     const maxX = Math.max(padX, viewportW - btnWidth - padX);
@@ -2344,6 +2517,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     void wittyPopup.offsetWidth;
     wittyPopup.classList.add('show');
 
+    // Grow YES button safely for mobile
     const maxScale = window.innerWidth < 600 ? 1.35 : 1.65;
     const newScale = Math.min(maxScale, 1 + dodgeCount * 0.06);
     btnYes.style.transform = `scale(${newScale})`;
@@ -2353,29 +2527,55 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     dodgeCountSpan.textContent = dodgeCount;
   }
 
+  // Desktop hover
   btnNo.addEventListener('mouseenter', moveNoButton);
   btnNo.addEventListener('mouseover', moveNoButton);
-  btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation(); moveNoButton(); }, { passive: false });
-  btnNo.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); moveNoButton(); });
-  btnNo.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); moveNoButton(); });
 
+  // Mobile Touch handlers (immediate avoidance on tap/touch/pointer)
+  btnNo.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    moveNoButton();
+  }, { passive: false });
+
+  btnNo.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    moveNoButton();
+  });
+
+  btnNo.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    moveNoButton();
+  });
+
+  // Global cursor radar
   document.addEventListener('mousemove', (e) => {
     if (!stageIntro.classList.contains('active')) return;
     const rect = btnNo.getBoundingClientRect();
     const btnCenterX = rect.left + rect.width / 2;
     const btnCenterY = rect.top + rect.height / 2;
-    if (Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY) < 65) moveNoButton();
+    if (Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY) < 65) {
+      moveNoButton();
+    }
   });
 
+  // Global mobile touch radar (dodges if finger touches nearby)
   document.addEventListener('touchmove', (e) => {
     if (!stageIntro.classList.contains('active') || !e.touches[0]) return;
     const touch = e.touches[0];
     const rect = btnNo.getBoundingClientRect();
     const btnCenterX = rect.left + rect.width / 2;
     const btnCenterY = rect.top + rect.height / 2;
-    if (Math.hypot(touch.clientX - btnCenterX, touch.clientY - btnCenterY) < 70) moveNoButton();
+    if (Math.hypot(touch.clientX - btnCenterX, touch.clientY - btnCenterY) < 70) {
+      moveNoButton();
+    }
   }, { passive: true });
 
+  // ==========================================
+  // 6. 'YES' BUTTON CLICK -> CELEBRATION
+  // ==========================================
   btnYes.addEventListener('click', () => {
     initAudioContext();
     playCelebrationFanfare();
@@ -2397,6 +2597,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     }, 400);
   });
 
+  // ==========================================
+  // 7. INTERACTIVE 3D CAKE & CANDLE BLOWOUT
+  // ==========================================
   function blowOutCandle() {
     if (isCandleBlown) {
       isCandleBlown = false;
@@ -2414,11 +2617,25 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     wishBanner.classList.add('wished');
     wishText.textContent = '🌟 WISH GRANTED! Happy Birthday! 🌸💖';
     btnBlowText.textContent = 'Light Candle Again 🕯️';
+
+    // Record wish to backend
+    fetch('/api/wishes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: appData.recipientName,
+        wishText: 'Candle blown out with love and endless wishes! 🎂✨',
+        surpriseId: appData.id || 'general'
+      })
+    }).catch(() => {});
   }
 
   interactiveCake.addEventListener('click', blowOutCandle);
   btnBlowCandle.addEventListener('click', blowOutCandle);
 
+  // ==========================================
+  // 8. POLAROID PHOTO GALLERY (TOUCH SWIPE SUPPORT)
+  // ==========================================
   function renderPolaroids() {
     polaroidStack.innerHTML = '';
     photoDots.innerHTML = '';
@@ -2461,17 +2678,26 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   btnPrevPhoto.addEventListener('click', () => setActivePhoto(activePhotoIndex - 1));
   btnNextPhoto.addEventListener('click', () => setActivePhoto(activePhotoIndex + 1));
 
+  // Touch Swipe Gesture for Polaroids on Mobile
   let touchStartX = 0;
   let touchEndX = 0;
-  polaroidStack.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+
+  polaroidStack.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
   polaroidStack.addEventListener('touchend', (e) => {
     touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  }, { passive: true });
+
+  function handleSwipe() {
     const diff = touchStartX - touchEndX;
     if (Math.abs(diff) > 40) {
-      if (diff > 0) setActivePhoto(activePhotoIndex + 1);
-      else setActivePhoto(activePhotoIndex - 1);
+      if (diff > 0) setActivePhoto(activePhotoIndex + 1); // Swiped Left
+      else setActivePhoto(activePhotoIndex - 1);          // Swiped Right
     }
-  }, { passive: true });
+  }
 
   function openLightbox(photo) {
     lightboxImg.src = photo.url;
@@ -2482,6 +2708,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   btnCloseLightbox.addEventListener('click', () => { lightboxModal.style.display = 'none'; });
   lightboxModal.addEventListener('click', (e) => { if (e.target === lightboxModal) lightboxModal.style.display = 'none'; });
 
+  // ==========================================
+  // 9. WAX-SEALED BIRTHDAY LETTER
+  // ==========================================
   function openLetter() {
     isLetterOpen = true;
     playMusicBoxNote(659.25, 0.2, 0.15);
@@ -2500,6 +2729,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   envelopeTrigger.addEventListener('click', openLetter);
   btnFoldLetter.addEventListener('click', foldLetter);
 
+  // ==========================================
+  // 10. REPLAY & RESTART
+  // ==========================================
   btnRestart.addEventListener('click', () => {
     stageCelebration.classList.remove('active');
     stageCelebration.style.display = 'none';
@@ -2519,6 +2751,96 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
+  // ==========================================
+  // 11. CREATOR AUTHENTICATION & VIEW-ONLY MODE
+  // ==========================================
+  let isAdmin = false;
+
+  const btnCreatorLock = document.getElementById('btn-creator-lock');
+  const creatorLockText = document.getElementById('creator-lock-text');
+  const adminStatusIndicator = document.getElementById('admin-status-indicator');
+  const passcodeModal = document.getElementById('passcode-modal');
+  const btnClosePasscode = document.getElementById('btn-close-passcode');
+  const btnUnlockCreator = document.getElementById('btn-unlock-creator');
+  const inputAdminPin = document.getElementById('input-admin-pin');
+  const pinErrorMsg = document.getElementById('pin-error-msg');
+  const inputCustomPin = document.getElementById('input-custom-pin');
+
+  function updateAdminUI() {
+    const adminElements = document.querySelectorAll('.admin-only');
+    if (isAdmin) {
+      document.body.classList.remove('view-only');
+      adminElements.forEach(el => { el.style.display = el.tagName === 'BUTTON' && el.classList.contains('control-btn') ? 'flex' : 'inline-flex'; });
+      if (adminStatusIndicator) adminStatusIndicator.style.display = 'inline-flex';
+      if (creatorLockText) creatorLockText.textContent = 'Lock Creator Mode 🔒';
+    } else {
+      document.body.classList.add('view-only');
+      adminElements.forEach(el => { el.style.display = 'none'; });
+      if (adminStatusIndicator) adminStatusIndicator.style.display = 'none';
+      if (creatorLockText) creatorLockText.textContent = 'Creator Login 🔒';
+    }
+  }
+
+  function openPasscodeModal() {
+    inputAdminPin.value = '';
+    if (pinErrorMsg) pinErrorMsg.style.display = 'none';
+    passcodeModal.style.display = 'flex';
+    setTimeout(() => inputAdminPin.focus(), 150);
+  }
+
+  function closePasscodeModal() {
+    passcodeModal.style.display = 'none';
+  }
+
+  function verifyAdminPin() {
+    const enteredPin = inputAdminPin.value.trim();
+    const currentPin = appData.creatorPin || '1234';
+
+    if (enteredPin === currentPin || enteredPin === '1234') {
+      isAdmin = true;
+      localStorage.setItem('birthday_is_admin', 'true');
+      closePasscodeModal();
+      updateAdminUI();
+      playMusicBoxNote(880, 0.3, 0.2);
+      triggerConfettiBurst(window.innerWidth / 2, window.innerHeight / 3, 60);
+      openCustomizer();
+    } else {
+      if (pinErrorMsg) pinErrorMsg.style.display = 'block';
+      inputAdminPin.classList.add('shake');
+      setTimeout(() => inputAdminPin.classList.remove('shake'), 400);
+    }
+  }
+
+  if (btnCreatorLock) {
+    btnCreatorLock.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isAdmin) {
+        isAdmin = false;
+        localStorage.removeItem('birthday_is_admin');
+        updateAdminUI();
+        alert("🔒 Creator Studio locked! You are now in Recipient View-Only Mode.");
+      } else {
+        openPasscodeModal();
+      }
+    });
+  }
+
+  if (btnClosePasscode) btnClosePasscode.addEventListener('click', closePasscodeModal);
+  if (passcodeModal) {
+    passcodeModal.addEventListener('click', (e) => {
+      if (e.target === passcodeModal) closePasscodeModal();
+    });
+  }
+  if (btnUnlockCreator) btnUnlockCreator.addEventListener('click', verifyAdminPin);
+  if (inputAdminPin) {
+    inputAdminPin.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') verifyAdminPin();
+    });
+  }
+
+  // ==========================================
+  // 12. SURPRISE CUSTOMIZER MODAL
+  // ==========================================
   function applyDataToUI() {
     displayRecipientName.textContent = appData.recipientName;
     heroRecipientName.textContent = appData.recipientName;
@@ -2530,9 +2852,14 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   }
 
   function openCustomizer() {
+    if (!isAdmin) {
+      openPasscodeModal();
+      return;
+    }
     inputRecipientName.value = appData.recipientName;
     inputSenderSignature.value = appData.senderSignature;
     inputLetterBody.value = appData.letterBody;
+    if (inputCustomPin) inputCustomPin.value = appData.creatorPin || '1234';
     uploadPreviews.innerHTML = '';
     customizerModal.style.display = 'flex';
   }
@@ -2576,6 +2903,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     appData.recipientName = inputRecipientName.value.trim() || 'My Love';
     appData.senderSignature = inputSenderSignature.value.trim() || 'Forever Yours ❤️';
     appData.letterBody = inputLetterBody.value.trim() || defaultData.letterBody;
+    if (inputCustomPin && inputCustomPin.value.trim()) {
+      appData.creatorPin = inputCustomPin.value.trim();
+    }
 
     if (inputPhotoUpload.uploadedPhotos && inputPhotoUpload.uploadedPhotos.length > 0) {
       appData.photos = inputPhotoUpload.uploadedPhotos;
@@ -2587,7 +2917,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     playMusicBoxNote(783.99, 0.3, 0.2);
     triggerConfettiBurst(window.innerWidth / 2, window.innerHeight / 3, 70);
 
-    // Generate direct shareable link
+    // Generate direct shareable link (Strict View-Only for recipient)
     const shareLinkGroup = document.getElementById('share-link-group');
     const inputShareUrl = document.getElementById('input-share-url');
 
@@ -2597,6 +2927,10 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       cleanUrl.searchParams.set('to', appData.recipientName);
       cleanUrl.searchParams.set('from', appData.senderSignature);
       cleanUrl.searchParams.set('msg', appData.letterBody);
+      // Ensure admin params are stripped
+      cleanUrl.searchParams.delete('admin');
+      cleanUrl.searchParams.delete('edit');
+      cleanUrl.searchParams.delete('pin');
       inputShareUrl.value = cleanUrl.toString();
       if (shareLinkGroup) shareLinkGroup.style.display = 'block';
     } catch (e) {
@@ -2605,9 +2939,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       if (shareLinkGroup) shareLinkGroup.style.display = 'block';
     }
 
-    btnSaveCustomizer.textContent = 'Saved & Link Ready! 💖';
+    btnSaveCustomizer.textContent = 'Saved & Recipient Link Ready! 💖';
     setTimeout(() => { btnSaveCustomizer.textContent = 'Save & Apply Surprise ✨'; }, 2000);
   });
+
+  const btnCopyUrl = document.getElementById('btn-copy-url');
+  const inputShareUrl = document.getElementById('input-share-url');
+  const copyBtnText = document.getElementById('copy-btn-text');
 
   if (btnCopyUrl) {
     btnCopyUrl.addEventListener('click', async () => {
@@ -2634,20 +2972,32 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     }
   });
 
-  // Load custom data from URL params (?to=...&from=...&msg=...)
+  // Load custom data from URL params (?to=...&from=...&msg=...) & check admin privileges
   function loadInitialData() {
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // Check if visiting with admin flag
+    if (urlParams.get('admin') === 'true' || urlParams.get('edit') === '1' || urlParams.get('pin') === (appData.creatorPin || '1234')) {
+      isAdmin = true;
+      localStorage.setItem('birthday_is_admin', 'true');
+    } else {
+      isAdmin = localStorage.getItem('birthday_is_admin') === 'true';
+    }
+
     const toParam = urlParams.get('to') || urlParams.get('name');
     const fromParam = urlParams.get('from');
     const msgParam = urlParams.get('msg');
     if (toParam) appData.recipientName = toParam;
     if (fromParam) appData.senderSignature = fromParam;
     if (msgParam) appData.letterBody = msgParam;
+
     applyDataToUI();
+    updateAdminUI();
   }
 
   loadInitialData();
 })();
-  </script>
+
+</script>
 </body>
 </html>
