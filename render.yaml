@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: birthday-surprise-app
+    name: birthday-surprise
     runtime: node
     plan: free
     buildCommand: npm install
@@ -8,5 +8,3 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
