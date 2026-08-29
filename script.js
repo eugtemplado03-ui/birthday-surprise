@@ -861,12 +861,17 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
   // 12. SURPRISE CUSTOMIZER MODAL
   // ==========================================
   function applyDataToUI() {
-    displayRecipientName.textContent = appData.recipientName;
-    heroRecipientName.textContent = appData.recipientName;
-    letterDisplayDate.textContent = appData.letterDate || defaultData.letterDate;
-    letterDisplaySalutation.textContent = `Dearest ${appData.recipientName},`;
-    letterDisplayBody.textContent = appData.letterBody;
-    letterDisplaySignature.textContent = appData.senderSignature;
+    const name = (appData.recipientName && appData.recipientName.trim()) ? appData.recipientName.trim() : defaultData.recipientName;
+    const signature = (appData.senderSignature && appData.senderSignature.trim()) ? appData.senderSignature.trim() : defaultData.senderSignature;
+    const letter = (appData.letterBody && appData.letterBody.trim()) ? appData.letterBody.trim() : defaultData.letterBody;
+    const date = appData.letterDate || defaultData.letterDate;
+
+    if (displayRecipientName) displayRecipientName.textContent = name;
+    if (heroRecipientName) heroRecipientName.textContent = name;
+    if (letterDisplayDate) letterDisplayDate.textContent = date;
+    if (letterDisplaySalutation) letterDisplaySalutation.textContent = `Dearest ${name},`;
+    if (letterDisplayBody) letterDisplayBody.textContent = letter;
+    if (letterDisplaySignature) letterDisplaySignature.textContent = signature;
     renderPolaroids();
   }
 
@@ -875,9 +880,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
       openPasscodeModal();
       return;
     }
-    inputRecipientName.value = appData.recipientName;
-    inputSenderSignature.value = appData.senderSignature;
-    inputLetterBody.value = appData.letterBody;
+    inputRecipientName.value = (appData.recipientName && appData.recipientName.trim()) ? appData.recipientName.trim() : defaultData.recipientName;
+    inputSenderSignature.value = (appData.senderSignature && appData.senderSignature.trim()) ? appData.senderSignature.trim() : defaultData.senderSignature;
+    inputLetterBody.value = (appData.letterBody && appData.letterBody.trim()) ? appData.letterBody.trim() : defaultData.letterBody;
     if (inputCustomPin) inputCustomPin.value = appData.creatorPin || '1234';
     uploadPreviews.innerHTML = '';
     customizerModal.style.display = 'flex';
@@ -965,9 +970,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
   });
 
   btnSaveCustomizer.addEventListener('click', async () => {
-    appData.recipientName = inputRecipientName.value.trim() || 'My Love';
-    appData.senderSignature = inputSenderSignature.value.trim() || 'Forever Yours ‚ù§Ô∏è';
-    appData.letterBody = inputLetterBody.value.trim() || defaultData.letterBody;
+    const newName = inputRecipientName.value.trim();
+    const newSignature = inputSenderSignature.value.trim();
+    const newLetter = inputLetterBody.value.trim();
+
+    appData.recipientName = newName || defaultData.recipientName;
+    appData.senderSignature = newSignature || defaultData.senderSignature;
+    appData.letterBody = newLetter || defaultData.letterBody;
     if (inputCustomPin && inputCustomPin.value.trim()) {
       appData.creatorPin = inputCustomPin.value.trim();
     }
@@ -1010,7 +1019,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
       btnSaveCustomizer.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes ‚ú®';
       if (saveSuccessMsg) saveSuccessMsg.style.display = 'none';
       closeCustomizer();
-    }, 1200);
+    }, 1000);
   });
 
   btnResetDefaults.addEventListener('click', () => {
@@ -1026,21 +1035,34 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
   async function loadInitialData() {
     const urlParams = new URLSearchParams(window.location.search);
     
-    // 1. Try loading active saved surprise from server (Render cloud backend)
+    // 1. Read from localStorage first
+    try {
+      const savedLocal = localStorage.getItem('birthday_surprise_data');
+      if (savedLocal) {
+        const parsed = JSON.parse(savedLocal);
+        if (parsed && typeof parsed === 'object') {
+          appData = Object.assign({}, defaultData, parsed);
+        }
+      }
+    } catch (e) {}
+
+    // 2. Try loading active saved surprise from server (Render cloud backend)
     try {
       const res = await fetch('/api/surprise');
       if (res.ok) {
         const json = await res.json();
         if (json && json.data && json.data.recipientName) {
-          appData = json.data;
-          applyDataToUI();
+          appData = Object.assign({}, defaultData, json.data);
+          try {
+            localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
+          } catch (e) {}
         }
       }
     } catch (e) {
       // Backend not running / static mode uses localStorage
     }
 
-    // 2. Check admin privileges
+    // 3. Check admin privileges
     if (urlParams.get('admin') === 'true' || urlParams.get('edit') === '1' || urlParams.get('pin') === (appData.creatorPin || '1234')) {
       isAdmin = true;
       localStorage.setItem('birthday_is_admin', 'true');
@@ -1048,13 +1070,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
       isAdmin = localStorage.getItem('birthday_is_admin') === 'true';
     }
 
-    // 3. Fallback query parameters if specifically passed
+    // 4. Fallback query parameters if specifically passed
     const toParam = urlParams.get('to') || urlParams.get('name');
     const fromParam = urlParams.get('from');
     const msgParam = urlParams.get('msg');
-    if (toParam) appData.recipientName = toParam;
-    if (fromParam) appData.senderSignature = fromParam;
-    if (msgParam) appData.letterBody = msgParam;
+    if (toParam && toParam.trim()) appData.recipientName = toParam.trim();
+    if (fromParam && fromParam.trim()) appData.senderSignature = fromParam.trim();
+    if (msgParam && msgParam.trim()) appData.letterBody = msgParam.trim();
 
     applyDataToUI();
     updateAdminUI();
