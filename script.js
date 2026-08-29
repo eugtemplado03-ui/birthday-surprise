@@ -496,8 +496,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     const btnWidth = btnNo.offsetWidth || 110;
     const btnHeight = btnNo.offsetHeight || 44;
 
-    const padX = 16;
-    const padTop = 68; // Below floating top buttons
+    const padX = 14;
+    const padTop = 78; // Below floating top buttons
     const padBottom = 24;
 
     const maxX = Math.max(padX, viewportW - btnWidth - padX);
@@ -517,8 +517,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     wittyPopup.classList.add('show');
 
     // Grow YES button safely for mobile
-    const maxScale = window.innerWidth < 600 ? 1.35 : 1.65;
-    const newScale = Math.min(maxScale, 1 + dodgeCount * 0.06);
+    const maxScale = window.innerWidth < 600 ? 1.15 : 1.35;
+    const newScale = Math.min(maxScale, 1 + dodgeCount * 0.04);
     btnYes.style.transform = `scale(${newScale})`;
     btnYes.style.boxShadow = `0 ${10 + dodgeCount * 2}px ${26 + dodgeCount * 4}px rgba(255, 45, 117, ${Math.min(0.9, 0.45 + dodgeCount * 0.05)})`;
 
@@ -639,13 +639,14 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     polaroidStack.innerHTML = '';
     photoDots.innerHTML = '';
     const photos = appData.photos || [];
+    const totalPhotos = photos.length;
 
     photos.forEach((photo, idx) => {
       const card = document.createElement('div');
       card.className = 'polaroid-card';
       if (idx === activePhotoIndex) card.classList.add('active');
-      else if (idx === (activePhotoIndex + 1) % photos.length) card.classList.add('stacked-1');
-      else if (idx === (activePhotoIndex + 2) % photos.length) card.classList.add('stacked-2');
+      else if (idx === (activePhotoIndex + 1) % totalPhotos) card.classList.add('stacked-1');
+      else if (idx === (activePhotoIndex + 2) % totalPhotos) card.classList.add('stacked-2');
       else { card.style.opacity = '0'; card.style.pointerEvents = 'none'; }
 
       card.innerHTML = `
@@ -658,12 +659,21 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       });
 
       polaroidStack.appendChild(card);
-
-      const dot = document.createElement('div');
-      dot.className = `photo-dot ${idx === activePhotoIndex ? 'active' : ''}`;
-      dot.addEventListener('click', () => setActivePhoto(idx));
-      photoDots.appendChild(dot);
     });
+
+    if (totalPhotos <= 8) {
+      photoDots.style.display = 'flex';
+      photoDots.innerHTML = '';
+      photos.forEach((_, idx) => {
+        const dot = document.createElement('div');
+        dot.className = `photo-dot ${idx === activePhotoIndex ? 'active' : ''}`;
+        dot.addEventListener('click', () => setActivePhoto(idx));
+        photoDots.appendChild(dot);
+      });
+    } else {
+      photoDots.style.display = 'flex';
+      photoDots.innerHTML = `<span class="photo-counter-badge"><i class="fa-solid fa-camera-retro"></i> ${activePhotoIndex + 1} / ${totalPhotos}</span>`;
+    }
   }
 
   function setActivePhoto(index) {
