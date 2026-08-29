@@ -64,13 +64,31 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+const GIST_RAW_URL = 'https://gist.githubusercontent.com/eugtemplado03-ui/e88e9b4d70b854d8eff3d9214e75f0e5/raw/active_surprise.json';
+
 // 2. Get the Active / Global Custom Surprise
-app.get('/api/surprise', (req, res) => {
+app.get('/api/surprise', async (req, res) => {
   const activeFile = path.join(DATA_DIR, 'active_surprise.json');
-  const activeSurprise = loadData(activeFile, null);
-  if (activeSurprise) {
+  let activeSurprise = loadData(activeFile, null);
+  
+  if (activeSurprise && activeSurprise.recipientName) {
     return res.json({ success: true, data: activeSurprise });
   }
+
+  // If local file is empty (e.g. after Render sleep/restart), auto restore from Cloud DB
+  try {
+    const cloudRes = await fetch(GIST_RAW_URL);
+    if (cloudRes.ok) {
+      const cloudData = await cloudRes.json();
+      if (cloudData && cloudData.recipientName) {
+        saveData(activeFile, cloudData);
+        return res.json({ success: true, data: cloudData });
+      }
+    }
+  } catch (e) {
+    console.log('Cloud DB fallback error:', e.message);
+  }
+
   res.json({ success: true, data: null });
 });
 

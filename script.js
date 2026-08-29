@@ -1031,22 +1031,23 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     }
   });
 
-  // Load custom data directly from server or local storage
+  // Load custom data directly from server, cloud database, or local storage
   async function loadInitialData() {
     const urlParams = new URLSearchParams(window.location.search);
     
-    // 1. Read from localStorage first
+    // 1. Read from localStorage first (instant render)
     try {
       const savedLocal = localStorage.getItem('birthday_surprise_data');
       if (savedLocal) {
         const parsed = JSON.parse(savedLocal);
         if (parsed && typeof parsed === 'object') {
           appData = Object.assign({}, defaultData, parsed);
+          applyDataToUI();
         }
       }
     } catch (e) {}
 
-    // 2. Try loading active saved surprise from server (Render cloud backend)
+    // 2. Try loading active saved surprise from server (Render backend)
     try {
       const res = await fetch('/api/surprise');
       if (res.ok) {
@@ -1056,13 +1057,29 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
           try {
             localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
           } catch (e) {}
+          applyDataToUI();
         }
+      } else {
+        throw new Error('Static fallback');
       }
     } catch (e) {
-      // Backend not running / static mode uses localStorage
+      // 3. Direct Cloud DB fallback for GitHub Pages / Static Hosting
+      try {
+        const cloudRes = await fetch('https://gist.githubusercontent.com/eugtemplado03-ui/e88e9b4d70b854d8eff3d9214e75f0e5/raw/active_surprise.json');
+        if (cloudRes.ok) {
+          const cloudData = await cloudRes.json();
+          if (cloudData && cloudData.recipientName) {
+            appData = Object.assign({}, defaultData, cloudData);
+            try {
+              localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
+            } catch (e) {}
+            applyDataToUI();
+          }
+        }
+      } catch (err) {}
     }
 
-    // 3. Check admin privileges
+    // 4. Check admin privileges
     if (urlParams.get('admin') === 'true' || urlParams.get('edit') === '1' || urlParams.get('pin') === (appData.creatorPin || '1234')) {
       isAdmin = true;
       localStorage.setItem('birthday_is_admin', 'true');
@@ -1070,7 +1087,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       isAdmin = localStorage.getItem('birthday_is_admin') === 'true';
     }
 
-    // 4. Fallback query parameters if specifically passed
+    // 5. Fallback query parameters if specifically passed
     const toParam = urlParams.get('to') || urlParams.get('name');
     const fromParam = urlParams.get('from');
     const msgParam = urlParams.get('msg');
