@@ -64,49 +64,52 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// 2. Create / Save a Custom Birthday Surprise
+// 2. Get the Active / Global Custom Surprise
+app.get('/api/surprise', (req, res) => {
+  const activeFile = path.join(DATA_DIR, 'active_surprise.json');
+  const activeSurprise = loadData(activeFile, null);
+  if (activeSurprise) {
+    return res.json({ success: true, data: activeSurprise });
+  }
+  res.json({ success: true, data: null });
+});
+
+// 3. Save & Update the Active Custom Surprise Directly
 app.post('/api/surprise', (req, res) => {
   try {
-    const { recipientName, senderSignature, letterDate, letterBody, photos } = req.body;
+    const { recipientName, senderSignature, letterDate, letterBody, photos, creatorPin } = req.body;
     
     if (!recipientName) {
       return res.status(400).json({ error: 'Recipient name is required' });
     }
 
-    const id = generateId();
     const surpriseData = {
-      id,
       recipientName: recipientName.trim(),
       senderSignature: senderSignature ? senderSignature.trim() : 'Forever Yours ❤️',
       letterDate: letterDate || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
       letterBody: letterBody ? letterBody.trim() : '',
       photos: Array.isArray(photos) ? photos : [],
-      createdAt: new Date().toISOString()
+      creatorPin: creatorPin || '1234',
+      updatedAt: new Date().toISOString()
     };
 
-    surprises[id] = surpriseData;
-    saveData(SURPRISES_FILE, surprises);
-
-    const protocol = req.protocol;
-    const host = req.get('host');
-    const shareUrl = `${protocol}://${host}/?id=${id}`;
+    saveData(path.join(DATA_DIR, 'active_surprise.json'), surpriseData);
 
     res.json({
       success: true,
-      id,
-      shareUrl,
+      message: 'Surprise saved directly!',
       data: surpriseData
     });
   } catch (err) {
-    console.error('Error creating surprise:', err);
-    res.status(500).json({ error: 'Failed to create surprise' });
+    console.error('Error saving surprise:', err);
+    res.status(500).json({ error: 'Failed to save surprise' });
   }
 });
 
-// 3. Get a Custom Birthday Surprise by ID
+// 4. Get a Custom Birthday Surprise by ID (fallback)
 app.get('/api/surprise/:id', (req, res) => {
   const { id } = req.params;
-  const surprise = surprises[id];
+  const surprise = surprises[id] || loadData(path.join(DATA_DIR, 'active_surprise.json'), null);
 
   if (!surprise) {
     return res.status(404).json({ error: 'Surprise not found' });

@@ -979,85 +979,41 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       activePhotoIndex = 0;
     }
 
+    // 1. Save directly into persistent browser storage
     try {
       localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
     } catch (e) {
-      console.warn('LocalStorage quota exceeded, relying on cloud/memory store');
+      console.warn('LocalStorage quota exceeded');
     }
 
+    // 2. Update page content live
     applyDataToUI();
     playMusicBoxNote(783.99, 0.3, 0.2);
     triggerConfettiBurst(window.innerWidth / 2, window.innerHeight / 3, 70);
 
-    // Generate direct shareable link (Strict View-Only for recipient)
-    const shareLinkGroup = document.getElementById('share-link-group');
-    const inputShareUrl = document.getElementById('input-share-url');
+    const saveSuccessMsg = document.getElementById('save-success-msg');
+    btnSaveCustomizer.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
-    btnSaveCustomizer.textContent = 'Saving Cloud Link... ✨';
-
-    // Try cloud backend API first (Render Full-Stack)
+    // 3. Save directly to server backend (Render full-stack)
     try {
-      const res = await fetch('/api/surprise', {
+      await fetch('/api/surprise', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(appData)
       });
-      if (res.ok) {
-        const result = await res.json();
-        if (result && result.id) {
-          const cloudShareUrl = `${window.location.origin}/s/${result.id}`;
-          inputShareUrl.value = cloudShareUrl;
-          if (shareLinkGroup) shareLinkGroup.style.display = 'block';
-          btnSaveCustomizer.textContent = 'Saved Permanently to Cloud! 💖';
-          setTimeout(() => { btnSaveCustomizer.textContent = 'Save & Apply Surprise ✨'; }, 2500);
-          return;
-        }
-      }
     } catch (err) {
-      // Backend offline / static mode fallback
+      // Offline / standalone mode works via localStorage
     }
 
-    // Direct Static URL Fallback
-    try {
-      const cleanUrl = new URL(window.location.href);
-      cleanUrl.search = '';
-      cleanUrl.searchParams.set('to', appData.recipientName);
-      cleanUrl.searchParams.set('from', appData.senderSignature);
-      cleanUrl.searchParams.set('msg', appData.letterBody);
-      cleanUrl.searchParams.delete('admin');
-      cleanUrl.searchParams.delete('edit');
-      cleanUrl.searchParams.delete('pin');
-      inputShareUrl.value = cleanUrl.toString();
-      if (shareLinkGroup) shareLinkGroup.style.display = 'block';
-    } catch (e) {
-      const fallbackUrl = `${window.location.origin}${window.location.pathname}?to=${encodeURIComponent(appData.recipientName)}&from=${encodeURIComponent(appData.senderSignature)}&msg=${encodeURIComponent(appData.letterBody)}`;
-      inputShareUrl.value = fallbackUrl;
-      if (shareLinkGroup) shareLinkGroup.style.display = 'block';
-    }
+    btnSaveCustomizer.innerHTML = '<i class="fa-solid fa-check"></i> Saved Live! 💖';
+    if (saveSuccessMsg) saveSuccessMsg.style.display = 'block';
 
-    btnSaveCustomizer.textContent = 'Saved & Recipient Link Ready! 💖';
-    setTimeout(() => { btnSaveCustomizer.textContent = 'Save & Apply Surprise ✨'; }, 2000);
+    setTimeout(() => {
+      btnSaveCustomizer.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes ✨';
+      if (saveSuccessMsg) saveSuccessMsg.style.display = 'none';
+      closeCustomizer();
+    }, 1200);
   });
-
-  const btnCopyUrl = document.getElementById('btn-copy-url');
-  const inputShareUrl = document.getElementById('input-share-url');
-  const copyBtnText = document.getElementById('copy-btn-text');
-
-  if (btnCopyUrl) {
-    btnCopyUrl.addEventListener('click', async () => {
-      if (!inputShareUrl || !inputShareUrl.value) return;
-      try {
-        await navigator.clipboard.writeText(inputShareUrl.value);
-        copyBtnText.textContent = 'Copied! 💖';
-        setTimeout(() => { copyBtnText.textContent = 'Copy'; }, 2500);
-      } catch (e) {
-        inputShareUrl.select();
-        document.execCommand('copy');
-        copyBtnText.textContent = 'Copied! 💖';
-        setTimeout(() => { copyBtnText.textContent = 'Copy'; }, 2500);
-      }
-    });
-  }
 
   btnResetDefaults.addEventListener('click', () => {
     if (confirm("Reset all customizations back to default?")) {
@@ -1068,32 +1024,25 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     }
   });
 
-  // Load custom data from Cloud API or URL params (?to=...&from=...&msg=...) & check admin privileges
+  // Load custom data directly from server or local storage
   async function loadInitialData() {
     const urlParams = new URLSearchParams(window.location.search);
     
-    // Check path for /s/:id
-    const pathMatch = window.location.pathname.match(/\/s\/([a-zA-Z0-9_-]+)/);
-    const surpriseId = urlParams.get('id') || (pathMatch ? pathMatch[1] : null);
-
-    if (surpriseId) {
-      try {
-        const res = await fetch(`/api/surprise/${encodeURIComponent(surpriseId)}`);
-        if (res.ok) {
-          const json = await res.json();
-          if (json && json.data) {
-            appData = json.data;
-            applyDataToUI();
-            updateAdminUI();
-            return;
-          }
+    // 1. Try loading active saved surprise from server (Render cloud backend)
+    try {
+      const res = await fetch('/api/surprise');
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.data && json.data.recipientName) {
+          appData = json.data;
+          applyDataToUI();
         }
-      } catch (e) {
-        console.log('Backend offline or using local data');
       }
+    } catch (e) {
+      // Backend not running / static mode uses localStorage
     }
 
-    // Check if visiting with admin flag
+    // 2. Check admin privileges
     if (urlParams.get('admin') === 'true' || urlParams.get('edit') === '1' || urlParams.get('pin') === (appData.creatorPin || '1234')) {
       isAdmin = true;
       localStorage.setItem('birthday_is_admin', 'true');
@@ -1101,6 +1050,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       isAdmin = localStorage.getItem('birthday_is_admin') === 'true';
     }
 
+    // 3. Fallback query parameters if specifically passed
     const toParam = urlParams.get('to') || urlParams.get('name');
     const fromParam = urlParams.get('from');
     const msgParam = urlParams.get('msg');
