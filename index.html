@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Happy Birthday! 🎂🌸 A Special Surprise For You</title>
+  <meta name="description" content="A personalized interactive birthday surprise adorned with pink lilies and roses, Happy Birthday music, interactive cake, memory photo gallery, and heartfelt letter.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Animated Background Particles & Falling Lilies & Roses Canvas -->
+  <canvas id="ambient-canvas"></canvas>
+  <canvas id="confetti-canvas"></canvas>
+  <div class="floral-ambient-glow"></div>
+
+  <!-- Background Music Audio (Web Audio Happy Birthday Synth + Audio Player) -->
+  <div id="floating-controls" class="floating-controls">
+    <button id="btn-music" class="control-btn" title="Toggle Happy Birthday Song" aria-label="Toggle Music">
+      <i class="fa-solid fa-music"></i>
+      <span class="btn-tooltip">Music: <strong id="music-status">Off</strong></span>
+    </button>
+    <button id="btn-confetti" class="control-btn" title="Trigger Floral Confetti Burst" aria-label="Confetti Burst">
+      <i class="fa-solid fa-wand-magic-sparkles"></i>
+      <span class="btn-tooltip">Flowers & Confetti! 🌸</span>
+    </button>
+    <button id="btn-customize" class="control-btn" title="Personalize this Surprise" aria-label="Personalize">
+      <i class="fa-solid fa-gear"></i>
+      <span class="btn-tooltip">Customize Details ✏️</span>
+    </button>
+  </div>
+
+  <main class="app-container">
+
+    <!-- ======================================================== -->
+    <!-- STAGE 1: INTRO & EVASIVE QUESTION ("DO YOU LOVE ME?")   -->
+    <!-- ======================================================== -->
+    <section id="stage-intro" class="stage active">
+      
+      <div class="intro-card glass-card">
+        
+        <!-- Pink Lilies and Roses Corner Accents -->
+        <div class="floral-corner floral-top-left">
+          <span style="font-size: 2.4rem;">🌸🌹🌺</span>
+        </div>
+        <div class="floral-corner floral-bottom-right">
+          <span style="font-size: 2.4rem;">🌺🌹🌸</span>
+        </div>
+
+        <!-- Floating Decorative Balloons & Flowers -->
+        <div class="balloon-cluster">
+          <span class="floating-balloon b-1">🌸</span>
+          <span class="floating-balloon b-2">💖</span>
+          <span class="floating-balloon b-3">🌹</span>
+          <span class="floating-balloon b-4">🎁</span>
+          <span class="floating-balloon b-5">🌺</span>
+        </div>
+
+        <div class="intro-badge">
+          <i class="fa-solid fa-sparkles"></i> <span id="intro-badge-text">🌸 Special Birthday Delivery 🌸</span>
+        </div>
+
+        <h1 class="intro-title">
+          Happy Birthday, <br><span class="highlight-name" id="display-recipient-name">My Favorite Person</span>! 🎂🌸
+        </h1>
+
+        <p class="intro-subtitle">
+          I prepared a magical surprise filled with blooming lilies and roses just for you today... <br>
+          <span class="highlight-sub">But first, answer this very important question:</span>
+        </p>
+
+        <!-- Floral Divider -->
+        <div class="floral-divider">
+          <span class="line"></span>
+          <span>🌸 🌹 🌺</span>
+          <span class="line"></span>
+        </div>
+
+        <!-- The Big Question -->
+        <div class="question-container">
+          <div class="question-heart-pulse">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <h2 class="question-text" id="question-heading">Do you love me? 🥺💖</h2>
+          
+          <!-- Playful witty hint popup on dodge -->
+          <div id="witty-popup" class="witty-popup">
+            <span id="witty-text">Nice try! You can't say no! 😜</span>
+          </div>
+
+          <!-- Action Buttons Area -->
+          <div id="button-arena" class="button-arena">
+            <button id="btn-yes" class="btn btn-yes pulse-glow">
+              <span class="btn-content">
+                <i class="fa-solid fa-heart-circle-check"></i>
+                <span class="btn-label">YES, OF COURSE! 💖</span>
+              </span>
+              <span class="btn-shine"></span>
+            </button>
+
+            <button id="btn-no" class="btn btn-no">
+              <span class="btn-content">
+                <i class="fa-solid fa-face-rolling-eyes"></i>
+                <span class="btn-label">No 😜</span>
+              </span>
+            </button>
+          </div>
+
+          <div class="evade-counter" id="evade-counter" style="display: none;">
+            <i class="fa-solid fa-person-running"></i> You tried to say No <span id="dodge-count">0</span> times!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== -->
+    <!-- STAGE 2: THE GRAND CELEBRATION PORTAL                   -->
+    <!-- ======================================================== -->
+    <section id="stage-celebration" class="stage">
+      
+      <!-- Top Celebration Banner -->
+      <header class="celebration-hero">
+        <div class="hero-confetti-badge">
+          🎉 YAAAY! I KNEW IT! 🥰❤️ 🌸
+        </div>
+        <h1 class="hero-title">
+          Happy Birthday, <span class="hero-name" id="hero-recipient-name">Sweetheart</span>! 🥳🌹
+        </h1>
+        <p class="hero-subtitle">
+          May your life blossom with infinite joy, sweetest smiles, and blooming unforgettable memories!
+        </p>
+      </header>
+
+      <!-- Main Showcase Grid (Cake, Photos, Letter) -->
+      <div class="celebration-grid">
+        
+        <!-- ================= ZONE 1: INTERACTIVE 3D CAKE ================= -->
+        <div class="celebration-column">
+          <div class="showcase-card glass-card cake-card">
+            <div class="card-header">
+              <span class="card-icon">🎂</span>
+              <h3>Make A Wish!</h3>
+              <p class="card-subtext">Click the candle or button to blow it out!</p>
+            </div>
+
+            <div class="cake-stage" id="cake-stage">
+              <div class="cake-container" id="interactive-cake">
+                
+                <!-- Glowing Candles with Interactive Flame -->
+                <div class="candles-wrapper">
+                  <div class="candle candle-center" id="main-candle">
+                    <div class="flame-wrapper" id="candle-flame">
+                      <div class="flame-glow"></div>
+                      <div class="flame"></div>
+                    </div>
+                    <div class="candle-smoke" id="candle-smoke"></div>
+                    <div class="candle-stick"></div>
+                  </div>
+                </div>
+
+                <!-- 3D Cake Tiers with Pink Cream and Rose/Berry Toppings -->
+                <div class="cake-tier tier-top">
+                  <div class="cake-frosting">
+                    <span class="berry">🌸</span>
+                    <span class="berry">🍓</span>
+                    <span class="berry">🌹</span>
+                  </div>
+                </div>
+                <div class="cake-tier tier-middle">
+                  <div class="frosting-drips"></div>
+                  <div class="tier-pattern"></div>
+                </div>
+                <div class="cake-tier tier-bottom">
+                  <div class="frosting-drips"></div>
+                  <div class="tier-plate"></div>
+                </div>
+              </div>
+
+              <!-- Wish Status Indicator -->
+              <div class="wish-banner" id="wish-banner">
+                <span id="wish-text">✨ Candle is burning! Click to blow out ✨</span>
+              </div>
+
+              <button id="btn-blow-candle" class="btn btn-action">
+                <i class="fa-solid fa-wind"></i>
+                <span id="btn-blow-text">Blow Out Candle 🎂💨</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= ZONE 2: MEMORY PHOTO GALLERY ================= -->
+        <div class="celebration-column">
+          <div class="showcase-card glass-card gallery-card">
+            <div class="card-header">
+              <span class="card-icon">📸</span>
+              <h3>Treasured Moments</h3>
+              <p class="card-subtext">Hover or click to flip through our favorite memories</p>
+            </div>
+
+            <!-- Polaroid Stack & Carousel -->
+            <div class="polaroid-wrapper">
+              <div class="polaroid-stack" id="polaroid-stack">
+                <!-- Dynamic Polaroids Injected via JS -->
+              </div>
+
+              <div class="gallery-navigation">
+                <button id="btn-prev-photo" class="nav-arrow" aria-label="Previous Photo">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="photo-dots" id="photo-dots"></div>
+                <button id="btn-next-photo" class="nav-arrow" aria-label="Next Photo">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+
+              <button id="btn-add-photos" class="btn btn-outline-small">
+                <i class="fa-solid fa-image"></i> Swap / Upload Your Photos
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= ZONE 3: WAX-SEALED BIRTHDAY LETTER ================= -->
+        <div class="celebration-column">
+          <div class="showcase-card glass-card letter-card">
+            <div class="card-header">
+              <span class="card-icon">💌</span>
+              <h3>A Letter For You</h3>
+              <p class="card-subtext">A heartfelt message written straight from the heart</p>
+            </div>
+
+            <div class="letter-stage">
+              
+              <!-- Sealed Envelope State -->
+              <div id="envelope-wrapper" class="envelope-wrapper">
+                <div class="envelope" id="envelope-trigger">
+                  <div class="envelope-flap"></div>
+                  <div class="envelope-pocket"></div>
+                  <div class="wax-seal" id="wax-seal">
+                    <span class="seal-icon">🌸</span>
+                    <span class="seal-text">OPEN</span>
+                  </div>
+                  <div class="envelope-hint">Click the wax seal to break & open! 🕊️</div>
+                </div>
+              </div>
+
+              <!-- Unfolded Parchment Paper State -->
+              <div id="letter-unfolded" class="letter-unfolded" style="display: none;">
+                <div class="parchment-paper">
+                  <div class="letter-stamp">
+                    <span>BIRTHDAY SPECIAL 🌸</span>
+                  </div>
+
+                  <div class="letter-header">
+                    <div class="letter-date" id="letter-display-date">August 29, 2026</div>
+                    <div class="letter-salutation" id="letter-display-salutation">Dearest Sweetheart,</div>
+                  </div>
+
+                  <div class="letter-body" id="letter-display-body">
+                    <!-- Dynamic Letter Content Injected via JS -->
+                  </div>
+
+                  <div class="letter-closing">
+                    <div class="letter-sign-off">With all my love & sweetest flowers,</div>
+                    <div class="letter-signature" id="letter-display-signature">Forever Yours ❤️</div>
+                  </div>
+
+                  <div class="letter-actions">
+                    <button id="btn-edit-letter" class="btn-link">
+                      <i class="fa-solid fa-pen-fancy"></i> Edit Letter
+                    </button>
+                    <button id="btn-fold-letter" class="btn-link">
+                      <i class="fa-solid fa-envelope"></i> Close Letter
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer Greeting -->
+      <footer class="celebration-footer">
+        <p>Made with endless love, pink lilies & roses for your special day 💖 Happy Birthday!</p>
+        <button id="btn-restart" class="btn btn-outline-small">
+          <i class="fa-solid fa-rotate-left"></i> Replay Surprise
+        </button>
+      </footer>
+    </section>
+
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 1: LIGHTBOX ZOOM FOR PHOTOS                       -->
+  <!-- ======================================================== -->
+  <div id="lightbox-modal" class="modal-backdrop" style="display: none;">
+    <div class="lightbox-content">
+      <button id="btn-close-lightbox" class="modal-close-btn">&times;</button>
+      <img id="lightbox-img" src="" alt="Zoomed Photo">
+      <p id="lightbox-caption" class="lightbox-caption"></p>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MODAL 2: SURPRISE CUSTOMIZER (EDIT NAME, LETTER & PHOTOS) -->
+  <!-- ======================================================== -->
+  <div id="customizer-modal" class="modal-backdrop" style="display: none;">
+    <div class="customizer-content glass-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Personalize This Surprise</h2>
+        <button id="btn-close-customizer" class="modal-close-btn">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Recipient Information -->
+        <div class="form-group">
+          <label for="input-recipient-name"><i class="fa-solid fa-user"></i> Birthday Person's Name / Nickname:</label>
+          <input type="text" id="input-recipient-name" class="form-input" placeholder="e.g. Sarah, Sweetheart, Bestie">
+        </div>
+
+        <div class="form-group">
+          <label for="input-sender-signature"><i class="fa-solid fa-signature"></i> Your Signature / From:</label>
+          <input type="text" id="input-sender-signature" class="form-input" placeholder="e.g. Forever Yours, Alex ❤️">
+        </div>
+
+        <!-- Custom Letter -->
+        <div class="form-group">
+          <label for="input-letter-body"><i class="fa-solid fa-envelope-open-text"></i> Heartfelt Birthday Message:</label>
+          <textarea id="input-letter-body" class="form-textarea" rows="6" placeholder="Write your romantic birthday letter here..."></textarea>
+        </div>
+
+        <!-- Custom Photos Upload / Management -->
+        <div class="form-group">
+          <label><i class="fa-solid fa-camera-retro"></i> Upload Custom Photos (Polaroids):</label>
+          <p class="input-hint">Select your favorite pictures together (supports JPEG, PNG, WEBP):</p>
+          <input type="file" id="input-photo-upload" class="form-file" accept="image/*" multiple>
+          <div id="upload-previews" class="upload-previews"></div>
+        </div>
+
+        <!-- Shareable Link Box -->
+        <div class="form-group" id="share-link-group" style="display: none; background: #fff2f6; padding: 1rem; border-radius: 14px; border: 1.5px dashed var(--primary-pink); margin-top: 1rem;">
+          <label style="color: var(--primary-deep); font-weight: 800;"><i class="fa-solid fa-share-nodes"></i> Shareable Birthday Link:</label>
+          <p class="input-hint" style="color: var(--text-muted); margin-bottom: 0.4rem;">Send this link to the birthday person to see this exact customized surprise!</p>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="text" id="input-share-url" class="form-input" readonly style="font-size: 0.85rem; background: #fff;">
+            <button id="btn-copy-url" class="btn btn-action" style="padding: 0.65rem 1rem; font-size: 0.85rem; white-space: nowrap;">
+              <i class="fa-solid fa-copy"></i> <span id="copy-btn-text">Copy</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button id="btn-reset-defaults" class="btn btn-secondary">Restore Defaults</button>
+        <button id="btn-save-customizer" class="btn btn-primary">Save & Apply Surprise ✨</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
