@@ -1,0 +1,14 @@
+module.exports = (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  res.status(200).json({
+    status: 'ok',
+    platform: 'Vercel Serverless',
+    app: 'Birthday Surprise App',
+    timestamp: new Date().toISOString()
+  });
+};
