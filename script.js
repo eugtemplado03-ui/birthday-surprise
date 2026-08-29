@@ -720,7 +720,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
   function foldLetter() {
     isLetterOpen = false;
     letterUnfolded.style.display = 'none';
-    envelopeWrapper.style.display = 'block';
+    envelopeWrapper.style.display = 'flex';
   }
 
   envelopeTrigger.addEventListener('click', openLetter);
