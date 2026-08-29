@@ -1496,7 +1496,7 @@ body {
 
 @media (max-width: 480px) {
   .app-container {
-    padding: 3.8rem 0.65rem 1.25rem;
+    padding: 3.6rem 0.65rem 1.25rem;
   }
 
   .glass-card {
@@ -1527,6 +1527,7 @@ body {
 
   .intro-title {
     margin-bottom: 0.6rem;
+    font-size: clamp(1.45rem, 5.5vw, 1.85rem);
   }
 
   .showcase-card {
@@ -1545,24 +1546,25 @@ body {
   }
 
   .polaroid-photo-box {
-    height: 155px;
+    height: 100% !important;
   }
 
   .envelope {
-    width: 200px;
-    height: 140px;
+    width: 210px;
+    height: 145px;
+    margin: 0 auto;
   }
 
   .envelope-flap {
-    border-left-width: 100px;
-    border-right-width: 100px;
-    border-top-width: 70px;
+    border-left-width: 105px;
+    border-right-width: 105px;
+    border-top-width: 72px;
   }
 
   .envelope-pocket {
-    border-left-width: 100px;
-    border-right-width: 100px;
-    border-bottom-width: 70px;
+    border-left-width: 105px;
+    border-right-width: 105px;
+    border-bottom-width: 72px;
   }
 
   .parchment-paper {
@@ -1572,6 +1574,55 @@ body {
   .letter-body {
     font-size: 0.88rem;
     max-height: 160px;
+  }
+}
+
+@media (max-width: 360px) {
+  .app-container {
+    padding: 3.4rem 0.45rem 1rem;
+  }
+
+  .intro-title {
+    font-size: 1.35rem;
+  }
+
+  .question-text {
+    font-size: 1.15rem;
+  }
+
+  .hero-title {
+    font-size: 1.4rem;
+  }
+
+  .cake-container {
+    transform: scale(0.82);
+  }
+
+  .polaroid-stack {
+    width: 175px;
+    height: 210px;
+  }
+
+  .envelope {
+    width: 180px;
+    height: 125px;
+  }
+
+  .envelope-flap {
+    border-left-width: 90px;
+    border-right-width: 90px;
+    border-top-width: 62px;
+  }
+
+  .envelope-pocket {
+    border-left-width: 90px;
+    border-right-width: 90px;
+    border-bottom-width: 62px;
+  }
+
+  .btn-pin-digit {
+    height: 46px;
+    font-size: 1.15rem;
   }
 }
 
@@ -1594,7 +1645,7 @@ body {
 
 /* PIN Keypad Styling */
 .btn-pin-digit {
-  height: 48px;
+  height: 52px;
   border-radius: 14px;
   border: 1.5px solid #f8bed4;
   background: #ffffff;
@@ -1609,6 +1660,8 @@ body {
   transition: all 0.15s ease;
   box-shadow: 0 4px 10px rgba(186, 45, 95, 0.08);
   touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .btn-pin-digit:hover, .btn-pin-digit:active {
