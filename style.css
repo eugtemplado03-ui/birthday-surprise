@@ -912,8 +912,8 @@ body {
   width: 100%;
   height: 100%;
   background: #ffffff;
-  padding: 10px 10px 24px 10px;
-  border-radius: 12px;
+  padding: 10px;
+  border-radius: 14px;
   box-shadow: 0 12px 28px rgba(186, 45, 95, 0.2);
   transition: all 0.45s var(--ease-spring);
   cursor: pointer;
@@ -942,8 +942,8 @@ body {
 
 .polaroid-photo-box {
   width: 100%;
-  height: 175px;
-  border-radius: 8px;
+  height: 100%;
+  border-radius: 10px;
   overflow: hidden;
   background: #ffe6f0;
 }
@@ -959,13 +959,9 @@ body {
   transform: scale(1.05);
 }
 
-.polaroid-caption {
-  font-family: var(--font-script);
-  font-size: 1.2rem;
-  color: var(--text-heading);
-  text-align: center;
-  margin-top: 8px;
-  font-weight: 700;
+.polaroid-caption,
+.lightbox-caption {
+  display: none !important;
 }
 
 .gallery-navigation {

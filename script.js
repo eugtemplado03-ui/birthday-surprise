@@ -649,8 +649,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       else { card.style.opacity = '0'; card.style.pointerEvents = 'none'; }
 
       card.innerHTML = `
-        <div class="polaroid-photo-box"><img src="${photo.url}" alt="${photo.caption}"></div>
-        <div class="polaroid-caption">${photo.caption}</div>
+        <div class="polaroid-photo-box"><img src="${photo.url}" alt="Birthday Photo"></div>
       `;
 
       card.addEventListener('click', () => {
@@ -700,7 +699,6 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
 
   function openLightbox(photo) {
     lightboxImg.src = photo.url;
-    lightboxCaption.textContent = photo.caption;
     lightboxModal.style.display = 'flex';
   }
 
