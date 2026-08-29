@@ -821,36 +821,26 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     playMusicBoxNote(783.99, 0.3, 0.2);
     triggerConfettiBurst(window.innerWidth / 2, window.innerHeight / 3, 70);
 
-    // Call Backend API to create persistent share link
+    // Generate direct shareable link
     const shareLinkGroup = document.getElementById('share-link-group');
     const inputShareUrl = document.getElementById('input-share-url');
-    const copyBtnText = document.getElementById('copy-btn-text');
 
     try {
-      btnSaveCustomizer.textContent = 'Saving Link... ✨';
-      const res = await fetch('/api/surprise', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(appData)
-      });
-      if (res.ok) {
-        const result = await res.json();
-        if (result && result.shareUrl) {
-          inputShareUrl.value = result.shareUrl;
-          if (shareLinkGroup) shareLinkGroup.style.display = 'block';
-        }
-      } else {
-        const fallbackUrl = `${window.location.origin}${window.location.pathname}?to=${encodeURIComponent(appData.recipientName)}&from=${encodeURIComponent(appData.senderSignature)}&msg=${encodeURIComponent(appData.letterBody)}`;
-        inputShareUrl.value = fallbackUrl;
-        if (shareLinkGroup) shareLinkGroup.style.display = 'block';
-      }
-    } catch (err) {
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.search = '';
+      cleanUrl.searchParams.set('to', appData.recipientName);
+      cleanUrl.searchParams.set('from', appData.senderSignature);
+      cleanUrl.searchParams.set('msg', appData.letterBody);
+      inputShareUrl.value = cleanUrl.toString();
+      if (shareLinkGroup) shareLinkGroup.style.display = 'block';
+    } catch (e) {
       const fallbackUrl = `${window.location.origin}${window.location.pathname}?to=${encodeURIComponent(appData.recipientName)}&from=${encodeURIComponent(appData.senderSignature)}&msg=${encodeURIComponent(appData.letterBody)}`;
       inputShareUrl.value = fallbackUrl;
       if (shareLinkGroup) shareLinkGroup.style.display = 'block';
-    } finally {
-      btnSaveCustomizer.textContent = 'Saved! ✨ Click to Update';
     }
+
+    btnSaveCustomizer.textContent = 'Saved & Link Ready! 💖';
+    setTimeout(() => { btnSaveCustomizer.textContent = 'Save & Apply Surprise ✨'; }, 2000);
   });
 
   const btnCopyUrl = document.getElementById('btn-copy-url');
@@ -882,34 +872,15 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     }
   });
 
-  // Async load from backend API if ?id=... or ?to=... is present
-  async function loadInitialData() {
+  // Load custom data from URL params (?to=...&from=...&msg=...)
+  function loadInitialData() {
     const urlParams = new URLSearchParams(window.location.search);
-    const surpriseId = urlParams.get('id');
-
-    if (surpriseId) {
-      try {
-        const res = await fetch(`/api/surprise/${encodeURIComponent(surpriseId)}`);
-        if (res.ok) {
-          const json = await res.json();
-          if (json && json.data) {
-            appData = json.data;
-            applyDataToUI();
-            return;
-          }
-        }
-      } catch (e) {
-        console.log('Backend offline or query error, using local data');
-      }
-    }
-
     const toParam = urlParams.get('to') || urlParams.get('name');
     const fromParam = urlParams.get('from');
     const msgParam = urlParams.get('msg');
     if (toParam) appData.recipientName = toParam;
     if (fromParam) appData.senderSignature = fromParam;
     if (msgParam) appData.letterBody = msgParam;
-
     applyDataToUI();
   }
 

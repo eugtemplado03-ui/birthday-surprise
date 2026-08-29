@@ -1,26 +1,15 @@
 {
   "name": "birthday-surprise-app",
   "version": "1.0.0",
-  "description": "Interactive Birthday Surprise Web App with evasive button, 3D cake, flower petals, music synthesizer, and full-stack backend API.",
-  "main": "server.js",
+  "description": "Interactive Birthday Surprise Web App with evasive button, 3D cake, flower petals, and music synthesizer.",
   "scripts": {
-    "start": "node server.js",
     "dev": "node server.js"
   },
   "keywords": [
     "birthday",
     "greeting",
-    "interactive",
-    "fullstack",
-    "express"
+    "interactive"
   ],
   "author": "Antigravity",
-  "license": "MIT",
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.21.2"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+  "license": "MIT"
 }
