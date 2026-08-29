@@ -170,7 +170,7 @@ app.get('*', (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🌸 Birthday Surprise Full-Stack Server running on port ${PORT}`);
   console.log(`👉 http://localhost:${PORT}/`);
 });
