@@ -1586,3 +1586,39 @@ body {
   font-weight: 700;
   animation: popIn 0.3s var(--ease-spring);
 }
+
+/* PIN Keypad Styling */
+.btn-pin-digit {
+  height: 48px;
+  border-radius: 14px;
+  border: 1.5px solid #f8bed4;
+  background: #ffffff;
+  font-family: var(--font-main);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 10px rgba(186, 45, 95, 0.08);
+  touch-action: manipulation;
+}
+
+.btn-pin-digit:hover, .btn-pin-digit:active {
+  background: var(--primary-pink);
+  color: #ffffff;
+  border-color: var(--primary-pink);
+  transform: scale(1.05);
+}
+
+.btn-pin-clear {
+  color: #e0246a;
+  background: #fff0f5;
+}
+
+.btn-pin-submit {
+  color: #2e7d32;
+  background: #e8f5e9;
+}

@@ -837,6 +837,28 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     });
   }
 
+  // Interactive PIN Keypad Buttons
+  const pinKeypadButtons = document.querySelectorAll('.btn-pin-digit');
+  pinKeypadButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const val = btn.getAttribute('data-val');
+      if (val === 'clear') {
+        inputAdminPin.value = inputAdminPin.value.slice(0, -1);
+      } else if (val === 'enter') {
+        verifyAdminPin();
+      } else {
+        if (inputAdminPin.value.length < 8) {
+          inputAdminPin.value += val;
+          playMusicBoxNote(523.25 + inputAdminPin.value.length * 40, 0.08, 0.08);
+          if (inputAdminPin.value.length === 4) {
+            setTimeout(verifyAdminPin, 220);
+          }
+        }
+      }
+    });
+  });
+
   // ==========================================
   // 12. SURPRISE CUSTOMIZER MODAL
   // ==========================================

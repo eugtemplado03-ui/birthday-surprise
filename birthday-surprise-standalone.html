@@ -1604,6 +1604,42 @@ body {
   animation: popIn 0.3s var(--ease-spring);
 }
 
+/* PIN Keypad Styling */
+.btn-pin-digit {
+  height: 48px;
+  border-radius: 14px;
+  border: 1.5px solid #f8bed4;
+  background: #ffffff;
+  font-family: var(--font-main);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 10px rgba(186, 45, 95, 0.08);
+  touch-action: manipulation;
+}
+
+.btn-pin-digit:hover, .btn-pin-digit:active {
+  background: var(--primary-pink);
+  color: #ffffff;
+  border-color: var(--primary-pink);
+  transform: scale(1.05);
+}
+
+.btn-pin-clear {
+  color: #e0246a;
+  background: #fff0f5;
+}
+
+.btn-pin-submit {
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+
 </style>
 </head>
 <body>
@@ -1978,20 +2014,38 @@ body {
   </div>
 
   <!-- ======================================================== -->
-  <!-- MODAL 3: CREATOR PASSCODE MODAL                          -->
+  <!-- MODAL 3: CREATOR PASSCODE MODAL (PIN ACCESS)             -->
   <!-- ======================================================== -->
   <div id="passcode-modal" class="modal-backdrop" style="display: none;">
-    <div class="customizer-content glass-card" style="max-width: 400px; text-align: center;">
-      <div class="modal-header" style="justify-content: center; position: relative;">
-        <h2><i class="fa-solid fa-lock"></i> Creator Studio Access</h2>
-        <button id="btn-close-passcode" class="modal-close-btn" style="position: absolute; right: 0;">&times;</button>
+    <div class="customizer-content glass-card" style="max-width: 380px; text-align: center;">
+      <div class="modal-header" style="justify-content: center; position: relative; border-bottom: none; padding-bottom: 0;">
+        <h2><i class="fa-solid fa-lock"></i> Creator Studio</h2>
+        <button id="btn-close-passcode" class="modal-close-btn" style="position: absolute; right: 0; top: 0;">&times;</button>
       </div>
-      <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0.8rem 0;">Enter your 4-digit Creator PIN to unlock editing tools, photo uploaders, and letter customized message:</p>
-      <div class="form-group" style="margin-bottom: 1.2rem;">
-        <input type="password" id="input-admin-pin" class="form-input" placeholder="Enter PIN (Default: 1234)" style="text-align: center; font-size: 1.4rem; letter-spacing: 4px; font-weight: bold;" maxlength="12">
-        <p id="pin-error-msg" style="color: #d81458; font-size: 0.82rem; font-weight: 700; margin-top: 0.4rem; display: none;">Incorrect PIN. Try again!</p>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0.6rem 0 0.9rem;">Enter your 4-digit Creator PIN to edit details, upload photos, and change letter text:</p>
+      
+      <div class="form-group" style="margin-bottom: 0.8rem;">
+        <input type="password" id="input-admin-pin" class="form-input" placeholder="••••" style="text-align: center; font-size: 1.8rem; letter-spacing: 10px; font-weight: 800; color: var(--primary-deep); background: #fff8fb;" maxlength="8" inputmode="numeric" autocomplete="current-password">
+        <p id="pin-error-msg" style="color: #d81458; font-size: 0.84rem; font-weight: 700; margin-top: 0.4rem; display: none;">❌ Incorrect PIN. Default is 1234!</p>
       </div>
-      <div class="modal-footer" style="justify-content: center;">
+
+      <!-- Quick Touch PIN Keypad -->
+      <div class="pin-keypad" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1.1rem;">
+        <button class="btn-pin-digit" data-val="1">1</button>
+        <button class="btn-pin-digit" data-val="2">2</button>
+        <button class="btn-pin-digit" data-val="3">3</button>
+        <button class="btn-pin-digit" data-val="4">4</button>
+        <button class="btn-pin-digit" data-val="5">5</button>
+        <button class="btn-pin-digit" data-val="6">6</button>
+        <button class="btn-pin-digit" data-val="7">7</button>
+        <button class="btn-pin-digit" data-val="8">8</button>
+        <button class="btn-pin-digit" data-val="9">9</button>
+        <button class="btn-pin-digit btn-pin-clear" data-val="clear"><i class="fa-solid fa-delete-left"></i></button>
+        <button class="btn-pin-digit" data-val="0">0</button>
+        <button class="btn-pin-digit btn-pin-submit" data-val="enter"><i class="fa-solid fa-check"></i></button>
+      </div>
+
+      <div class="modal-footer" style="justify-content: center; border-top: none; padding-top: 0;">
         <button id="btn-unlock-creator" class="btn btn-primary" style="width: 100%;"><i class="fa-solid fa-key"></i> Unlock Creator Mode</button>
       </div>
     </div>
@@ -2837,6 +2891,28 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       if (e.key === 'Enter') verifyAdminPin();
     });
   }
+
+  // Interactive PIN Keypad Buttons
+  const pinKeypadButtons = document.querySelectorAll('.btn-pin-digit');
+  pinKeypadButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const val = btn.getAttribute('data-val');
+      if (val === 'clear') {
+        inputAdminPin.value = inputAdminPin.value.slice(0, -1);
+      } else if (val === 'enter') {
+        verifyAdminPin();
+      } else {
+        if (inputAdminPin.value.length < 8) {
+          inputAdminPin.value += val;
+          playMusicBoxNote(523.25 + inputAdminPin.value.length * 40, 0.08, 0.08);
+          if (inputAdminPin.value.length === 4) {
+            setTimeout(verifyAdminPin, 220);
+          }
+        }
+      }
+    });
+  });
 
   // ==========================================
   // 12. SURPRISE CUSTOMIZER MODAL
