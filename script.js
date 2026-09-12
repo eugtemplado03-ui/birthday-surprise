@@ -682,19 +682,20 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     const btnWidth = btnNo.offsetWidth || 110;
     const btnHeight = btnNo.offsetHeight || 44;
 
-    const padX = 16;
-    const padTop = 68; // Below floating top buttons
-    const padBottom = 24;
+    // Mobile safe boundaries (respecting top floating controls & bottom bars)
+    const padX = 12;
+    const padTop = 75; // Safely below floating top buttons
+    const padBottom = 38; // Safely above mobile address bars
 
     const maxX = Math.max(padX, viewportW - btnWidth - padX);
     const maxY = Math.max(padTop, viewportH - btnHeight - padBottom);
 
-    const randomX = Math.floor(Math.random() * (maxX - padX)) + padX;
-    const randomY = Math.floor(Math.random() * (maxY - padTop)) + padTop;
+    const randomX = Math.floor(Math.random() * Math.max(1, maxX - padX)) + padX;
+    const randomY = Math.floor(Math.random() * Math.max(1, maxY - padTop)) + padTop;
 
     btnNo.style.left = `${randomX}px`;
     btnNo.style.top = `${randomY}px`;
-    btnNo.style.transform = `rotate(${(Math.random() - 0.5) * 16}deg)`;
+    btnNo.style.transform = `rotate(${(Math.random() - 0.5) * 12}deg)`;
 
     const phrase = wittyPhrases[dodgeCount % wittyPhrases.length];
     wittyText.textContent = phrase;
@@ -702,9 +703,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     void wittyPopup.offsetWidth;
     wittyPopup.classList.add('show');
 
-    // Grow YES button safely for mobile
-    const maxScale = window.innerWidth < 600 ? 1.35 : 1.65;
-    const newScale = Math.min(maxScale, 1 + dodgeCount * 0.06);
+    // Grow YES button gently without breaking mobile layout
+    const maxScale = viewportW < 480 ? 1.25 : (viewportW < 768 ? 1.35 : 1.6);
+    const newScale = Math.min(maxScale, 1 + dodgeCount * 0.05);
     btnYes.style.transform = `scale(${newScale})`;
     btnYes.style.boxShadow = `0 ${10 + dodgeCount * 2}px ${26 + dodgeCount * 4}px rgba(255, 45, 117, ${Math.min(0.9, 0.45 + dodgeCount * 0.05)})`;
 
