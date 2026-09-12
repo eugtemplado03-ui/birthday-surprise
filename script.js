@@ -262,7 +262,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     if (!targetEl) return;
     targetEl.innerHTML = '';
 
-    const parsed = parseVideoData(videoData ? videoData.url : '');
+    const rawUrl = videoData ? videoData.url : '';
+    const parsed = parseVideoData(rawUrl);
     if (!parsed) {
       targetEl.innerHTML = '<div class="video-placeholder-container">' +
         '<div class="video-placeholder-icon"><i class="fa-solid fa-film"></i></div>' +
@@ -303,43 +304,77 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
         return;
       }
 
-      // Big Glowing Center Play Button for Touch & Desktop
+      // Prominent Glowing Center Play Button with crisp inline SVG (never fails to render)
       const playBtn = document.createElement('button');
       playBtn.className = 'video-big-play-btn';
-      playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      playBtn.innerHTML = '<svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" style="margin-left:4px; display:block;"><path d="M8 5v14l11-7z"/></svg>';
       playBtn.setAttribute('aria-label', 'Play Video');
       playBtn.title = 'Play Video';
 
-      playBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
+      function togglePlay() {
+        if (isMusicPlaying) stopHappyBirthdaySong(true);
         if (video.paused) {
-          video.play().then(() => {
-            playBtn.classList.add('hidden');
-          }).catch(() => {
-            video.muted = true;
-            video.play();
-            playBtn.classList.add('hidden');
-          });
+          const playPromise = video.play();
+          if (playPromise !== undefined) {
+            playPromise.then(() => {
+              playBtn.classList.add('hidden');
+            }).catch((err) => {
+              console.warn('Playback with sound blocked, retrying muted for mobile:', err);
+              video.muted = true;
+              video.play().then(() => {
+                playBtn.classList.add('hidden');
+              }).catch((e) => console.error('Play error:', e));
+            });
+          }
         } else {
           video.pause();
           playBtn.classList.remove('hidden');
         }
+      }
+
+      playBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        togglePlay();
       });
 
-      video.addEventListener('play', () => playBtn.classList.add('hidden'));
+      video.addEventListener('click', () => {
+        togglePlay();
+      });
+
+      video.addEventListener('play', () => {
+        if (isMusicPlaying) stopHappyBirthdaySong(true);
+        playBtn.classList.add('hidden');
+      });
       video.addEventListener('pause', () => playBtn.classList.remove('hidden'));
       video.addEventListener('ended', () => playBtn.classList.remove('hidden'));
 
-      // Render thumbnail frame immediately
+      // Render thumbnail frame immediately on mobile
       video.addEventListener('loadedmetadata', () => {
         try {
           if (video.currentTime === 0) video.currentTime = 0.001;
         } catch (e) {}
       });
 
+      video.addEventListener('error', () => {
+        console.warn('Video failed to load:', video.src);
+        playBtn.style.display = 'none';
+      });
+
       targetEl.appendChild(video);
       targetEl.appendChild(playBtn);
     }
+  }
+
+  function renderFeaturedVideo() {
+    if (!featuredVideoContainer) return;
+    const videoData = appData.featuredVideo || defaultData.featuredVideo;
+    if (featuredVideoTitle) {
+      featuredVideoTitle.textContent = (videoData && videoData.title) ? videoData.title : defaultData.featuredVideo.title;
+    }
+    if (featuredVideoCaption) {
+      featuredVideoCaption.textContent = (videoData && videoData.caption) ? videoData.caption : defaultData.featuredVideo.caption;
+    }
+    renderVideoPlayer(featuredVideoContainer, videoData, false);
   }
 
   function updateCustomizerVideoPreview() {
@@ -823,6 +858,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       void stageCelebration.offsetWidth;
       stageCelebration.classList.add('active');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderFeaturedVideo();
     }, 400);
   });
 
@@ -901,12 +937,6 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     const count = appData.photos.length;
     activePhotoIndex = (index + count) % count;
     renderPolaroids();
-
-    // Render Featured Video
-    const videoData = appData.featuredVideo || defaultData.featuredVideo;
-    if (featuredVideoTitle) featuredVideoTitle.textContent = (videoData && videoData.title) ? videoData.title : defaultData.featuredVideo.title;
-    if (featuredVideoCaption) featuredVideoCaption.textContent = (videoData && videoData.caption) ? videoData.caption : defaultData.featuredVideo.caption;
-    renderVideoPlayer(featuredVideoContainer, videoData, false);
   }
 
   btnPrevPhoto.addEventListener('click', () => setActivePhoto(activePhotoIndex - 1));
@@ -1109,6 +1139,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     if (letterDisplayBody) letterDisplayBody.textContent = letter;
     if (letterDisplaySignature) letterDisplaySignature.textContent = signature;
     renderPolaroids();
+    renderFeaturedVideo();
   }
 
   function openCustomizer() {
@@ -1120,6 +1151,15 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     inputSenderSignature.value = (appData.senderSignature && appData.senderSignature.trim()) ? appData.senderSignature.trim() : defaultData.senderSignature;
     inputLetterBody.value = (appData.letterBody && appData.letterBody.trim()) ? appData.letterBody.trim() : defaultData.letterBody;
     if (inputCustomPin) inputCustomPin.value = appData.creatorPin || '1234';
+
+    // Populate Video Inputs & Live Preview
+    const vData = appData.featuredVideo || defaultData.featuredVideo;
+    if (inputVideoUrl) inputVideoUrl.value = (vData && vData.url && !vData.url.startsWith('blob:')) ? vData.url : '';
+    if (inputVideoTitle) inputVideoTitle.value = (vData && vData.title) ? vData.title : defaultData.featuredVideo.title;
+    if (inputVideoCaption) inputVideoCaption.value = (vData && vData.caption) ? vData.caption : defaultData.featuredVideo.caption;
+    if (inputVideoFile) inputVideoFile.uploadedVideoUrl = (vData && vData.url) ? vData.url : '';
+    updateCustomizerVideoPreview();
+
     uploadPreviews.innerHTML = '';
     customizerModal.style.display = 'flex';
   }
