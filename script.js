@@ -205,12 +205,58 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     }
   }
 
+  // ==========================================
+  // CLOUDINARY VIDEO UPLOAD (Global Cloud CDN)
+  // Everyone who opens the Render link will see the video!
+  // ==========================================
+  const CLOUDINARY_CLOUD_NAME = 'ydwq0y2h';
+  const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
+
+  function uploadVideoToCloudinary(file, onProgress) {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+      formData.append('resource_type', 'video');
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`);
+
+      xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable && onProgress) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          onProgress(percent);
+        }
+      });
+
+      xhr.addEventListener('load', () => {
+        if (xhr.status === 200) {
+          try {
+            const response = JSON.parse(xhr.responseText);
+            resolve(response.secure_url);
+          } catch (e) {
+            reject(new Error('Invalid response from Cloudinary'));
+          }
+        } else {
+          try {
+            const errResponse = JSON.parse(xhr.responseText);
+            reject(new Error('Cloudinary error: ' + (errResponse.error && errResponse.error.message || xhr.status)));
+          } catch (e) {
+            reject(new Error('Cloudinary upload failed: HTTP ' + xhr.status));
+          }
+        }
+      });
+
+      xhr.addEventListener('error', () => reject(new Error('Network error during Cloudinary upload')));
+      xhr.addEventListener('abort', () => reject(new Error('Upload cancelled')));
+      xhr.send(formData);
+    });
+  }
+
+  // Also try local server upload as fallback
   async function uploadVideoToServer(file) {
     try {
-      const res = await fetch('/api/upload-video', {
-        method: 'POST',
-        body: file
-      });
+      const res = await fetch('/api/upload-video', { method: 'POST', body: file });
       if (res.ok) {
         const json = await res.json();
         return json.url;
@@ -1185,25 +1231,62 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     inputVideoFile.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
+
+      // Show upload progress UI
       if (videoFileStatus) {
         videoFileStatus.style.display = 'block';
-        videoFileStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving video permanently... ⏳';
+        videoFileStatus.innerHTML =
+          '<div style="display:flex; flex-direction:column; gap:0.4rem;">' +
+          '<span><i class="fa-solid fa-cloud-arrow-up" style="color:#ff2d75;"></i> <strong>Uploading to cloud... 0%</strong> — everyone will see your video!</span>' +
+          '<div style="width:100%; height:8px; background:rgba(255,150,180,0.25); border-radius:99px; overflow:hidden;">' +
+          '<div id="video-upload-bar" style="width:0%; height:100%; background:linear-gradient(90deg,#ff2d75,#ff9abc); border-radius:99px; transition:width 0.3s;"></div>' +
+          '</div></div>';
       }
 
-      // 1. Save to IndexedDB (Client-side permanent storage)
-      await saveVideoToIndexedDB(file);
+      const uploadBar = document.getElementById('video-upload-bar');
 
-      // 2. Upload to server (if server is active)
-      const serverUrl = await uploadVideoToServer(file);
+      try {
+        // 1. Upload to Cloudinary (global cloud — everyone sees it!)
+        const cloudinaryUrl = await uploadVideoToCloudinary(file, (percent) => {
+          if (uploadBar) uploadBar.style.width = percent + '%';
+          if (videoFileStatus) {
+            const span = videoFileStatus.querySelector('span');
+            if (span) span.innerHTML = '<i class="fa-solid fa-cloud-arrow-up" style="color:#ff2d75;"></i> <strong>Uploading to cloud... ' + percent + '%</strong> — everyone will see your video!';
+          }
+        });
 
-      const localBlobUrl = URL.createObjectURL(file);
-      inputVideoFile.uploadedVideoUrl = serverUrl || localBlobUrl;
-      inputVideoFile.hasPermanentUploadedVideo = true;
+        // 2. Save Cloudinary URL as the permanent video URL
+        inputVideoFile.uploadedVideoUrl = cloudinaryUrl;
+        inputVideoFile.hasPermanentUploadedVideo = true;
+        if (inputVideoUrl) inputVideoUrl.value = cloudinaryUrl;
 
-      if (inputVideoUrl) inputVideoUrl.value = '';
-      if (videoFileStatus) {
-        videoFileStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Saved permanently: <strong>' + file.name + '</strong> (will not disappear on refresh)! ✨';
+        // 3. Also save to IndexedDB for instant local playback
+        saveVideoToIndexedDB(file);
+
+        if (videoFileStatus) {
+          videoFileStatus.innerHTML =
+            '<i class="fa-solid fa-circle-check" style="color:#22c55e;"></i> ' +
+            '<strong style="color:#15803d;">Uploaded to cloud! ✨</strong> ' +
+            '<span style="color:#555;">Everyone who opens your link will see this video.</span>';
+        }
+
+      } catch (uploadErr) {
+        console.warn('Cloudinary upload failed, using local blob:', uploadErr.message);
+
+        // Fallback: use local blob URL (only works on this device)
+        const localBlobUrl = URL.createObjectURL(file);
+        inputVideoFile.uploadedVideoUrl = localBlobUrl;
+        saveVideoToIndexedDB(file);
+
+        if (videoFileStatus) {
+          videoFileStatus.innerHTML =
+            '<i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i> ' +
+            '<strong style="color:#b45309;">Cloud upload failed.</strong> ' +
+            '<span style="color:#555;">Video saved locally (only visible on this device). Check your Cloudinary settings.</span><br>' +
+            '<small style="color:#999;">Error: ' + uploadErr.message + '</small>';
+        }
       }
+
       updateCustomizerVideoPreview();
     });
   }

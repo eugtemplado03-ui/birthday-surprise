@@ -14,7 +14,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <link rel="stylesheet" href="style.css?v=20260912-v4-1789213053885">
+  <link rel="stylesheet" href="style.css?v=cloudinary-1789213788951">
 
   <!-- Inlined Mobile-First Overrides (Instant Load & Cache Immunity) -->
   <style>
@@ -496,13 +496,16 @@
           <label for="input-video-url"><i class="fa-solid fa-film"></i> Featured Video (YouTube / Link / File):</label>
           <p class="input-hint">Paste any YouTube URL (regular, Shorts, youtu.be) or direct video link:</p>
           <input type="url" id="input-video-url" class="form-input" placeholder="https://www.youtube.com/watch?v=nl62hhiBMOM">
-          
-          <div style="margin-top: 0.7rem; background: rgba(255, 240, 245, 0.7); padding: 0.6rem 0.8rem; border-radius: 12px; border: 1px solid #ffd6e5;">
-            <label for="input-video-file" style="font-size: 0.82rem; font-weight: 700; color: var(--text-heading); display: block; margin-bottom: 0.3rem;">
-              <i class="fa-solid fa-upload"></i> Or select a local video clip:
+
+          <div style="margin-top: 0.7rem; background: linear-gradient(135deg, rgba(255,240,248,0.9), rgba(255,220,240,0.85)); padding: 0.8rem 0.9rem; border-radius: 14px; border: 1.5px solid #ffb3d0;">
+            <label for="input-video-file" style="font-size: 0.84rem; font-weight: 700; color: var(--text-heading); display: block; margin-bottom: 0.25rem;">
+              <i class="fa-solid fa-cloud-arrow-up" style="color:#ff2d75;"></i> Upload a Video File (Saved to Cloud ☁️):
             </label>
+            <p style="font-size: 0.75rem; color: #d63384; margin: 0 0 0.4rem 0; font-weight: 600;">
+              <i class="fa-solid fa-globe"></i> Video uploads to Cloudinary — <strong>everyone</strong> who opens your link will see it!
+            </p>
             <input type="file" id="input-video-file" class="form-file" accept="video/*" style="font-size: 0.8rem;">
-            <p id="video-file-status" style="font-size: 0.75rem; color: var(--primary-pink); margin-top: 0.3rem; display: none; font-weight: 600;"></p>
+            <div id="video-file-status" style="font-size: 0.8rem; color: var(--primary-pink); margin-top: 0.5rem; display: none; font-weight: 600;"></div>
           </div>
 
           <div style="margin-top: 0.8rem;">
@@ -583,6 +586,6 @@
   </div>
 
   <!-- Main JavaScript File -->
-  <script src="script.js?v=20260912-v4-1789213053885"></script>
+  <script src="script.js?v=cloudinary-1789213788951"></script>
 </body>
 </html>
