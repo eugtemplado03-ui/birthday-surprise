@@ -229,7 +229,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     if (ytMatch && ytMatch[1]) {
       return {
         type: 'youtube',
-        embedUrl: 'https://www.youtube-nocookie.com/embed/' + ytMatch[1] + '?enablejsapi=1&rel=0'
+        embedUrl: 'https://www.youtube.com/embed/' + ytMatch[1] + '?enablejsapi=1&rel=0&playsinline=1'
       };
     }
 
@@ -278,6 +278,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       iframe.title = (videoData && videoData.title) ? videoData.title : 'Birthday Video';
       iframe.setAttribute('allowfullscreen', 'true');
       iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
       if (isCompact) {
         iframe.style.width = '100%';
         iframe.style.height = '180px';
@@ -285,17 +286,59 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       }
       targetEl.appendChild(iframe);
     } else {
+      // Direct video stream / MP4 / Blob / /api/video
       const video = document.createElement('video');
       video.src = parsed.src;
       video.controls = true;
       video.playsInline = true;
-      video.preload = 'metadata';
+      video.setAttribute('playsinline', '');
+      video.setAttribute('webkit-playsinline', '');
+      video.preload = 'auto';
+
       if (isCompact) {
         video.style.width = '100%';
         video.style.maxHeight = '180px';
         video.style.display = 'block';
+        targetEl.appendChild(video);
+        return;
       }
+
+      // Big Glowing Center Play Button for Touch & Desktop
+      const playBtn = document.createElement('button');
+      playBtn.className = 'video-big-play-btn';
+      playBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
+      playBtn.setAttribute('aria-label', 'Play Video');
+      playBtn.title = 'Play Video';
+
+      playBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (video.paused) {
+          video.play().then(() => {
+            playBtn.classList.add('hidden');
+          }).catch(() => {
+            video.muted = true;
+            video.play();
+            playBtn.classList.add('hidden');
+          });
+        } else {
+          video.pause();
+          playBtn.classList.remove('hidden');
+        }
+      });
+
+      video.addEventListener('play', () => playBtn.classList.add('hidden'));
+      video.addEventListener('pause', () => playBtn.classList.remove('hidden'));
+      video.addEventListener('ended', () => playBtn.classList.remove('hidden'));
+
+      // Render thumbnail frame immediately
+      video.addEventListener('loadedmetadata', () => {
+        try {
+          if (video.currentTime === 0) video.currentTime = 0.001;
+        } catch (e) {}
+      });
+
       targetEl.appendChild(video);
+      targetEl.appendChild(playBtn);
     }
   }
 
