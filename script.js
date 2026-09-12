@@ -23,6 +23,11 @@ From every laugh we've shared to all our little sweet moments, having you in my 
 May this new year of your life be blessed with endless happiness, blooming love, good health, and all the dreams your heart desires!
 
 I hope this little surprise brings the biggest smile to your beautiful face! üéÇüå∏üéâ`,
+    featuredVideo: {
+      url: 'https://www.youtube.com/watch?v=nl62hhiBMOM',
+      title: 'A Special Video For Your Birthday üé¨üå∏',
+      caption: 'Press play to watch a heartfelt message recorded just for you ‚ù§Ô∏è'
+    },
     photos: [
       {
         url: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="%23ff9a9e"/><stop offset="99%" stop-color="%23fecfef"/></linearGradient></defs><rect width="100%" height="100%" fill="url(%23g1)"/><circle cx="200" cy="180" r="75" fill="%23ffffff" opacity="0.9"/><text x="200" y="195" font-size="65" text-anchor="middle">üå∏</text><text x="200" y="310" font-size="22" text-anchor="middle" fill="%23d63384" font-weight="bold" font-family="sans-serif">Sweetest Smile</text></svg>',
@@ -123,6 +128,187 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
   const uploadPreviews = document.getElementById('upload-previews');
   const btnSaveCustomizer = document.getElementById('btn-save-customizer');
   const btnResetDefaults = document.getElementById('btn-reset-defaults');
+
+  const featuredVideoContainer = document.getElementById('featured-video-container');
+  const featuredVideoTitle = document.getElementById('featured-video-title');
+  const featuredVideoCaption = document.getElementById('featured-video-caption');
+  const btnEditVideo = document.getElementById('btn-edit-video');
+
+  const inputVideoUrl = document.getElementById('input-video-url');
+  const inputVideoFile = document.getElementById('input-video-file');
+  const videoFileStatus = document.getElementById('video-file-status');
+  const inputVideoTitle = document.getElementById('input-video-title');
+  const inputVideoCaption = document.getElementById('input-video-caption');
+  const videoPreviewWrapper = document.getElementById('video-preview-wrapper');
+  const customizerVideoPreview = document.getElementById('customizer-video-preview');
+
+  // ==========================================
+  // 2.5 VIDEO HELPER FUNCTIONS (PERMANENT STORAGE & INDEXEDDB)
+  // ==========================================
+  function openVideoDatabase() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open('BirthdaySurpriseVideoDB', 1);
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('videos')) {
+          db.createObjectStore('videos');
+        }
+      };
+      request.onsuccess = (e) => resolve(e.target.result);
+      request.onerror = (e) => reject(e);
+    });
+  }
+
+  async function saveVideoToIndexedDB(file) {
+    try {
+      const db = await openVideoDatabase();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('videos', 'readwrite');
+        const store = tx.objectStore('videos');
+        store.put(file, 'featuredVideoBlob');
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = (e) => reject(e);
+      });
+    } catch (err) {
+      console.error('IndexedDB save error:', err);
+      return false;
+    }
+  }
+
+  async function getVideoFromIndexedDB() {
+    try {
+      const db = await openVideoDatabase();
+      return new Promise((resolve) => {
+        const tx = db.transaction('videos', 'readonly');
+        const store = tx.objectStore('videos');
+        const req = store.get('featuredVideoBlob');
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => resolve(null);
+      });
+    } catch (err) {
+      return null;
+    }
+  }
+
+  async function deleteVideoFromIndexedDB() {
+    try {
+      const db = await openVideoDatabase();
+      return new Promise((resolve) => {
+        const tx = db.transaction('videos', 'readwrite');
+        const store = tx.objectStore('videos');
+        store.delete('featuredVideoBlob');
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(false);
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function uploadVideoToServer(file) {
+    try {
+      const res = await fetch('/api/upload-video', {
+        method: 'POST',
+        body: file
+      });
+      if (res.ok) {
+        const json = await res.json();
+        return json.url;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function parseVideoData(url) {
+    if (!url || typeof url !== 'string') return null;
+    const trimmed = url.trim();
+    if (!trimmed) return null;
+
+    // YouTube (watch, embed, youtu.be, shorts)
+    const ytMatch = trimmed.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/i);
+    if (ytMatch && ytMatch[1]) {
+      return {
+        type: 'youtube',
+        embedUrl: 'https://www.youtube-nocookie.com/embed/' + ytMatch[1] + '?enablejsapi=1&rel=0'
+      };
+    }
+
+    // Vimeo
+    const vimeoMatch = trimmed.match(/vimeo\.com\/(?:video\/)?([0-9]+)/i);
+    if (vimeoMatch && vimeoMatch[1]) {
+      return {
+        type: 'vimeo',
+        embedUrl: 'https://player.vimeo.com/video/' + vimeoMatch[1]
+      };
+    }
+
+    // Google Drive Preview
+    const driveMatch = trimmed.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i);
+    if (driveMatch && driveMatch[1]) {
+      return {
+        type: 'drive',
+        embedUrl: 'https://drive.google.com/file/d/' + driveMatch[1] + '/preview'
+      };
+    }
+
+    // Direct video stream / MP4 / WebM / Blob / Data URL
+    return {
+      type: 'direct',
+      src: trimmed
+    };
+  }
+
+  function renderVideoPlayer(targetEl, videoData, isCompact) {
+    if (!targetEl) return;
+    targetEl.innerHTML = '';
+
+    const parsed = parseVideoData(videoData ? videoData.url : '');
+    if (!parsed) {
+      targetEl.innerHTML = '<div class="video-placeholder-container">' +
+        '<div class="video-placeholder-icon"><i class="fa-solid fa-film"></i></div>' +
+        '<strong style="font-size:1.1rem; margin-bottom:0.2rem;">No Video Selected</strong>' +
+        '<span style="font-size:0.85rem; opacity:0.85;">Add a YouTube URL or video file in Creator Studio! üå∏</span>' +
+        '</div>';
+      return;
+    }
+
+    if (parsed.type === 'youtube' || parsed.type === 'vimeo' || parsed.type === 'drive') {
+      const iframe = document.createElement('iframe');
+      iframe.src = parsed.embedUrl;
+      iframe.title = (videoData && videoData.title) ? videoData.title : 'Birthday Video';
+      iframe.setAttribute('allowfullscreen', 'true');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+      if (isCompact) {
+        iframe.style.width = '100%';
+        iframe.style.height = '180px';
+        iframe.style.border = 'none';
+      }
+      targetEl.appendChild(iframe);
+    } else {
+      const video = document.createElement('video');
+      video.src = parsed.src;
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = 'metadata';
+      if (isCompact) {
+        video.style.width = '100%';
+        video.style.maxHeight = '180px';
+        video.style.display = 'block';
+      }
+      targetEl.appendChild(video);
+    }
+  }
+
+  function updateCustomizerVideoPreview() {
+    const url = (inputVideoFile && inputVideoFile.uploadedVideoUrl) ? inputVideoFile.uploadedVideoUrl : (inputVideoUrl ? inputVideoUrl.value.trim() : '');
+    if (url) {
+      if (videoPreviewWrapper) videoPreviewWrapper.style.display = 'block';
+      renderVideoPlayer(customizerVideoPreview, { url: url }, true);
+    } else {
+      if (videoPreviewWrapper) videoPreviewWrapper.style.display = 'none';
+      if (customizerVideoPreview) customizerVideoPreview.innerHTML = '';
+    }
+  }
 
   // ==========================================
   // 3. HAPPY BIRTHDAY SONG - WEB AUDIO SYNTH
@@ -496,8 +682,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     const btnWidth = btnNo.offsetWidth || 110;
     const btnHeight = btnNo.offsetHeight || 44;
 
-    const padX = 14;
-    const padTop = 78; // Below floating top buttons
+    const padX = 16;
+    const padTop = 68; // Below floating top buttons
     const padBottom = 24;
 
     const maxX = Math.max(padX, viewportW - btnWidth - padX);
@@ -517,8 +703,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     wittyPopup.classList.add('show');
 
     // Grow YES button safely for mobile
-    const maxScale = window.innerWidth < 600 ? 1.15 : 1.35;
-    const newScale = Math.min(maxScale, 1 + dodgeCount * 0.04);
+    const maxScale = window.innerWidth < 600 ? 1.35 : 1.65;
+    const newScale = Math.min(maxScale, 1 + dodgeCount * 0.06);
     btnYes.style.transform = `scale(${newScale})`;
     btnYes.style.boxShadow = `0 ${10 + dodgeCount * 2}px ${26 + dodgeCount * 4}px rgba(255, 45, 117, ${Math.min(0.9, 0.45 + dodgeCount * 0.05)})`;
 
@@ -639,14 +825,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     polaroidStack.innerHTML = '';
     photoDots.innerHTML = '';
     const photos = appData.photos || [];
-    const totalPhotos = photos.length;
 
     photos.forEach((photo, idx) => {
       const card = document.createElement('div');
       card.className = 'polaroid-card';
       if (idx === activePhotoIndex) card.classList.add('active');
-      else if (idx === (activePhotoIndex + 1) % totalPhotos) card.classList.add('stacked-1');
-      else if (idx === (activePhotoIndex + 2) % totalPhotos) card.classList.add('stacked-2');
+      else if (idx === (activePhotoIndex + 1) % photos.length) card.classList.add('stacked-1');
+      else if (idx === (activePhotoIndex + 2) % photos.length) card.classList.add('stacked-2');
       else { card.style.opacity = '0'; card.style.pointerEvents = 'none'; }
 
       card.innerHTML = `
@@ -659,21 +844,12 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
       });
 
       polaroidStack.appendChild(card);
-    });
 
-    if (totalPhotos <= 8) {
-      photoDots.style.display = 'flex';
-      photoDots.innerHTML = '';
-      photos.forEach((_, idx) => {
-        const dot = document.createElement('div');
-        dot.className = `photo-dot ${idx === activePhotoIndex ? 'active' : ''}`;
-        dot.addEventListener('click', () => setActivePhoto(idx));
-        photoDots.appendChild(dot);
-      });
-    } else {
-      photoDots.style.display = 'flex';
-      photoDots.innerHTML = `<span class="photo-counter-badge"><i class="fa-solid fa-camera-retro"></i> ${activePhotoIndex + 1} / ${totalPhotos}</span>`;
-    }
+      const dot = document.createElement('div');
+      dot.className = `photo-dot ${idx === activePhotoIndex ? 'active' : ''}`;
+      dot.addEventListener('click', () => setActivePhoto(idx));
+      photoDots.appendChild(dot);
+    });
   }
 
   function setActivePhoto(index) {
@@ -681,6 +857,12 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     const count = appData.photos.length;
     activePhotoIndex = (index + count) % count;
     renderPolaroids();
+
+    // Render Featured Video
+    const videoData = appData.featuredVideo || defaultData.featuredVideo;
+    if (featuredVideoTitle) featuredVideoTitle.textContent = (videoData && videoData.title) ? videoData.title : defaultData.featuredVideo.title;
+    if (featuredVideoCaption) featuredVideoCaption.textContent = (videoData && videoData.caption) ? videoData.caption : defaultData.featuredVideo.caption;
+    renderVideoPlayer(featuredVideoContainer, videoData, false);
   }
 
   btnPrevPhoto.addEventListener('click', () => setActivePhoto(activePhotoIndex - 1));
@@ -905,6 +1087,42 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
   btnCustomize.addEventListener('click', openCustomizer);
   btnEditLetter.addEventListener('click', openCustomizer);
   btnAddPhotos.addEventListener('click', openCustomizer);
+  if (btnEditVideo) btnEditVideo.addEventListener('click', openCustomizer);
+
+  if (inputVideoUrl) {
+    inputVideoUrl.addEventListener('input', () => {
+      if (inputVideoFile) inputVideoFile.uploadedVideoUrl = '';
+      if (videoFileStatus) videoFileStatus.style.display = 'none';
+      updateCustomizerVideoPreview();
+    });
+  }
+
+  if (inputVideoFile) {
+    inputVideoFile.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (videoFileStatus) {
+        videoFileStatus.style.display = 'block';
+        videoFileStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving video permanently... ‚è≥';
+      }
+
+      // 1. Save to IndexedDB (Client-side permanent storage)
+      await saveVideoToIndexedDB(file);
+
+      // 2. Upload to server (if server is active)
+      const serverUrl = await uploadVideoToServer(file);
+
+      const localBlobUrl = URL.createObjectURL(file);
+      inputVideoFile.uploadedVideoUrl = serverUrl || localBlobUrl;
+      inputVideoFile.hasPermanentUploadedVideo = true;
+
+      if (inputVideoUrl) inputVideoUrl.value = '';
+      if (videoFileStatus) {
+        videoFileStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Saved permanently: <strong>' + file.name + '</strong> (will not disappear on refresh)! ‚ú®';
+      }
+      updateCustomizerVideoPreview();
+    });
+  }
   btnCloseCustomizer.addEventListener('click', closeCustomizer);
 
   customizerModal.addEventListener('click', (e) => {
@@ -996,6 +1214,14 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
       activePhotoIndex = 0;
     }
 
+    // Save Featured Video Settings
+    const videoUrlToSave = (inputVideoFile && inputVideoFile.uploadedVideoUrl) ? inputVideoFile.uploadedVideoUrl : (inputVideoUrl ? inputVideoUrl.value.trim() : '');
+    appData.featuredVideo = {
+      url: videoUrlToSave || defaultData.featuredVideo.url,
+      title: (inputVideoTitle && inputVideoTitle.value.trim()) ? inputVideoTitle.value.trim() : defaultData.featuredVideo.title,
+      caption: (inputVideoCaption && inputVideoCaption.value.trim()) ? inputVideoCaption.value.trim() : defaultData.featuredVideo.caption
+    };
+
     // 1. Save directly into persistent browser storage
     try {
       localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
@@ -1036,6 +1262,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     if (confirm("Reset all customizations back to default?")) {
       appData = JSON.parse(JSON.stringify(defaultData));
       localStorage.removeItem('birthday_surprise_data');
+      deleteVideoFromIndexedDB();
       applyDataToUI();
       closeCustomizer();
     }
@@ -1104,6 +1331,33 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     if (toParam && toParam.trim()) appData.recipientName = toParam.trim();
     if (fromParam && fromParam.trim()) appData.senderSignature = fromParam.trim();
     if (msgParam && msgParam.trim()) appData.letterBody = msgParam.trim();
+    const videoParam = urlParams.get('video');
+    if (videoParam && videoParam.trim()) {
+      if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
+      appData.featuredVideo.url = videoParam.trim();
+    }
+
+    // Check for permanently stored uploaded video (Server or IndexedDB)
+    try {
+      let hasLoadedVideo = false;
+      try {
+        const headRes = await fetch('/api/video', { method: 'HEAD' });
+        if (headRes.ok) {
+          if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
+          appData.featuredVideo.url = '/api/video';
+          hasLoadedVideo = true;
+        }
+      } catch (e) {}
+
+      if (!hasLoadedVideo) {
+        const storedBlob = await getVideoFromIndexedDB();
+        if (storedBlob) {
+          const persistentUrl = URL.createObjectURL(storedBlob);
+          if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
+          appData.featuredVideo.url = persistentUrl;
+        }
+      }
+    } catch (e) {}
 
     applyDataToUI();
     updateAdminUI();

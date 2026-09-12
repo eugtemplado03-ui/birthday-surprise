@@ -53,6 +53,56 @@ function generateId() {
 // REST API ENDPOINTS
 // ==========================================
 
+
+// Video Upload Endpoint (Local/Persistent Storage)
+app.post('/api/upload-video', (req, res) => {
+  const videoPath = path.join(DATA_DIR, 'uploaded_video.mp4');
+  const fileStream = fs.createWriteStream(videoPath);
+  req.pipe(fileStream);
+
+  req.on('end', () => {
+    res.json({ success: true, url: '/api/video' });
+  });
+
+  req.on('error', (err) => {
+    res.status(500).json({ success: false, error: err.message });
+  });
+});
+
+// Video Streaming Endpoint with HTTP Range Support
+app.get('/api/video', (req, res) => {
+  const videoFile = path.join(DATA_DIR, 'uploaded_video.mp4');
+  if (!fs.existsSync(videoFile)) {
+    return res.status(404).send('No video uploaded yet');
+  }
+
+  const stat = fs.statSync(videoFile);
+  const fileSize = stat.size;
+  const range = req.headers.range;
+
+  if (range) {
+    const parts = range.replace(/bytes=/, '').split('-');
+    const start = parseInt(parts[0], 10);
+    const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+    const chunksize = (end - start) + 1;
+    const file = fs.createReadStream(videoFile, { start, end });
+    res.writeHead(206, {
+      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+      'Accept-Ranges': 'bytes',
+      'Content-Length': chunksize,
+      'Content-Type': 'video/mp4'
+    });
+    file.pipe(res);
+  } else {
+    res.writeHead(200, {
+      'Content-Length': fileSize,
+      'Content-Type': 'video/mp4',
+      'Accept-Ranges': 'bytes'
+    });
+    fs.createReadStream(videoFile).pipe(res);
+  }
+});
+
 // 1. Health Check
 app.get('/api/health', (req, res) => {
   res.json({
@@ -95,7 +145,7 @@ app.get('/api/surprise', async (req, res) => {
 // 3. Save & Update the Active Custom Surprise Directly
 app.post('/api/surprise', (req, res) => {
   try {
-    const { recipientName, senderSignature, letterDate, letterBody, photos, creatorPin } = req.body;
+    const { recipientName, senderSignature, letterDate, letterBody, photos, creatorPin, featuredVideo } = req.body;
     
     if (!recipientName) {
       return res.status(400).json({ error: 'Recipient name is required' });
@@ -108,6 +158,7 @@ app.post('/api/surprise', (req, res) => {
       letterBody: letterBody ? letterBody.trim() : '',
       photos: Array.isArray(photos) ? photos : [],
       creatorPin: creatorPin || '1234',
+      featuredVideo: featuredVideo || null,
       updatedAt: new Date().toISOString()
     };
 

@@ -292,6 +292,32 @@
 
       </div>
 
+      <!-- ================= ZONE 4: FEATURED BIRTHDAY VIDEO ================= -->
+      <section class="video-showcase-section" id="section-featured-video">
+        <div class="video-card glass-card">
+          <div class="card-header">
+            <span class="card-icon">🎬</span>
+            <h3 id="video-card-heading">A Special Video For You</h3>
+            <p class="card-subtext">A memorable moment & message in motion 🌸</p>
+          </div>
+
+          <div class="video-player-frame" id="featured-video-container">
+            <!-- Dynamic video/iframe injected via JS -->
+          </div>
+
+          <div class="video-info-box">
+            <h4 class="video-info-title" id="featured-video-title">Special Birthday Memory 💖</h4>
+            <p class="video-info-caption" id="featured-video-caption">Press play to watch this heartfelt moment recorded just for you!</p>
+          </div>
+
+          <div class="video-card-actions">
+            <button id="btn-edit-video" class="btn btn-outline-small admin-only" style="display: none;">
+              <i class="fa-solid fa-film"></i> Swap / Update Video
+            </button>
+          </div>
+        </div>
+      </section>
+
       <!-- Footer Greeting -->
       <footer class="celebration-footer">
         <p>Made with endless love, pink lilies & roses for your special day 💖 Happy Birthday!</p>
@@ -357,6 +383,38 @@
           <p class="input-hint">Select your favorite pictures together (supports JPEG, PNG, WEBP):</p>
           <input type="file" id="input-photo-upload" class="form-file" accept="image/*" multiple>
           <div id="upload-previews" class="upload-previews"></div>
+        </div>
+
+        <!-- Featured Birthday Video Configuration -->
+        <div class="form-group" style="margin-top: 1.2rem; border-top: 1px dashed #f8bed4; padding-top: 1rem;">
+          <label for="input-video-url"><i class="fa-solid fa-film"></i> Featured Video (YouTube / Link / File):</label>
+          <p class="input-hint">Paste any YouTube URL (regular, Shorts, youtu.be) or direct video link:</p>
+          <input type="url" id="input-video-url" class="form-input" placeholder="https://www.youtube.com/watch?v=nl62hhiBMOM">
+          
+          <div style="margin-top: 0.7rem; background: rgba(255, 240, 245, 0.7); padding: 0.6rem 0.8rem; border-radius: 12px; border: 1px solid #ffd6e5;">
+            <label for="input-video-file" style="font-size: 0.82rem; font-weight: 700; color: var(--text-heading); display: block; margin-bottom: 0.3rem;">
+              <i class="fa-solid fa-upload"></i> Or select a local video clip:
+            </label>
+            <input type="file" id="input-video-file" class="form-file" accept="video/*" style="font-size: 0.8rem;">
+            <p id="video-file-status" style="font-size: 0.75rem; color: var(--primary-pink); margin-top: 0.3rem; display: none; font-weight: 600;"></p>
+          </div>
+
+          <div style="margin-top: 0.8rem;">
+            <label for="input-video-title" style="font-size: 0.84rem; font-weight: 700; color: var(--text-heading);"><i class="fa-solid fa-heading"></i> Video Title:</label>
+            <input type="text" id="input-video-title" class="form-input" placeholder="e.g. A Special Message For You 🎬🌸">
+          </div>
+
+          <div style="margin-top: 0.8rem;">
+            <label for="input-video-caption" style="font-size: 0.84rem; font-weight: 700; color: var(--text-heading);"><i class="fa-solid fa-comment-dots"></i> Video Caption / Message:</label>
+            <input type="text" id="input-video-caption" class="form-input" placeholder="e.g. Press play to watch our favorite memories come alive! ❤️">
+          </div>
+
+          <div id="video-preview-wrapper" style="margin-top: 0.9rem; display: none;">
+            <p style="font-size: 0.8rem; font-weight: 700; color: var(--primary-deep); margin-bottom: 0.4rem;">
+              <i class="fa-solid fa-eye"></i> Video Preview:
+            </p>
+            <div id="customizer-video-preview" style="width: 100%; max-width: 340px; border-radius: 14px; overflow: hidden; border: 2px solid var(--primary-pink); background: #000;"></div>
+          </div>
         </div>
 
         <!-- Creator PIN Setting -->

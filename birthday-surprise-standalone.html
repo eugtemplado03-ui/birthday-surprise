@@ -93,10 +93,6 @@ body::-webkit-scrollbar {
   -webkit-tap-highlight-color: transparent;
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
 html {
   font-size: 16px;
   scroll-behavior: smooth;
@@ -104,9 +100,7 @@ html {
 
 body {
   width: 100%;
-  max-width: 100vw;
   min-height: 100vh;
-  min-height: 100dvh;
   min-height: -webkit-fill-available;
   overflow-x: hidden;
   font-family: var(--font-main);
@@ -151,18 +145,15 @@ body {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   min-height: 100vh;
-  min-height: 100dvh;
   min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 4.6rem 1.25rem 2rem;
+  padding: 3rem 1.25rem 2rem;
   margin: 0 auto;
-  box-sizing: border-box;
-  overflow-x: hidden;
 }
 
 /* ========================================================
@@ -170,25 +161,24 @@ body {
    ======================================================== */
 .floating-controls {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
+  top: 1.2rem;
+  right: 1.2rem;
   display: flex;
-  gap: 0.5rem;
-  z-index: 1000;
-  pointer-events: auto;
+  gap: 0.6rem;
+  z-index: 100;
 }
 
 .control-btn {
   position: relative;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 1.5px solid var(--glass-border);
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   color: var(--primary-pink);
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -196,7 +186,6 @@ body {
   transition: all 0.3s var(--ease-spring);
   box-shadow: 0 6px 20px rgba(224, 36, 106, 0.2);
   touch-action: manipulation;
-  flex-shrink: 0;
 }
 
 .control-btn:hover {
@@ -235,12 +224,9 @@ body {
 .stage {
   display: none;
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
   opacity: 0;
-  transform: scale(0.98) translateY(12px);
-  transition: opacity 0.5s var(--ease-smooth), transform 0.5s var(--ease-smooth);
+  transform: scale(0.96) translateY(20px);
+  transition: opacity 0.6s var(--ease-smooth), transform 0.6s var(--ease-smooth);
 }
 
 .stage.active {
@@ -261,9 +247,6 @@ body {
   position: relative;
   overflow: hidden;
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
 }
 
 .glass-card::before {
@@ -281,19 +264,8 @@ body {
    STAGE 1: INTRO & EVASIVE QUESTION CARD
    ======================================================== */
 #stage-intro {
-  max-width: 620px;
-  width: 100%;
+  max-width: 680px;
   margin: 0 auto;
-  box-sizing: border-box;
-  min-width: 0;
-}
-
-#stage-celebration {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
-  min-width: 0;
 }
 
 .intro-card {
@@ -301,9 +273,6 @@ body {
   position: relative;
   z-index: 5;
   background: rgba(255, 255, 255, 0.78);
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 /* Corner Flowers (Pink Lilies & Roses) */
@@ -595,30 +564,23 @@ body {
    ======================================================== */
 .celebration-hero {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.2rem;
   width: 100%;
-  max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 0.5rem;
-  box-sizing: border-box;
 }
 
 .hero-confetti-badge {
   display: inline-block;
   background: linear-gradient(135deg, #ff4d79, #ff2d75);
   color: #fff;
-  padding: 0.45rem 1.2rem;
+  padding: 0.5rem 1.4rem;
   border-radius: 50px;
   font-weight: 800;
-  font-size: clamp(0.8rem, 3vw, 1rem);
+  font-size: clamp(0.85rem, 3.2vw, 1.05rem);
   letter-spacing: 0.5px;
-  margin-bottom: 0.8rem;
+  margin-bottom: 1rem;
   box-shadow: 0 6px 20px rgba(255, 45, 117, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.5);
   animation: popIn 0.6s var(--ease-spring);
-  max-width: 100%;
-  word-break: break-word;
 }
 
 @keyframes popIn {
@@ -628,13 +590,12 @@ body {
 
 .hero-title {
   font-family: var(--font-heading);
-  font-size: clamp(1.65rem, 5.2vw, 3rem);
+  font-size: clamp(1.85rem, 5.5vw, 3.2rem);
   font-weight: 800;
   color: var(--text-heading);
-  line-height: 1.25;
+  line-height: 1.2;
   margin-bottom: 0.6rem;
   word-break: break-word;
-  overflow-wrap: break-word;
 }
 
 .hero-name {
@@ -645,51 +606,39 @@ body {
 }
 
 .hero-subtitle {
-  font-size: clamp(0.88rem, 3.2vw, 1.1rem);
+  font-size: clamp(0.92rem, 3vw, 1.15rem);
   color: var(--text-muted);
-  max-width: 600px;
+  max-width: 620px;
   margin: 0 auto;
   padding: 0 0.5rem;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  line-height: 1.5;
 }
 
 /* Celebration 3-Column Grid */
 .celebration-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
   margin-bottom: 2.5rem;
   align-items: stretch;
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 .celebration-column {
   display: flex;
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
 }
 
 .showcase-card {
   width: 100%;
-  max-width: 100%;
-  min-width: 0;
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.8);
   border: 2px solid var(--glass-border);
   box-shadow: 0 16px 40px rgba(224, 36, 106, 0.15);
   border-radius: 26px;
   padding: 2rem 1.5rem;
   position: relative;
   transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s ease;
-  box-sizing: border-box;
-  overflow: hidden;
 }
 
 .showcase-card:hover {
@@ -700,8 +649,6 @@ body {
 .card-header {
   text-align: center;
   margin-bottom: 1.5rem;
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .card-icon {
@@ -900,10 +847,8 @@ body {
 .tier-plate {
   position: absolute;
   bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 230px;
-  max-width: calc(100% + 20px);
+  left: -20px;
+  width: 240px;
   height: 16px;
   background: linear-gradient(180deg, #ffffff 0%, #f0d5e2 100%);
   border-radius: 50%;
@@ -1039,12 +984,8 @@ body {
 .gallery-navigation {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.8rem;
   margin-bottom: 0.9rem;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 .nav-arrow {
@@ -1060,7 +1001,6 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   touch-action: manipulation;
-  flex-shrink: 0;
 }
 
 .nav-arrow:hover, .nav-arrow:active {
@@ -1071,26 +1011,7 @@ body {
 
 .photo-dots {
   display: flex;
-  align-items: center;
-  justify-content: center;
   gap: 6px;
-  max-width: 180px;
-  overflow: hidden;
-}
-
-.photo-counter-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: rgba(255, 45, 117, 0.12);
-  color: var(--primary-deep);
-  font-weight: 700;
-  font-size: 0.86rem;
-  padding: 0.35rem 0.85rem;
-  border-radius: 50px;
-  border: 1px solid rgba(255, 77, 121, 0.35);
-  box-shadow: 0 2px 8px rgba(255, 45, 117, 0.1);
-  white-space: nowrap;
 }
 
 .photo-dot {
@@ -1100,7 +1021,6 @@ body {
   background: rgba(255, 77, 121, 0.3);
   cursor: pointer;
   transition: all 0.2s ease;
-  flex-shrink: 0;
 }
 
 .photo-dot.active {
@@ -1236,17 +1156,14 @@ body {
   font-size: 0.82rem;
   color: var(--text-heading);
   font-weight: 700;
-  white-space: normal;
+  white-space: nowrap;
   text-align: center;
-  width: 100%;
-  max-width: 260px;
+  width: max-content;
 }
 
 /* Unfolded Parchment Paper */
 .letter-unfolded {
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
   animation: unfoldLetter 0.5s var(--ease-spring) forwards;
 }
 
@@ -1264,8 +1181,6 @@ body {
   position: relative;
   color: var(--parchment-text);
   width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 .letter-stamp {
@@ -1293,18 +1208,14 @@ body {
   font-weight: 700;
   color: var(--text-heading);
   margin-bottom: 0.6rem;
-  word-break: break-word;
-  overflow-wrap: break-word;
 }
 
 .letter-body {
   font-size: 0.92rem;
   line-height: 1.6;
   color: var(--parchment-text);
-  white-space: pre-wrap;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  max-height: 220px;
+  white-space: pre-line;
+  max-height: 170px;
   overflow-y: auto;
   padding-right: 4px;
   margin-bottom: 0.8rem;
@@ -1315,15 +1226,11 @@ body {
   text-align: right;
   border-top: 1px dashed #f8c3d9;
   padding-top: 0.5rem;
-  word-break: break-word;
-  overflow-wrap: break-word;
 }
 
 .letter-sign-off {
   font-size: 0.8rem;
   color: var(--text-sub);
-  word-break: break-word;
-  overflow-wrap: break-word;
 }
 
 .letter-signature {
@@ -1331,8 +1238,6 @@ body {
   font-size: 1.35rem;
   font-weight: 700;
   color: var(--primary-deep);
-  word-break: break-word;
-  overflow-wrap: break-word;
 }
 
 .letter-actions {
@@ -1359,6 +1264,116 @@ body {
 .btn-link:hover, .btn-link:active {
   color: var(--primary-deep);
   text-decoration: underline;
+}
+
+/* ========================================================
+   ZONE 4: FEATURED BIRTHDAY VIDEO SHOWCASE
+   ======================================================== */
+.video-showcase-section {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto 3rem;
+}
+
+.video-card {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.88);
+  border: 2px solid var(--glass-border);
+  box-shadow: 0 16px 45px rgba(224, 36, 106, 0.18);
+  border-radius: 28px;
+  padding: 2.2rem 2rem;
+  position: relative;
+  transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s ease;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.video-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 55px rgba(224, 36, 106, 0.25);
+}
+
+.video-player-frame {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #1e0915;
+  box-shadow: 0 12px 35px rgba(186, 45, 95, 0.28);
+  border: 2.5px solid rgba(255, 255, 255, 0.95);
+}
+
+.video-player-frame iframe,
+.video-player-frame video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+.video-info-box {
+  margin-top: 1.4rem;
+  text-align: center;
+  padding: 0 0.5rem;
+}
+
+.video-info-title {
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 3.5vw, 1.55rem);
+  color: var(--text-heading);
+  margin-bottom: 0.35rem;
+  font-weight: 700;
+}
+
+.video-info-caption {
+  font-size: clamp(0.88rem, 2.5vw, 1rem);
+  color: var(--text-muted);
+  line-height: 1.5;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.video-card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.2rem;
+}
+
+.video-placeholder-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffd3e4 0%, #ffb1ce 100%);
+  color: var(--primary-deep);
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.video-placeholder-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--primary-pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  box-shadow: 0 8px 24px rgba(224, 36, 106, 0.3);
 }
 
 /* Footer */
@@ -1543,10 +1558,10 @@ body {
 
 @media (max-width: 1024px) {
   .celebration-grid {
-    grid-template-columns: minmax(0, 1fr);
-    max-width: 480px;
+    grid-template-columns: 1fr;
+    max-width: 540px;
     margin: 0 auto 2.5rem;
-    gap: 1.8rem;
+    gap: 2rem;
   }
 }
 
@@ -1558,34 +1573,33 @@ body {
   .floating-controls {
     top: 0.8rem;
     right: 0.8rem;
-    gap: 0.45rem;
+    gap: 0.5rem;
   }
 
   .control-btn {
-    width: 38px;
-    height: 38px;
-    font-size: 0.95rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
   }
 
   .glass-card {
-    padding: 1.8rem 1.2rem;
-    border-radius: 22px;
+    padding: 2rem 1.25rem;
+    border-radius: 24px;
   }
 
   .question-container {
-    padding: 1.4rem 0.9rem;
+    padding: 1.5rem 1rem;
   }
 
   .button-arena {
     flex-direction: column;
-    gap: 0.8rem;
-    min-height: auto;
+    gap: 0.9rem;
   }
 
   .btn {
     width: 100%;
     max-width: 280px;
-    padding: 0.85rem 1.5rem;
+    padding: 0.85rem 1.6rem;
   }
 
   .btn-yes {
@@ -1595,7 +1609,6 @@ body {
 
   .btn-no {
     order: 2;
-    min-width: 130px;
   }
 
   .modal-footer {
@@ -1610,77 +1623,53 @@ body {
 
 @media (max-width: 480px) {
   .app-container {
-    padding: 3.8rem 0.75rem 1.25rem;
-  }
-
-  .celebration-grid {
-    max-width: 100%;
-    gap: 1.4rem;
-    margin-bottom: 2rem;
+    padding: 3.6rem 0.65rem 1.25rem;
   }
 
   .glass-card {
-    padding: 1.5rem 1rem;
+    padding: 1.6rem 0.95rem;
     border-radius: 20px;
-  }
-
-  .showcase-card {
-    padding: 1.5rem 1rem;
-    border-radius: 20px;
-  }
-
-  .card-header {
-    margin-bottom: 1.1rem;
-  }
-
-  .card-header h3 {
-    font-size: 1.25rem;
-  }
-
-  .card-icon {
-    font-size: 1.9rem;
   }
 
   .floral-top-left {
-    top: -6px;
-    left: -6px;
+    top: -8px;
+    left: -8px;
   }
 
   .floral-bottom-right {
-    bottom: -6px;
-    right: -6px;
+    bottom: -8px;
+    right: -8px;
   }
 
   .balloon-cluster {
-    font-size: 1.3rem;
-    top: 0.5rem;
+    font-size: 1.4rem;
+    top: 0.6rem;
   }
 
   .intro-badge {
     font-size: 0.75rem;
     padding: 0.35rem 0.85rem;
-    margin-top: 0.6rem;
-    margin-bottom: 0.8rem;
+    margin-top: 0.8rem;
   }
 
   .intro-title {
     margin-bottom: 0.6rem;
-    font-size: clamp(1.45rem, 5.2vw, 1.85rem);
+    font-size: clamp(1.45rem, 5.5vw, 1.85rem);
   }
 
-  .question-text {
-    font-size: clamp(1.2rem, 4.5vw, 1.6rem);
-    margin-bottom: 1rem;
+  .showcase-card {
+    padding: 1.6rem 1.1rem;
+    border-radius: 22px;
   }
 
   .cake-container {
     transform: scale(0.92);
-    margin: 0.4rem auto;
+    margin: 0.5rem auto;
   }
 
   .polaroid-stack {
-    width: 195px;
-    height: 235px;
+    width: 200px;
+    height: 240px;
   }
 
   .polaroid-photo-box {
@@ -1688,62 +1677,48 @@ body {
   }
 
   .envelope {
-    width: 200px;
-    height: 138px;
+    width: 210px;
+    height: 145px;
     margin: 0 auto;
   }
 
   .envelope-flap {
-    border-left-width: 100px;
-    border-right-width: 100px;
-    border-top-width: 70px;
+    border-left-width: 105px;
+    border-right-width: 105px;
+    border-top-width: 72px;
   }
 
   .envelope-pocket {
-    border-left-width: 100px;
-    border-right-width: 100px;
-    border-bottom-width: 70px;
+    border-left-width: 105px;
+    border-right-width: 105px;
+    border-bottom-width: 72px;
   }
 
   .parchment-paper {
     padding: 1.1rem 0.85rem;
   }
 
-  .letter-salutation {
-    font-size: 1.1rem;
-  }
-
   .letter-body {
     font-size: 0.88rem;
-    max-height: 180px;
-  }
-
-  .celebration-footer {
-    font-size: 0.82rem;
-    padding: 1rem 0 1.5rem;
+    max-height: 160px;
   }
 }
 
 @media (max-width: 360px) {
   .app-container {
-    padding: 3.5rem 0.5rem 1rem;
+    padding: 3.4rem 0.45rem 1rem;
   }
 
   .intro-title {
-    font-size: 1.3rem;
-  }
-
-  .question-text {
-    font-size: 1.1rem;
-  }
-
-  .hero-title {
     font-size: 1.35rem;
   }
 
-  .hero-confetti-badge {
-    font-size: 0.72rem;
-    padding: 0.35rem 0.8rem;
+  .question-text {
+    font-size: 1.15rem;
+  }
+
+  .hero-title {
+    font-size: 1.4rem;
   }
 
   .cake-container {
@@ -1751,30 +1726,30 @@ body {
   }
 
   .polaroid-stack {
-    width: 170px;
-    height: 205px;
+    width: 175px;
+    height: 210px;
   }
 
   .envelope {
-    width: 175px;
-    height: 120px;
+    width: 180px;
+    height: 125px;
   }
 
   .envelope-flap {
-    border-left-width: 87px;
-    border-right-width: 87px;
-    border-top-width: 60px;
+    border-left-width: 90px;
+    border-right-width: 90px;
+    border-top-width: 62px;
   }
 
   .envelope-pocket {
-    border-left-width: 87px;
-    border-right-width: 87px;
-    border-bottom-width: 60px;
+    border-left-width: 90px;
+    border-right-width: 90px;
+    border-bottom-width: 62px;
   }
 
   .btn-pin-digit {
-    height: 44px;
-    font-size: 1.1rem;
+    height: 46px;
+    font-size: 1.15rem;
   }
 }
 
@@ -2111,6 +2086,32 @@ body {
 
       </div>
 
+      <!-- ================= ZONE 4: FEATURED BIRTHDAY VIDEO ================= -->
+      <section class="video-showcase-section" id="section-featured-video">
+        <div class="video-card glass-card">
+          <div class="card-header">
+            <span class="card-icon">üé¨</span>
+            <h3 id="video-card-heading">A Special Video For You</h3>
+            <p class="card-subtext">A memorable moment & message in motion üå∏</p>
+          </div>
+
+          <div class="video-player-frame" id="featured-video-container">
+            <!-- Dynamic video/iframe injected via JS -->
+          </div>
+
+          <div class="video-info-box">
+            <h4 class="video-info-title" id="featured-video-title">Special Birthday Memory üíñ</h4>
+            <p class="video-info-caption" id="featured-video-caption">Press play to watch this heartfelt moment recorded just for you!</p>
+          </div>
+
+          <div class="video-card-actions">
+            <button id="btn-edit-video" class="btn btn-outline-small admin-only" style="display: none;">
+              <i class="fa-solid fa-film"></i> Swap / Update Video
+            </button>
+          </div>
+        </div>
+      </section>
+
       <!-- Footer Greeting -->
       <footer class="celebration-footer">
         <p>Made with endless love, pink lilies & roses for your special day üíñ Happy Birthday!</p>
@@ -2176,6 +2177,38 @@ body {
           <p class="input-hint">Select your favorite pictures together (supports JPEG, PNG, WEBP):</p>
           <input type="file" id="input-photo-upload" class="form-file" accept="image/*" multiple>
           <div id="upload-previews" class="upload-previews"></div>
+        </div>
+
+        <!-- Featured Birthday Video Configuration -->
+        <div class="form-group" style="margin-top: 1.2rem; border-top: 1px dashed #f8bed4; padding-top: 1rem;">
+          <label for="input-video-url"><i class="fa-solid fa-film"></i> Featured Video (YouTube / Link / File):</label>
+          <p class="input-hint">Paste any YouTube URL (regular, Shorts, youtu.be) or direct video link:</p>
+          <input type="url" id="input-video-url" class="form-input" placeholder="https://www.youtube.com/watch?v=nl62hhiBMOM">
+          
+          <div style="margin-top: 0.7rem; background: rgba(255, 240, 245, 0.7); padding: 0.6rem 0.8rem; border-radius: 12px; border: 1px solid #ffd6e5;">
+            <label for="input-video-file" style="font-size: 0.82rem; font-weight: 700; color: var(--text-heading); display: block; margin-bottom: 0.3rem;">
+              <i class="fa-solid fa-upload"></i> Or select a local video clip:
+            </label>
+            <input type="file" id="input-video-file" class="form-file" accept="video/*" style="font-size: 0.8rem;">
+            <p id="video-file-status" style="font-size: 0.75rem; color: var(--primary-pink); margin-top: 0.3rem; display: none; font-weight: 600;"></p>
+          </div>
+
+          <div style="margin-top: 0.8rem;">
+            <label for="input-video-title" style="font-size: 0.84rem; font-weight: 700; color: var(--text-heading);"><i class="fa-solid fa-heading"></i> Video Title:</label>
+            <input type="text" id="input-video-title" class="form-input" placeholder="e.g. A Special Message For You üé¨üå∏">
+          </div>
+
+          <div style="margin-top: 0.8rem;">
+            <label for="input-video-caption" style="font-size: 0.84rem; font-weight: 700; color: var(--text-heading);"><i class="fa-solid fa-comment-dots"></i> Video Caption / Message:</label>
+            <input type="text" id="input-video-caption" class="form-input" placeholder="e.g. Press play to watch our favorite memories come alive! ‚ù§Ô∏è">
+          </div>
+
+          <div id="video-preview-wrapper" style="margin-top: 0.9rem; display: none;">
+            <p style="font-size: 0.8rem; font-weight: 700; color: var(--primary-deep); margin-bottom: 0.4rem;">
+              <i class="fa-solid fa-eye"></i> Video Preview:
+            </p>
+            <div id="customizer-video-preview" style="width: 100%; max-width: 340px; border-radius: 14px; overflow: hidden; border: 2px solid var(--primary-pink); background: #000;"></div>
+          </div>
         </div>
 
         <!-- Creator PIN Setting -->
@@ -2264,6 +2297,11 @@ From every laugh we've shared to all our little sweet moments, having you in my 
 May this new year of your life be blessed with endless happiness, blooming love, good health, and all the dreams your heart desires!
 
 I hope this little surprise brings the biggest smile to your beautiful face! üéÇüå∏üéâ`,
+    featuredVideo: {
+      url: 'https://www.youtube.com/watch?v=nl62hhiBMOM',
+      title: 'A Special Video For Your Birthday üé¨üå∏',
+      caption: 'Press play to watch a heartfelt message recorded just for you ‚ù§Ô∏è'
+    },
     photos: [
       {
         url: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="%23ff9a9e"/><stop offset="99%" stop-color="%23fecfef"/></linearGradient></defs><rect width="100%" height="100%" fill="url(%23g1)"/><circle cx="200" cy="180" r="75" fill="%23ffffff" opacity="0.9"/><text x="200" y="195" font-size="65" text-anchor="middle">üå∏</text><text x="200" y="310" font-size="22" text-anchor="middle" fill="%23d63384" font-weight="bold" font-family="sans-serif">Sweetest Smile</text></svg>',
@@ -2364,6 +2402,187 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
   const uploadPreviews = document.getElementById('upload-previews');
   const btnSaveCustomizer = document.getElementById('btn-save-customizer');
   const btnResetDefaults = document.getElementById('btn-reset-defaults');
+
+  const featuredVideoContainer = document.getElementById('featured-video-container');
+  const featuredVideoTitle = document.getElementById('featured-video-title');
+  const featuredVideoCaption = document.getElementById('featured-video-caption');
+  const btnEditVideo = document.getElementById('btn-edit-video');
+
+  const inputVideoUrl = document.getElementById('input-video-url');
+  const inputVideoFile = document.getElementById('input-video-file');
+  const videoFileStatus = document.getElementById('video-file-status');
+  const inputVideoTitle = document.getElementById('input-video-title');
+  const inputVideoCaption = document.getElementById('input-video-caption');
+  const videoPreviewWrapper = document.getElementById('video-preview-wrapper');
+  const customizerVideoPreview = document.getElementById('customizer-video-preview');
+
+  // ==========================================
+  // 2.5 VIDEO HELPER FUNCTIONS (PERMANENT STORAGE & INDEXEDDB)
+  // ==========================================
+  function openVideoDatabase() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open('BirthdaySurpriseVideoDB', 1);
+      request.onupgradeneeded = (e) => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains('videos')) {
+          db.createObjectStore('videos');
+        }
+      };
+      request.onsuccess = (e) => resolve(e.target.result);
+      request.onerror = (e) => reject(e);
+    });
+  }
+
+  async function saveVideoToIndexedDB(file) {
+    try {
+      const db = await openVideoDatabase();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('videos', 'readwrite');
+        const store = tx.objectStore('videos');
+        store.put(file, 'featuredVideoBlob');
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = (e) => reject(e);
+      });
+    } catch (err) {
+      console.error('IndexedDB save error:', err);
+      return false;
+    }
+  }
+
+  async function getVideoFromIndexedDB() {
+    try {
+      const db = await openVideoDatabase();
+      return new Promise((resolve) => {
+        const tx = db.transaction('videos', 'readonly');
+        const store = tx.objectStore('videos');
+        const req = store.get('featuredVideoBlob');
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => resolve(null);
+      });
+    } catch (err) {
+      return null;
+    }
+  }
+
+  async function deleteVideoFromIndexedDB() {
+    try {
+      const db = await openVideoDatabase();
+      return new Promise((resolve) => {
+        const tx = db.transaction('videos', 'readwrite');
+        const store = tx.objectStore('videos');
+        store.delete('featuredVideoBlob');
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(false);
+      });
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function uploadVideoToServer(file) {
+    try {
+      const res = await fetch('/api/upload-video', {
+        method: 'POST',
+        body: file
+      });
+      if (res.ok) {
+        const json = await res.json();
+        return json.url;
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function parseVideoData(url) {
+    if (!url || typeof url !== 'string') return null;
+    const trimmed = url.trim();
+    if (!trimmed) return null;
+
+    // YouTube (watch, embed, youtu.be, shorts)
+    const ytMatch = trimmed.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/i);
+    if (ytMatch && ytMatch[1]) {
+      return {
+        type: 'youtube',
+        embedUrl: 'https://www.youtube-nocookie.com/embed/' + ytMatch[1] + '?enablejsapi=1&rel=0'
+      };
+    }
+
+    // Vimeo
+    const vimeoMatch = trimmed.match(/vimeo\.com\/(?:video\/)?([0-9]+)/i);
+    if (vimeoMatch && vimeoMatch[1]) {
+      return {
+        type: 'vimeo',
+        embedUrl: 'https://player.vimeo.com/video/' + vimeoMatch[1]
+      };
+    }
+
+    // Google Drive Preview
+    const driveMatch = trimmed.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i);
+    if (driveMatch && driveMatch[1]) {
+      return {
+        type: 'drive',
+        embedUrl: 'https://drive.google.com/file/d/' + driveMatch[1] + '/preview'
+      };
+    }
+
+    // Direct video stream / MP4 / WebM / Blob / Data URL
+    return {
+      type: 'direct',
+      src: trimmed
+    };
+  }
+
+  function renderVideoPlayer(targetEl, videoData, isCompact) {
+    if (!targetEl) return;
+    targetEl.innerHTML = '';
+
+    const parsed = parseVideoData(videoData ? videoData.url : '');
+    if (!parsed) {
+      targetEl.innerHTML = '<div class="video-placeholder-container">' +
+        '<div class="video-placeholder-icon"><i class="fa-solid fa-film"></i></div>' +
+        '<strong style="font-size:1.1rem; margin-bottom:0.2rem;">No Video Selected</strong>' +
+        '<span style="font-size:0.85rem; opacity:0.85;">Add a YouTube URL or video file in Creator Studio! üå∏</span>' +
+        '</div>';
+      return;
+    }
+
+    if (parsed.type === 'youtube' || parsed.type === 'vimeo' || parsed.type === 'drive') {
+      const iframe = document.createElement('iframe');
+      iframe.src = parsed.embedUrl;
+      iframe.title = (videoData && videoData.title) ? videoData.title : 'Birthday Video';
+      iframe.setAttribute('allowfullscreen', 'true');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+      if (isCompact) {
+        iframe.style.width = '100%';
+        iframe.style.height = '180px';
+        iframe.style.border = 'none';
+      }
+      targetEl.appendChild(iframe);
+    } else {
+      const video = document.createElement('video');
+      video.src = parsed.src;
+      video.controls = true;
+      video.playsInline = true;
+      video.preload = 'metadata';
+      if (isCompact) {
+        video.style.width = '100%';
+        video.style.maxHeight = '180px';
+        video.style.display = 'block';
+      }
+      targetEl.appendChild(video);
+    }
+  }
+
+  function updateCustomizerVideoPreview() {
+    const url = (inputVideoFile && inputVideoFile.uploadedVideoUrl) ? inputVideoFile.uploadedVideoUrl : (inputVideoUrl ? inputVideoUrl.value.trim() : '');
+    if (url) {
+      if (videoPreviewWrapper) videoPreviewWrapper.style.display = 'block';
+      renderVideoPlayer(customizerVideoPreview, { url: url }, true);
+    } else {
+      if (videoPreviewWrapper) videoPreviewWrapper.style.display = 'none';
+      if (customizerVideoPreview) customizerVideoPreview.innerHTML = '';
+    }
+  }
 
   // ==========================================
   // 3. HAPPY BIRTHDAY SONG - WEB AUDIO SYNTH
@@ -2737,8 +2956,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     const btnWidth = btnNo.offsetWidth || 110;
     const btnHeight = btnNo.offsetHeight || 44;
 
-    const padX = 14;
-    const padTop = 78; // Below floating top buttons
+    const padX = 16;
+    const padTop = 68; // Below floating top buttons
     const padBottom = 24;
 
     const maxX = Math.max(padX, viewportW - btnWidth - padX);
@@ -2758,8 +2977,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     wittyPopup.classList.add('show');
 
     // Grow YES button safely for mobile
-    const maxScale = window.innerWidth < 600 ? 1.15 : 1.35;
-    const newScale = Math.min(maxScale, 1 + dodgeCount * 0.04);
+    const maxScale = window.innerWidth < 600 ? 1.35 : 1.65;
+    const newScale = Math.min(maxScale, 1 + dodgeCount * 0.06);
     btnYes.style.transform = `scale(${newScale})`;
     btnYes.style.boxShadow = `0 ${10 + dodgeCount * 2}px ${26 + dodgeCount * 4}px rgba(255, 45, 117, ${Math.min(0.9, 0.45 + dodgeCount * 0.05)})`;
 
@@ -2880,14 +3099,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     polaroidStack.innerHTML = '';
     photoDots.innerHTML = '';
     const photos = appData.photos || [];
-    const totalPhotos = photos.length;
 
     photos.forEach((photo, idx) => {
       const card = document.createElement('div');
       card.className = 'polaroid-card';
       if (idx === activePhotoIndex) card.classList.add('active');
-      else if (idx === (activePhotoIndex + 1) % totalPhotos) card.classList.add('stacked-1');
-      else if (idx === (activePhotoIndex + 2) % totalPhotos) card.classList.add('stacked-2');
+      else if (idx === (activePhotoIndex + 1) % photos.length) card.classList.add('stacked-1');
+      else if (idx === (activePhotoIndex + 2) % photos.length) card.classList.add('stacked-2');
       else { card.style.opacity = '0'; card.style.pointerEvents = 'none'; }
 
       card.innerHTML = `
@@ -2900,21 +3118,12 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
       });
 
       polaroidStack.appendChild(card);
-    });
 
-    if (totalPhotos <= 8) {
-      photoDots.style.display = 'flex';
-      photoDots.innerHTML = '';
-      photos.forEach((_, idx) => {
-        const dot = document.createElement('div');
-        dot.className = `photo-dot ${idx === activePhotoIndex ? 'active' : ''}`;
-        dot.addEventListener('click', () => setActivePhoto(idx));
-        photoDots.appendChild(dot);
-      });
-    } else {
-      photoDots.style.display = 'flex';
-      photoDots.innerHTML = `<span class="photo-counter-badge"><i class="fa-solid fa-camera-retro"></i> ${activePhotoIndex + 1} / ${totalPhotos}</span>`;
-    }
+      const dot = document.createElement('div');
+      dot.className = `photo-dot ${idx === activePhotoIndex ? 'active' : ''}`;
+      dot.addEventListener('click', () => setActivePhoto(idx));
+      photoDots.appendChild(dot);
+    });
   }
 
   function setActivePhoto(index) {
@@ -2922,6 +3131,12 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     const count = appData.photos.length;
     activePhotoIndex = (index + count) % count;
     renderPolaroids();
+
+    // Render Featured Video
+    const videoData = appData.featuredVideo || defaultData.featuredVideo;
+    if (featuredVideoTitle) featuredVideoTitle.textContent = (videoData && videoData.title) ? videoData.title : defaultData.featuredVideo.title;
+    if (featuredVideoCaption) featuredVideoCaption.textContent = (videoData && videoData.caption) ? videoData.caption : defaultData.featuredVideo.caption;
+    renderVideoPlayer(featuredVideoContainer, videoData, false);
   }
 
   btnPrevPhoto.addEventListener('click', () => setActivePhoto(activePhotoIndex - 1));
@@ -3146,6 +3361,42 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
   btnCustomize.addEventListener('click', openCustomizer);
   btnEditLetter.addEventListener('click', openCustomizer);
   btnAddPhotos.addEventListener('click', openCustomizer);
+  if (btnEditVideo) btnEditVideo.addEventListener('click', openCustomizer);
+
+  if (inputVideoUrl) {
+    inputVideoUrl.addEventListener('input', () => {
+      if (inputVideoFile) inputVideoFile.uploadedVideoUrl = '';
+      if (videoFileStatus) videoFileStatus.style.display = 'none';
+      updateCustomizerVideoPreview();
+    });
+  }
+
+  if (inputVideoFile) {
+    inputVideoFile.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (videoFileStatus) {
+        videoFileStatus.style.display = 'block';
+        videoFileStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving video permanently... ‚è≥';
+      }
+
+      // 1. Save to IndexedDB (Client-side permanent storage)
+      await saveVideoToIndexedDB(file);
+
+      // 2. Upload to server (if server is active)
+      const serverUrl = await uploadVideoToServer(file);
+
+      const localBlobUrl = URL.createObjectURL(file);
+      inputVideoFile.uploadedVideoUrl = serverUrl || localBlobUrl;
+      inputVideoFile.hasPermanentUploadedVideo = true;
+
+      if (inputVideoUrl) inputVideoUrl.value = '';
+      if (videoFileStatus) {
+        videoFileStatus.innerHTML = '<i class="fa-solid fa-circle-check"></i> Saved permanently: <strong>' + file.name + '</strong> (will not disappear on refresh)! ‚ú®';
+      }
+      updateCustomizerVideoPreview();
+    });
+  }
   btnCloseCustomizer.addEventListener('click', closeCustomizer);
 
   customizerModal.addEventListener('click', (e) => {
@@ -3237,6 +3488,14 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
       activePhotoIndex = 0;
     }
 
+    // Save Featured Video Settings
+    const videoUrlToSave = (inputVideoFile && inputVideoFile.uploadedVideoUrl) ? inputVideoFile.uploadedVideoUrl : (inputVideoUrl ? inputVideoUrl.value.trim() : '');
+    appData.featuredVideo = {
+      url: videoUrlToSave || defaultData.featuredVideo.url,
+      title: (inputVideoTitle && inputVideoTitle.value.trim()) ? inputVideoTitle.value.trim() : defaultData.featuredVideo.title,
+      caption: (inputVideoCaption && inputVideoCaption.value.trim()) ? inputVideoCaption.value.trim() : defaultData.featuredVideo.caption
+    };
+
     // 1. Save directly into persistent browser storage
     try {
       localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
@@ -3277,6 +3536,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     if (confirm("Reset all customizations back to default?")) {
       appData = JSON.parse(JSON.stringify(defaultData));
       localStorage.removeItem('birthday_surprise_data');
+      deleteVideoFromIndexedDB();
       applyDataToUI();
       closeCustomizer();
     }
@@ -3345,6 +3605,33 @@ I hope this little surprise brings the biggest smile to your beautiful face! üé
     if (toParam && toParam.trim()) appData.recipientName = toParam.trim();
     if (fromParam && fromParam.trim()) appData.senderSignature = fromParam.trim();
     if (msgParam && msgParam.trim()) appData.letterBody = msgParam.trim();
+    const videoParam = urlParams.get('video');
+    if (videoParam && videoParam.trim()) {
+      if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
+      appData.featuredVideo.url = videoParam.trim();
+    }
+
+    // Check for permanently stored uploaded video (Server or IndexedDB)
+    try {
+      let hasLoadedVideo = false;
+      try {
+        const headRes = await fetch('/api/video', { method: 'HEAD' });
+        if (headRes.ok) {
+          if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
+          appData.featuredVideo.url = '/api/video';
+          hasLoadedVideo = true;
+        }
+      } catch (e) {}
+
+      if (!hasLoadedVideo) {
+        const storedBlob = await getVideoFromIndexedDB();
+        if (storedBlob) {
+          const persistentUrl = URL.createObjectURL(storedBlob);
+          if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
+          appData.featuredVideo.url = persistentUrl;
+        }
+      }
+    } catch (e) {}
 
     applyDataToUI();
     updateAdminUI();
