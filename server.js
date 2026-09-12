@@ -145,11 +145,15 @@ app.get('/api/surprise', async (req, res) => {
 // 3. Save & Update the Active Custom Surprise Directly
 app.post('/api/surprise', (req, res) => {
   try {
-    const { recipientName, senderSignature, letterDate, letterBody, photos, creatorPin, featuredVideo } = req.body;
+    const { recipientName, senderSignature, letterDate, letterBody, photos, creatorPin, featuredVideo, videos } = req.body;
     
     if (!recipientName) {
       return res.status(400).json({ error: 'Recipient name is required' });
     }
+
+    const videoList = Array.isArray(videos) && videos.length > 0 
+      ? videos 
+      : (featuredVideo ? [featuredVideo] : []);
 
     const surpriseData = {
       recipientName: recipientName.trim(),
@@ -158,7 +162,8 @@ app.post('/api/surprise', (req, res) => {
       letterBody: letterBody ? letterBody.trim() : '',
       photos: Array.isArray(photos) ? photos : [],
       creatorPin: creatorPin || '1234',
-      featuredVideo: featuredVideo || null,
+      videos: videoList,
+      featuredVideo: videoList.length > 0 ? videoList[0] : null,
       updatedAt: new Date().toISOString()
     };
 
@@ -173,21 +178,6 @@ app.post('/api/surprise', (req, res) => {
     console.error('Error saving surprise:', err);
     res.status(500).json({ error: 'Failed to save surprise' });
   }
-});
-
-// 4. Get a Custom Birthday Surprise by ID (fallback)
-app.get('/api/surprise/:id', (req, res) => {
-  const { id } = req.params;
-  const surprise = surprises[id] || loadData(path.join(DATA_DIR, 'active_surprise.json'), null);
-
-  if (!surprise) {
-    return res.status(404).json({ error: 'Surprise not found' });
-  }
-
-  res.json({
-    success: true,
-    data: surprise
-  });
 });
 
 // 4. Record a Birthday Candle Wish / Guestbook Message

@@ -14,7 +14,7 @@
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
-  <link rel="stylesheet" href="style.css?v=cloudinary-1789222237648">
+  <link rel="stylesheet" href="style.css?v=cloudinary-1789223680714">
 
   <!-- Inlined Layout Overrides (Cache-Immune, Applied First) -->
   <style>
@@ -225,7 +225,215 @@
       color: #ffffff !important;
       border-color: #ff4d8d !important;
       transform: translateY(-2px) !important;
-      box-shadow: 0 6px 18px rgba(255, 45, 117, 0.3) !important;
+    /* ---- Video Carousel & Navigation Styles ---- */
+    .video-player-wrapper {
+      position: relative !important;
+      width: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    .video-nav-arrow {
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      width: 46px !important;
+      height: 46px !important;
+      border-radius: 50% !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      border: 2px solid #ff85a9 !important;
+      color: #d81458 !important;
+      font-size: 1.25rem !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      z-index: 35 !important;
+      box-shadow: 0 6px 20px rgba(216, 20, 88, 0.35) !important;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+      touch-action: manipulation !important;
+    }
+    .video-nav-arrow:hover {
+      background: linear-gradient(135deg, #ff2d75, #d81458) !important;
+      color: #ffffff !important;
+      border-color: #ff2d75 !important;
+      transform: translateY(-50%) scale(1.12) !important;
+      box-shadow: 0 8px 25px rgba(216, 20, 88, 0.5) !important;
+    }
+    .video-nav-arrow-left {
+      left: -20px !important;
+    }
+    .video-nav-arrow-right {
+      right: -20px !important;
+    }
+    @media (max-width: 768px) {
+      .video-nav-arrow {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.1rem !important;
+      }
+      .video-nav-arrow-left {
+        left: 4px !important;
+      }
+      .video-nav-arrow-right {
+        right: 4px !important;
+      }
+    }
+    .video-carousel-header {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 0.6rem !important;
+      margin-bottom: 1.1rem !important;
+    }
+    .video-counter-badge {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.4rem !important;
+      font-size: 0.8rem !important;
+      font-weight: 700 !important;
+      color: #ff2d75 !important;
+      background: rgba(255, 235, 243, 0.95) !important;
+      padding: 0.3rem 0.85rem !important;
+      border-radius: 20px !important;
+      border: 1px solid #ffb3ce !important;
+      box-shadow: 0 2px 8px rgba(255, 45, 117, 0.12) !important;
+    }
+    .video-playlist-tabs {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-wrap: wrap !important;
+      gap: 0.5rem !important;
+      max-width: 100% !important;
+    }
+    .video-tab-chip {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.35rem !important;
+      padding: 0.4rem 0.85rem !important;
+      border-radius: 16px !important;
+      font-size: 0.8rem !important;
+      font-weight: 600 !important;
+      background: rgba(255, 255, 255, 0.9) !important;
+      border: 1.5px solid #ffd1e0 !important;
+      color: var(--text-heading) !important;
+      cursor: pointer !important;
+      transition: all 0.25s ease !important;
+      white-space: nowrap !important;
+      max-width: 180px !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+    .video-tab-chip:hover {
+      border-color: #ff4d8d !important;
+      background: #fff5f8 !important;
+      transform: translateY(-1px) !important;
+    }
+    .video-tab-chip.active {
+      background: linear-gradient(135deg, #ff4d8d, #d81458) !important;
+      color: #ffffff !important;
+      border-color: #ff2d75 !important;
+      box-shadow: 0 4px 14px rgba(255, 45, 117, 0.35) !important;
+    }
+    .video-dots-nav {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 0.5rem !important;
+      margin-top: 0.9rem !important;
+    }
+    .video-dot {
+      width: 9px !important;
+      height: 9px !important;
+      border-radius: 50% !important;
+      background: #f8bed4 !important;
+      border: 1.5px solid #ff85a9 !important;
+      cursor: pointer !important;
+      transition: all 0.25s ease !important;
+    }
+    .video-dot.active {
+      width: 24px !important;
+      border-radius: 10px !important;
+      background: linear-gradient(135deg, #ff2d75, #d81458) !important;
+      border-color: #ff2d75 !important;
+      box-shadow: 0 2px 8px rgba(255, 45, 117, 0.4) !important;
+    }
+    .customizer-video-card {
+      background: rgba(255, 255, 255, 0.9) !important;
+      border: 1.5px solid #ffb3d0 !important;
+      border-radius: 16px !important;
+      padding: 0.9rem !important;
+      margin-bottom: 0.9rem !important;
+      box-shadow: 0 4px 15px rgba(255, 77, 141, 0.08) !important;
+      transition: all 0.25s ease !important;
+    }
+    .customizer-video-card:hover {
+      box-shadow: 0 6px 20px rgba(255, 77, 141, 0.15) !important;
+      border-color: #ff85a9 !important;
+    }
+    .customizer-video-header {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      margin-bottom: 0.65rem !important;
+      border-bottom: 1px dashed #ffd1e0 !important;
+      padding-bottom: 0.45rem !important;
+    }
+    .video-badge-num {
+      font-size: 0.88rem !important;
+      font-weight: 700 !important;
+      color: #ff2d75 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.35rem !important;
+    }
+    .btn-remove-video {
+      background: none !important;
+      border: 1px solid #ffccd5 !important;
+      color: #d81458 !important;
+      font-size: 0.75rem !important;
+      font-weight: 600 !important;
+      padding: 0.25rem 0.6rem !important;
+      border-radius: 12px !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+    }
+    .btn-remove-video:hover {
+      background: #ffebee !important;
+      border-color: #e53935 !important;
+      color: #c62828 !important;
+    }
+    .video-upload-box {
+      background: linear-gradient(135deg, rgba(255,240,248,0.9), rgba(255,220,240,0.85)) !important;
+      padding: 0.7rem 0.85rem !important;
+      border-radius: 12px !important;
+      border: 1.5px solid #ffb3d0 !important;
+      margin-bottom: 0.6rem !important;
+    }
+    .btn-add-video-dashed {
+      width: 100% !important;
+      padding: 0.75rem !important;
+      border-radius: 14px !important;
+      border: 2px dashed #ff85a9 !important;
+      background: rgba(255, 245, 248, 0.85) !important;
+      color: #d81458 !important;
+      font-size: 0.88rem !important;
+      font-weight: 700 !important;
+      cursor: pointer !important;
+      transition: all 0.25s ease !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 0.5rem !important;
+      margin-top: 0.6rem !important;
+    }
+    .btn-add-video-dashed:hover {
+      background: #ffe8f0 !important;
+      border-color: #ff2d75 !important;
+      color: #b3003b !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 4px 15px rgba(255, 45, 117, 0.15) !important;
     }
   </style>
   
@@ -508,18 +716,40 @@
 
       </div>
 
-      <!-- ================= ZONE 4: FEATURED BIRTHDAY VIDEO ================= -->
+      <!-- ================= ZONE 4: FEATURED BIRTHDAY VIDEO (MULTIPLE VIDEOS) ================= -->
       <section class="video-showcase-section" id="section-featured-video">
         <div class="video-card glass-card">
           <div class="card-header">
             <span class="card-icon">🎬</span>
             <h3 id="video-card-heading">A Special Video For You</h3>
-            <p class="card-subtext">A memorable moment & message in motion 🌸</p>
+            <p class="card-subtext">Memorable moments & heartfelt messages in motion 🌸</p>
           </div>
 
-          <div class="video-player-frame" id="featured-video-container">
-            <!-- Dynamic video/iframe injected via JS -->
+          <!-- Video Counter & Playlist Tabs (Visible when >1 video) -->
+          <div id="video-carousel-header" class="video-carousel-header" style="display: none;">
+            <div class="video-counter-badge" id="video-counter-badge">
+              <i class="fa-solid fa-film"></i> Video <span id="video-current-num">1</span> of <span id="video-total-num">1</span>
+            </div>
+            <div class="video-playlist-tabs" id="video-playlist-tabs"></div>
           </div>
+
+          <!-- Video Player with Overlay Left/Right Navigation Arrows -->
+          <div class="video-player-wrapper">
+            <button id="btn-prev-video" class="video-nav-arrow video-nav-arrow-left" aria-label="Previous Video" style="display: none;">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div class="video-player-frame is-landscape" id="featured-video-container">
+              <!-- Dynamic video/iframe injected via JS -->
+            </div>
+
+            <button id="btn-next-video" class="video-nav-arrow video-nav-arrow-right" aria-label="Next Video" style="display: none;">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Dot Navigation Indicator -->
+          <div class="video-dots-nav" id="video-dots-nav" style="display: none;"></div>
 
           <div class="video-info-box">
             <h4 class="video-info-title" id="featured-video-title">Special Birthday Memory 💖</h4>
@@ -531,7 +761,7 @@
               <i class="fa-solid fa-arrows-rotate"></i> <span id="orientation-toggle-label">Switch to Portrait 📱</span>
             </button>
             <button id="btn-edit-video" class="btn btn-outline-small admin-only" style="display: none;">
-              <i class="fa-solid fa-film"></i> Swap / Update Video
+              <i class="fa-solid fa-film"></i> Manage Videos 🎬
             </button>
           </div>
         </div>
@@ -604,51 +834,27 @@
           <div id="upload-previews" class="upload-previews"></div>
         </div>
 
-        <!-- Featured Birthday Video Configuration -->
+        <!-- Featured Birthday Video Configuration (Multiple Videos) -->
         <div class="form-group" style="margin-top: 1.2rem; border-top: 1px dashed #f8bed4; padding-top: 1rem;">
-          <label for="input-video-url"><i class="fa-solid fa-film"></i> Featured Video (YouTube / Link / File):</label>
-          <p class="input-hint">Paste any YouTube URL (regular, Shorts, youtu.be) or direct video link:</p>
-          <input type="url" id="input-video-url" class="form-input" placeholder="https://www.youtube.com/watch?v=nl62hhiBMOM">
-
-          <div style="margin-top: 0.7rem; background: linear-gradient(135deg, rgba(255,240,248,0.9), rgba(255,220,240,0.85)); padding: 0.8rem 0.9rem; border-radius: 14px; border: 1.5px solid #ffb3d0;">
-            <label for="input-video-file" style="font-size: 0.84rem; font-weight: 700; color: var(--text-heading); display: block; margin-bottom: 0.25rem;">
-              <i class="fa-solid fa-cloud-arrow-up" style="color:#ff2d75;"></i> Upload a Video File (Saved to Cloud ☁️):
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+            <label style="font-size: 0.92rem; font-weight: 700; margin-bottom: 0; color: var(--text-heading);">
+              <i class="fa-solid fa-film"></i> Birthday Videos Playlist 🎬:
             </label>
-            <p style="font-size: 0.75rem; color: #d63384; margin: 0 0 0.4rem 0; font-weight: 600;">
-              <i class="fa-solid fa-globe"></i> Video uploads to Cloudinary — <strong>everyone</strong> who opens your link will see it!
-            </p>
-            <input type="file" id="input-video-file" class="form-file" accept="video/*" style="font-size: 0.8rem;">
-            <div id="video-file-status" style="font-size: 0.8rem; color: var(--primary-pink); margin-top: 0.5rem; display: none; font-weight: 600;"></div>
+            <button id="btn-add-video-item" type="button" class="btn btn-outline-small" style="font-size: 0.78rem; padding: 0.35rem 0.75rem; border-radius: 14px;">
+              <i class="fa-solid fa-plus"></i> Add Video
+            </button>
+          </div>
+          <p class="input-hint" style="margin-bottom: 0.8rem;">
+            Add one or multiple videos! Upload video files to Cloudinary (everyone sees them) or paste YouTube / Shorts links:
+          </p>
+
+          <div id="video-items-container" class="video-items-container">
+            <!-- Dynamic video items populated via JS -->
           </div>
 
-          <div style="margin-top: 0.8rem;">
-            <label for="input-video-title" style="font-size: 0.84rem; font-weight: 700; color: var(--text-heading);"><i class="fa-solid fa-heading"></i> Video Title:</label>
-            <input type="text" id="input-video-title" class="form-input" placeholder="e.g. A Special Message For You 🎬🌸">
-          </div>
-
-          <div style="margin-top: 0.8rem;">
-            <label for="input-video-caption" style="font-size: 0.84rem; font-weight: 700; color: var(--text-heading);"><i class="fa-solid fa-comment-dots"></i> Video Caption / Message:</label>
-            <input type="text" id="input-video-caption" class="form-input" placeholder="e.g. Press play to watch our favorite memories come alive! ❤️">
-          </div>
-
-          <div style="margin-top: 0.8rem;">
-            <label for="select-video-orientation" style="font-size: 0.84rem; font-weight: 700; color: var(--text-heading);">
-              <i class="fa-solid fa-mobile-screen"></i> Video Display Layout:
-            </label>
-            <select id="select-video-orientation" class="form-input" style="padding: 0.5rem 0.8rem; border-radius: 10px; cursor: pointer;">
-              <option value="auto">✨ Auto Detect (Vertical Phone or Widescreen)</option>
-              <option value="landscape">💻 Landscape (16:9 Widescreen)</option>
-              <option value="portrait">📱 Portrait (9:16 Vertical / Phone / Shorts)</option>
-            </select>
-            <p class="input-hint">Auto Detect will automatically fit vertical phone recordings in portrait mode and horizontal videos in widescreen!</p>
-          </div>
-
-          <div id="video-preview-wrapper" style="margin-top: 0.9rem; display: none;">
-            <p style="font-size: 0.8rem; font-weight: 700; color: var(--primary-deep); margin-bottom: 0.4rem;">
-              <i class="fa-solid fa-eye"></i> Video Preview:
-            </p>
-            <div id="customizer-video-preview" style="width: 100%; max-width: 340px; border-radius: 14px; overflow: hidden; border: 2px solid var(--primary-pink); background: #000;"></div>
-          </div>
+          <button id="btn-add-video-bottom" type="button" class="btn-add-video-dashed">
+            <i class="fa-solid fa-circle-plus"></i> + Add Another Video 🎬
+          </button>
         </div>
 
         <!-- Creator PIN Setting -->
@@ -711,6 +917,6 @@
   </div>
 
   <!-- Main JavaScript File -->
-  <script src="script.js?v=cloudinary-1789222237648"></script>
+  <script src="script.js?v=cloudinary-1789223680714"></script>
 </body>
 </html>

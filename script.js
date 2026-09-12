@@ -23,6 +23,14 @@ From every laugh we've shared to all our little sweet moments, having you in my 
 May this new year of your life be blessed with endless happiness, blooming love, good health, and all the dreams your heart desires!
 
 I hope this little surprise brings the biggest smile to your beautiful face! 🎂🌸🎉`,
+    videos: [
+      {
+        url: 'https://www.youtube.com/watch?v=nl62hhiBMOM',
+        title: 'A Special Video For Your Birthday 🎬🌸',
+        caption: 'Press play to watch a heartfelt message recorded just for you ❤️',
+        orientation: 'auto'
+      }
+    ],
     featuredVideo: {
       url: 'https://www.youtube.com/watch?v=nl62hhiBMOM',
       title: 'A Special Video For Your Birthday 🎬🌸',
@@ -53,6 +61,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   let appData = JSON.parse(localStorage.getItem('birthday_surprise_data')) || defaultData;
   let dodgeCount = 0;
   let activePhotoIndex = 0;
+  let activeVideoIndex = 0;
+  let customizerVideosList = [];
   let isCandleBlown = false;
   let isLetterOpen = false;
   let isMusicPlaying = false;
@@ -145,6 +155,19 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   const selectVideoOrientation = document.getElementById('select-video-orientation');
   const btnToggleOrientation = document.getElementById('btn-toggle-video-orientation');
   const orientationToggleLabel = document.getElementById('orientation-toggle-label');
+
+  const btnPrevVideo = document.getElementById('btn-prev-video');
+  const btnNextVideo = document.getElementById('btn-next-video');
+  const videoCarouselHeader = document.getElementById('video-carousel-header');
+  const videoCounterBadge = document.getElementById('video-counter-badge');
+  const videoCurrentNum = document.getElementById('video-current-num');
+  const videoTotalNum = document.getElementById('video-total-num');
+  const videoPlaylistTabs = document.getElementById('video-playlist-tabs');
+  const videoDotsNav = document.getElementById('video-dots-nav');
+
+  const btnAddVideoItem = document.getElementById('btn-add-video-item');
+  const btnAddVideoBottom = document.getElementById('btn-add-video-bottom');
+  const videoItemsContainer = document.getElementById('video-items-container');
 
   // ==========================================
   // 2.5 VIDEO HELPER FUNCTIONS (PERMANENT STORAGE & INDEXEDDB)
@@ -474,28 +497,83 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     }
   }
 
-  function renderFeaturedVideo() {
-    if (!featuredVideoContainer) return;
-    const videoData = appData.featuredVideo || defaultData.featuredVideo;
-    if (featuredVideoTitle) {
-      featuredVideoTitle.textContent = (videoData && videoData.title) ? videoData.title : defaultData.featuredVideo.title;
-    }
-    if (featuredVideoCaption) {
-      featuredVideoCaption.textContent = (videoData && videoData.caption) ? videoData.caption : defaultData.featuredVideo.caption;
-    }
-    renderVideoPlayer(featuredVideoContainer, videoData, false);
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 
-  function updateCustomizerVideoPreview() {
-    const url = (inputVideoFile && inputVideoFile.uploadedVideoUrl) ? inputVideoFile.uploadedVideoUrl : (inputVideoUrl ? inputVideoUrl.value.trim() : '');
-    const orientation = selectVideoOrientation ? selectVideoOrientation.value : 'auto';
-    if (url) {
-      if (videoPreviewWrapper) videoPreviewWrapper.style.display = 'block';
-      renderVideoPlayer(customizerVideoPreview, { url: url, orientation: orientation }, true);
-    } else {
-      if (videoPreviewWrapper) videoPreviewWrapper.style.display = 'none';
-      if (customizerVideoPreview) customizerVideoPreview.innerHTML = '';
+  function setActiveVideo(index) {
+    const videoList = (appData.videos && appData.videos.length > 0) ? appData.videos : [appData.featuredVideo || defaultData.featuredVideo];
+    if (!videoList.length) return;
+
+    if (featuredVideoContainer) {
+      const curVid = featuredVideoContainer.querySelector('video');
+      if (curVid && !curVid.paused) curVid.pause();
     }
+
+    const count = videoList.length;
+    activeVideoIndex = (index + count) % count;
+    renderFeaturedVideo();
+  }
+
+  function renderFeaturedVideo() {
+    if (!featuredVideoContainer) return;
+    const videoList = (appData.videos && appData.videos.length > 0) ? appData.videos : [appData.featuredVideo || defaultData.featuredVideo];
+    const count = videoList.length;
+    if (activeVideoIndex >= count) activeVideoIndex = 0;
+    const videoData = videoList[activeVideoIndex] || defaultData.featuredVideo;
+
+    if (featuredVideoTitle) {
+      featuredVideoTitle.textContent = (videoData && videoData.title) ? videoData.title : `Video #${activeVideoIndex + 1}`;
+    }
+    if (featuredVideoCaption) {
+      featuredVideoCaption.textContent = (videoData && videoData.caption) ? videoData.caption : '';
+    }
+
+    if (count > 1) {
+      if (videoCarouselHeader) videoCarouselHeader.style.display = 'flex';
+      if (videoCurrentNum) videoCurrentNum.textContent = String(activeVideoIndex + 1);
+      if (videoTotalNum) videoTotalNum.textContent = String(count);
+      if (btnPrevVideo) btnPrevVideo.style.display = 'flex';
+      if (btnNextVideo) btnNextVideo.style.display = 'flex';
+
+      if (videoPlaylistTabs) {
+        videoPlaylistTabs.innerHTML = '';
+        videoList.forEach((v, idx) => {
+          const chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = `video-tab-chip ${idx === activeVideoIndex ? 'active' : ''}`;
+          const title = v.title ? (v.title.length > 20 ? v.title.slice(0, 18) + '…' : v.title) : `Video #${idx + 1}`;
+          chip.innerHTML = `<i class="fa-solid fa-play" style="font-size:0.65rem;"></i> ${title}`;
+          chip.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setActiveVideo(idx);
+          });
+          videoPlaylistTabs.appendChild(chip);
+        });
+      }
+
+      if (videoDotsNav) {
+        videoDotsNav.style.display = 'flex';
+        videoDotsNav.innerHTML = '';
+        videoList.forEach((_, idx) => {
+          const dot = document.createElement('div');
+          dot.className = `video-dot ${idx === activeVideoIndex ? 'active' : ''}`;
+          dot.addEventListener('click', () => setActiveVideo(idx));
+          videoDotsNav.appendChild(dot);
+        });
+      }
+    } else {
+      if (videoCarouselHeader) videoCarouselHeader.style.display = 'none';
+      if (btnPrevVideo) btnPrevVideo.style.display = 'none';
+      if (btnNextVideo) btnNextVideo.style.display = 'none';
+      if (videoDotsNav) videoDotsNav.style.display = 'none';
+    }
+
+    renderVideoPlayer(featuredVideoContainer, videoData, false);
   }
 
   // ==========================================
@@ -1262,14 +1340,15 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     inputLetterBody.value = (appData.letterBody && appData.letterBody.trim()) ? appData.letterBody.trim() : defaultData.letterBody;
     if (inputCustomPin) inputCustomPin.value = appData.creatorPin || '1234';
 
-    // Populate Video Inputs & Live Preview
-    const vData = appData.featuredVideo || defaultData.featuredVideo;
-    if (inputVideoUrl) inputVideoUrl.value = (vData && vData.url && !vData.url.startsWith('blob:')) ? vData.url : '';
-    if (inputVideoTitle) inputVideoTitle.value = (vData && vData.title) ? vData.title : defaultData.featuredVideo.title;
-    if (inputVideoCaption) inputVideoCaption.value = (vData && vData.caption) ? vData.caption : defaultData.featuredVideo.caption;
-    if (selectVideoOrientation) selectVideoOrientation.value = (vData && vData.orientation) ? vData.orientation : 'auto';
-    if (inputVideoFile) inputVideoFile.uploadedVideoUrl = (vData && vData.url) ? vData.url : '';
-    updateCustomizerVideoPreview();
+    // Populate Multiple Videos List in Creator Studio
+    if (appData.videos && Array.isArray(appData.videos) && appData.videos.length > 0) {
+      customizerVideosList = JSON.parse(JSON.stringify(appData.videos));
+    } else if (appData.featuredVideo) {
+      customizerVideosList = [JSON.parse(JSON.stringify(appData.featuredVideo))];
+    } else {
+      customizerVideosList = [JSON.parse(JSON.stringify(defaultData.featuredVideo))];
+    }
+    renderCustomizerVideosList();
 
     uploadPreviews.innerHTML = '';
     customizerModal.style.display = 'flex';
@@ -1284,10 +1363,234 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   btnAddPhotos.addEventListener('click', openCustomizer);
   if (btnEditVideo) btnEditVideo.addEventListener('click', openCustomizer);
 
-  if (selectVideoOrientation) {
-    selectVideoOrientation.addEventListener('change', () => {
-      updateCustomizerVideoPreview();
+  // Dynamic Multiple Video Management in Creator Studio
+  function renderCustomizerVideosList() {
+    const container = document.getElementById('video-items-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    if (!customizerVideosList || customizerVideosList.length === 0) {
+      customizerVideosList = [
+        {
+          url: (appData.featuredVideo && appData.featuredVideo.url) || defaultData.featuredVideo.url,
+          title: (appData.featuredVideo && appData.featuredVideo.title) || defaultData.featuredVideo.title,
+          caption: (appData.featuredVideo && appData.featuredVideo.caption) || defaultData.featuredVideo.caption,
+          orientation: (appData.featuredVideo && appData.featuredVideo.orientation) || 'auto'
+        }
+      ];
+    }
+
+    customizerVideosList.forEach((item, index) => {
+      const card = document.createElement('div');
+      card.className = 'customizer-video-card';
+      card.dataset.index = index;
+
+      const canDelete = customizerVideosList.length > 1;
+
+      card.innerHTML = `
+        <div class="customizer-video-header">
+          <span class="video-badge-num"><i class="fa-solid fa-play"></i> Video #${index + 1}</span>
+          ${canDelete ? `<button type="button" class="btn-remove-video" data-index="${index}"><i class="fa-solid fa-trash-can"></i> Remove</button>` : ''}
+        </div>
+
+        <div class="video-upload-box">
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-heading); display: block; margin-bottom: 0.2rem;">
+            <i class="fa-solid fa-cloud-arrow-up" style="color:#ff2d75;"></i> Upload Video File (Saved to Cloud ☁️):
+          </label>
+          <input type="file" class="form-file video-item-file" accept="video/*" style="font-size: 0.78rem;" data-index="${index}">
+          <div class="video-upload-status" style="font-size: 0.78rem; color: var(--primary-pink); margin-top: 0.4rem; display: none; font-weight: 600;"></div>
+        </div>
+
+        <div style="margin-top: 0.5rem;">
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-heading);">Or Paste YouTube / Video Link:</label>
+          <input type="url" class="form-input video-item-url" placeholder="https://www.youtube.com/watch?... or https://res.cloudinary.com/..." value="${escapeHtml(item.url || '')}" data-index="${index}">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
+          <div>
+            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-heading);">Video Title:</label>
+            <input type="text" class="form-input video-item-title" placeholder="e.g. Birthday Greetings 💖" value="${escapeHtml(item.title || '')}" data-index="${index}">
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-heading);">Display Layout:</label>
+            <select class="form-input video-item-orientation" data-index="${index}" style="padding: 0.45rem 0.6rem; border-radius: 10px;">
+              <option value="auto" ${item.orientation === 'auto' ? 'selected' : ''}>✨ Auto Detect</option>
+              <option value="landscape" ${item.orientation === 'landscape' ? 'selected' : ''}>💻 Landscape (16:9)</option>
+              <option value="portrait" ${item.orientation === 'portrait' ? 'selected' : ''}>📱 Portrait (9:16)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 0.5rem;">
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-heading);">Video Caption / Note:</label>
+          <input type="text" class="form-input video-item-caption" placeholder="e.g. Press play to watch our sweetest memories ❤️" value="${escapeHtml(item.caption || '')}" data-index="${index}">
+        </div>
+      `;
+
+      const removeBtn = card.querySelector('.btn-remove-video');
+      if (removeBtn) {
+        removeBtn.addEventListener('click', () => {
+          syncCustomizerVideosFromInputs();
+          customizerVideosList.splice(index, 1);
+          renderCustomizerVideosList();
+        });
+      }
+
+      const urlInput = card.querySelector('.video-item-url');
+      if (urlInput) {
+        urlInput.addEventListener('input', (e) => {
+          item.url = e.target.value.trim();
+        });
+      }
+
+      const titleInput = card.querySelector('.video-item-title');
+      if (titleInput) {
+        titleInput.addEventListener('input', (e) => {
+          item.title = e.target.value.trim();
+        });
+      }
+
+      const captionInput = card.querySelector('.video-item-caption');
+      if (captionInput) {
+        captionInput.addEventListener('input', (e) => {
+          item.caption = e.target.value.trim();
+        });
+      }
+
+      const orientSelect = card.querySelector('.video-item-orientation');
+      if (orientSelect) {
+        orientSelect.addEventListener('change', (e) => {
+          item.orientation = e.target.value;
+        });
+      }
+
+      const fileInput = card.querySelector('.video-item-file');
+      const uploadStatus = card.querySelector('.video-upload-status');
+      if (fileInput) {
+        fileInput.addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          if (uploadStatus) {
+            uploadStatus.style.display = 'block';
+            uploadStatus.innerHTML = `
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+                <span><i class="fa-solid fa-cloud-arrow-up" style="color:#ff2d75;"></i> Uploading ${file.name.slice(0, 18)}...</span>
+                <span id="upload-percent-${index}">0%</span>
+              </div>
+              <div style="width:100%; height:6px; background:#fce4ec; border-radius:10px; overflow:hidden;">
+                <div id="upload-bar-${index}" style="width:0%; height:100%; background:linear-gradient(90deg, #ff2d75, #ff6584); transition:width 0.2s ease;"></div>
+              </div>
+            `;
+          }
+
+          const bar = document.getElementById(`upload-bar-${index}`);
+          const pct = document.getElementById(`upload-percent-${index}`);
+
+          try {
+            const cloudinaryUrl = await uploadVideoToCloudinary(file, (percent) => {
+              if (bar) bar.style.width = percent + '%';
+              if (pct) pct.textContent = percent + '%';
+            });
+
+            item.url = cloudinaryUrl;
+            if (urlInput) urlInput.value = cloudinaryUrl;
+            if (!item.title && file.name) {
+              const suggestedTitle = file.name.replace(/\.[^/.]+$/, "");
+              item.title = suggestedTitle;
+              if (titleInput) titleInput.value = suggestedTitle;
+            }
+
+            if (uploadStatus) {
+              uploadStatus.innerHTML = `
+                <div style="color:#2e7d32; display:flex; align-items:center; gap:6px; margin-top:4px;">
+                  <i class="fa-solid fa-circle-check"></i> <strong>Uploaded to cloud! ✨</strong> Everyone can now see this video!
+                </div>
+              `;
+            }
+          } catch (err) {
+            console.warn('Cloudinary upload error:', err);
+            const localBlobUrl = URL.createObjectURL(file);
+            item.url = localBlobUrl;
+            if (urlInput) urlInput.value = localBlobUrl;
+            if (uploadStatus) {
+              uploadStatus.innerHTML = `
+                <div style="color:#d81458; margin-top:4px;">
+                  ⚠️ Cloud upload error: ${err.message}. Saved locally for now.
+                </div>
+              `;
+            }
+          }
+        });
+      }
+
+      container.appendChild(card);
     });
+  }
+
+  function syncCustomizerVideosFromInputs() {
+    const container = document.getElementById('video-items-container');
+    if (!container) return;
+    const cards = container.querySelectorAll('.customizer-video-card');
+    cards.forEach((card, idx) => {
+      if (customizerVideosList[idx]) {
+        const urlInput = card.querySelector('.video-item-url');
+        const titleInput = card.querySelector('.video-item-title');
+        const captionInput = card.querySelector('.video-item-caption');
+        const orientSelect = card.querySelector('.video-item-orientation');
+        if (urlInput) customizerVideosList[idx].url = urlInput.value.trim();
+        if (titleInput) customizerVideosList[idx].title = titleInput.value.trim();
+        if (captionInput) customizerVideosList[idx].caption = captionInput.value.trim();
+        if (orientSelect) customizerVideosList[idx].orientation = orientSelect.value;
+      }
+    });
+  }
+
+  function addVideoItem() {
+    syncCustomizerVideosFromInputs();
+    customizerVideosList.push({
+      url: '',
+      title: `Video #${customizerVideosList.length + 1}`,
+      caption: '',
+      orientation: 'auto'
+    });
+    renderCustomizerVideosList();
+  }
+
+  if (btnAddVideoItem) btnAddVideoItem.addEventListener('click', addVideoItem);
+  if (btnAddVideoBottom) btnAddVideoBottom.addEventListener('click', addVideoItem);
+
+  // Video Carousel Controls
+  if (btnPrevVideo) {
+    btnPrevVideo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setActiveVideo(activeVideoIndex - 1);
+    });
+  }
+
+  if (btnNextVideo) {
+    btnNextVideo.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setActiveVideo(activeVideoIndex + 1);
+    });
+  }
+
+  // Touch Swipe for Video Carousel on Mobile
+  let videoTouchStartX = 0;
+  let videoTouchEndX = 0;
+  if (featuredVideoContainer) {
+    featuredVideoContainer.addEventListener('touchstart', (e) => {
+      videoTouchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    featuredVideoContainer.addEventListener('touchend', (e) => {
+      videoTouchEndX = e.changedTouches[0].screenX;
+      const diff = videoTouchStartX - videoTouchEndX;
+      const videoList = (appData.videos && appData.videos.length > 0) ? appData.videos : [appData.featuredVideo || defaultData.featuredVideo];
+      if (videoList.length > 1 && Math.abs(diff) > 45) {
+        if (diff > 0) setActiveVideo(activeVideoIndex + 1);
+        else setActiveVideo(activeVideoIndex - 1);
+      }
+    }, { passive: true });
   }
 
   if (btnToggleOrientation) {
@@ -1297,9 +1600,12 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       const newIsPortrait = !isCurrentlyPortrait;
       const newOrientation = newIsPortrait ? 'portrait' : 'landscape';
 
+      const videoList = (appData.videos && appData.videos.length > 0) ? appData.videos : [appData.featuredVideo || defaultData.featuredVideo];
+      if (videoList[activeVideoIndex]) {
+        videoList[activeVideoIndex].orientation = newOrientation;
+      }
       if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
       appData.featuredVideo.orientation = newOrientation;
-      if (selectVideoOrientation) selectVideoOrientation.value = newOrientation;
 
       const video = featuredVideoContainer.querySelector('video');
       if (video && video.videoWidth && video.videoHeight) {
@@ -1314,82 +1620,15 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     });
   }
 
-  if (inputVideoUrl) {
-    inputVideoUrl.addEventListener('input', () => {
-      if (inputVideoFile) inputVideoFile.uploadedVideoUrl = '';
-      if (videoFileStatus) videoFileStatus.style.display = 'none';
-      updateCustomizerVideoPreview();
-    });
+  if (btnCloseCustomizer) {
+    btnCloseCustomizer.addEventListener('click', closeCustomizer);
   }
 
-  if (inputVideoFile) {
-    inputVideoFile.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      // Show upload progress UI
-      if (videoFileStatus) {
-        videoFileStatus.style.display = 'block';
-        videoFileStatus.innerHTML =
-          '<div style="display:flex; flex-direction:column; gap:0.4rem;">' +
-          '<span><i class="fa-solid fa-cloud-arrow-up" style="color:#ff2d75;"></i> <strong>Uploading to cloud... 0%</strong> — everyone will see your video!</span>' +
-          '<div style="width:100%; height:8px; background:rgba(255,150,180,0.25); border-radius:99px; overflow:hidden;">' +
-          '<div id="video-upload-bar" style="width:0%; height:100%; background:linear-gradient(90deg,#ff2d75,#ff9abc); border-radius:99px; transition:width 0.3s;"></div>' +
-          '</div></div>';
-      }
-
-      const uploadBar = document.getElementById('video-upload-bar');
-
-      try {
-        // 1. Upload to Cloudinary (global cloud — everyone sees it!)
-        const cloudinaryUrl = await uploadVideoToCloudinary(file, (percent) => {
-          if (uploadBar) uploadBar.style.width = percent + '%';
-          if (videoFileStatus) {
-            const span = videoFileStatus.querySelector('span');
-            if (span) span.innerHTML = '<i class="fa-solid fa-cloud-arrow-up" style="color:#ff2d75;"></i> <strong>Uploading to cloud... ' + percent + '%</strong> — everyone will see your video!';
-          }
-        });
-
-        // 2. Save Cloudinary URL as the permanent video URL
-        inputVideoFile.uploadedVideoUrl = cloudinaryUrl;
-        inputVideoFile.hasPermanentUploadedVideo = true;
-        if (inputVideoUrl) inputVideoUrl.value = cloudinaryUrl;
-
-        // 3. Also save to IndexedDB for instant local playback
-        saveVideoToIndexedDB(file);
-
-        if (videoFileStatus) {
-          videoFileStatus.innerHTML =
-            '<i class="fa-solid fa-circle-check" style="color:#22c55e;"></i> ' +
-            '<strong style="color:#15803d;">Uploaded to cloud! ✨</strong> ' +
-            '<span style="color:#555;">Everyone who opens your link will see this video.</span>';
-        }
-
-      } catch (uploadErr) {
-        console.warn('Cloudinary upload failed, using local blob:', uploadErr.message);
-
-        // Fallback: use local blob URL (only works on this device)
-        const localBlobUrl = URL.createObjectURL(file);
-        inputVideoFile.uploadedVideoUrl = localBlobUrl;
-        saveVideoToIndexedDB(file);
-
-        if (videoFileStatus) {
-          videoFileStatus.innerHTML =
-            '<i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i> ' +
-            '<strong style="color:#b45309;">Cloud upload failed.</strong> ' +
-            '<span style="color:#555;">Video saved locally (only visible on this device). Check your Cloudinary settings.</span><br>' +
-            '<small style="color:#999;">Error: ' + uploadErr.message + '</small>';
-        }
-      }
-
-      updateCustomizerVideoPreview();
+  if (customizerModal) {
+    customizerModal.addEventListener('click', (e) => {
+      if (e.target === customizerModal) closeCustomizer();
     });
   }
-  btnCloseCustomizer.addEventListener('click', closeCustomizer);
-
-  customizerModal.addEventListener('click', (e) => {
-    if (e.target === customizerModal) closeCustomizer();
-  });
 
   // Smart Image Optimizer & Compressor (Prevents storage quota issues)
   function optimizeImage(file, maxWidth = 700, maxHeight = 700, quality = 0.82) {
@@ -1476,14 +1715,17 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       activePhotoIndex = 0;
     }
 
-    // Save Featured Video Settings
-    const videoUrlToSave = (inputVideoFile && inputVideoFile.uploadedVideoUrl) ? inputVideoFile.uploadedVideoUrl : (inputVideoUrl ? inputVideoUrl.value.trim() : '');
-    appData.featuredVideo = {
-      url: videoUrlToSave || defaultData.featuredVideo.url,
-      title: (inputVideoTitle && inputVideoTitle.value.trim()) ? inputVideoTitle.value.trim() : defaultData.featuredVideo.title,
-      caption: (inputVideoCaption && inputVideoCaption.value.trim()) ? inputVideoCaption.value.trim() : defaultData.featuredVideo.caption,
-      orientation: (selectVideoOrientation && selectVideoOrientation.value) ? selectVideoOrientation.value : 'auto'
-    };
+    // Save Multiple Videos Settings
+    syncCustomizerVideosFromInputs();
+    const validVideos = customizerVideosList.filter(v => v.url && v.url.trim());
+    if (validVideos.length > 0) {
+      appData.videos = validVideos;
+      appData.featuredVideo = validVideos[0];
+    } else {
+      appData.videos = [defaultData.featuredVideo];
+      appData.featuredVideo = defaultData.featuredVideo;
+    }
+    activeVideoIndex = 0;
 
     // 1. Save directly into persistent browser storage
     try {
@@ -1621,6 +1863,16 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
         }
       }
     } catch (e) {}
+
+    // 6. Load multiple videos list with backward compatibility
+    if (appData.videos && Array.isArray(appData.videos) && appData.videos.length > 0) {
+      if (!appData.featuredVideo) appData.featuredVideo = appData.videos[0];
+    } else if (appData.featuredVideo) {
+      appData.videos = [appData.featuredVideo];
+    } else {
+      appData.videos = defaultData.videos ? JSON.parse(JSON.stringify(defaultData.videos)) : [defaultData.featuredVideo];
+      appData.featuredVideo = appData.videos[0];
+    }
 
     applyDataToUI();
     updateAdminUI();
