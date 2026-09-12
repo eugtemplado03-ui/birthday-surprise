@@ -26,7 +26,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     featuredVideo: {
       url: 'https://www.youtube.com/watch?v=nl62hhiBMOM',
       title: 'A Special Video For Your Birthday ðŸŽ¬ðŸŒ¸',
-      caption: 'Press play to watch a heartfelt message recorded just for you â¤ï¸'
+      caption: 'Press play to watch a heartfelt message recorded just for you â¤ï¸',
+      orientation: 'auto'
     },
     photos: [
       {
@@ -141,6 +142,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
   const inputVideoCaption = document.getElementById('input-video-caption');
   const videoPreviewWrapper = document.getElementById('video-preview-wrapper');
   const customizerVideoPreview = document.getElementById('customizer-video-preview');
+  const selectVideoOrientation = document.getElementById('select-video-orientation');
+  const btnToggleOrientation = document.getElementById('btn-toggle-video-orientation');
+  const orientationToggleLabel = document.getElementById('orientation-toggle-label');
 
   // ==========================================
   // 2.5 VIDEO HELPER FUNCTIONS (PERMANENT STORAGE & INDEXEDDB)
@@ -304,6 +308,34 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     };
   }
 
+  function applyVideoOrientation(container, isPortrait, ratio, vw, vh, isCompact) {
+    if (!container) return;
+    if (isCompact) {
+      container.style.aspectRatio = isPortrait ? '9 / 16' : '16 / 9';
+      return;
+    }
+    container.classList.remove('is-portrait', 'is-landscape');
+    if (isPortrait) {
+      container.classList.add('is-portrait');
+      container.style.maxWidth = 'min(380px, 88vw)';
+      if (vw && vh) {
+        container.style.aspectRatio = `${vw} / ${vh}`;
+      } else {
+        container.style.aspectRatio = '9 / 16';
+      }
+      if (orientationToggleLabel) orientationToggleLabel.innerHTML = 'Switch to Landscape ðŸ’»';
+    } else {
+      container.classList.add('is-landscape');
+      container.style.maxWidth = '100%';
+      if (vw && vh) {
+        container.style.aspectRatio = `${vw} / ${vh}`;
+      } else {
+        container.style.aspectRatio = '16 / 9';
+      }
+      if (orientationToggleLabel) orientationToggleLabel.innerHTML = 'Switch to Portrait ðŸ“±';
+    }
+  }
+
   function renderVideoPlayer(targetEl, videoData, isCompact) {
     if (!targetEl) return;
     targetEl.innerHTML = '';
@@ -319,7 +351,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       return;
     }
 
+    const prefOrientation = (videoData && videoData.orientation) ? videoData.orientation : 'auto';
+
     if (parsed.type === 'youtube' || parsed.type === 'vimeo' || parsed.type === 'drive') {
+      const isShorts = rawUrl.toLowerCase().includes('/shorts/');
+      const isPortrait = (prefOrientation === 'portrait') || (prefOrientation === 'auto' && isShorts);
+      applyVideoOrientation(targetEl, isPortrait, isPortrait ? (9 / 16) : (16 / 9), null, null, isCompact);
+
       const iframe = document.createElement('iframe');
       iframe.src = parsed.embedUrl;
       iframe.title = (videoData && videoData.title) ? videoData.title : 'Birthday Video';
@@ -328,12 +366,15 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
       if (isCompact) {
         iframe.style.width = '100%';
-        iframe.style.height = '180px';
+        iframe.style.height = isPortrait ? '260px' : '180px';
         iframe.style.border = 'none';
       }
       targetEl.appendChild(iframe);
     } else {
       // Direct video stream / MP4 / Blob / /api/video
+      const isInitialPortrait = (prefOrientation === 'portrait');
+      applyVideoOrientation(targetEl, isInitialPortrait, isInitialPortrait ? (9 / 16) : (16 / 9), null, null, isCompact);
+
       const video = document.createElement('video');
       video.src = parsed.src;
       video.controls = true;
@@ -344,8 +385,15 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
 
       if (isCompact) {
         video.style.width = '100%';
-        video.style.maxHeight = '180px';
+        video.style.maxHeight = '220px';
         video.style.display = 'block';
+        video.style.objectFit = 'contain';
+        video.addEventListener('loadedmetadata', () => {
+          if (video.videoWidth && video.videoHeight) {
+            const isPort = (prefOrientation === 'portrait') || (prefOrientation === 'auto' && video.videoHeight > video.videoWidth);
+            applyVideoOrientation(targetEl, isPort, video.videoWidth / video.videoHeight, video.videoWidth, video.videoHeight, true);
+          }
+        });
         targetEl.appendChild(video);
         return;
       }
@@ -394,11 +442,26 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       video.addEventListener('pause', () => playBtn.classList.remove('hidden'));
       video.addEventListener('ended', () => playBtn.classList.remove('hidden'));
 
-      // Render thumbnail frame immediately on mobile
+      // Render thumbnail frame immediately on mobile and adapt orientation
       video.addEventListener('loadedmetadata', () => {
         try {
           if (video.currentTime === 0) video.currentTime = 0.001;
         } catch (e) {}
+
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+        if (vw && vh) {
+          let isPort = false;
+          if (prefOrientation === 'portrait') {
+            isPort = true;
+          } else if (prefOrientation === 'landscape') {
+            isPort = false;
+          } else {
+            // Auto detect: if height is greater than width, it's portrait!
+            isPort = (vh > vw * 1.02);
+          }
+          applyVideoOrientation(targetEl, isPort, vw / vh, vw, vh, isCompact);
+        }
       });
 
       video.addEventListener('error', () => {
@@ -425,9 +488,10 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
 
   function updateCustomizerVideoPreview() {
     const url = (inputVideoFile && inputVideoFile.uploadedVideoUrl) ? inputVideoFile.uploadedVideoUrl : (inputVideoUrl ? inputVideoUrl.value.trim() : '');
+    const orientation = selectVideoOrientation ? selectVideoOrientation.value : 'auto';
     if (url) {
       if (videoPreviewWrapper) videoPreviewWrapper.style.display = 'block';
-      renderVideoPlayer(customizerVideoPreview, { url: url }, true);
+      renderVideoPlayer(customizerVideoPreview, { url: url, orientation: orientation }, true);
     } else {
       if (videoPreviewWrapper) videoPreviewWrapper.style.display = 'none';
       if (customizerVideoPreview) customizerVideoPreview.innerHTML = '';
@@ -1203,6 +1267,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     if (inputVideoUrl) inputVideoUrl.value = (vData && vData.url && !vData.url.startsWith('blob:')) ? vData.url : '';
     if (inputVideoTitle) inputVideoTitle.value = (vData && vData.title) ? vData.title : defaultData.featuredVideo.title;
     if (inputVideoCaption) inputVideoCaption.value = (vData && vData.caption) ? vData.caption : defaultData.featuredVideo.caption;
+    if (selectVideoOrientation) selectVideoOrientation.value = (vData && vData.orientation) ? vData.orientation : 'auto';
     if (inputVideoFile) inputVideoFile.uploadedVideoUrl = (vData && vData.url) ? vData.url : '';
     updateCustomizerVideoPreview();
 
@@ -1218,6 +1283,36 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
   btnEditLetter.addEventListener('click', openCustomizer);
   btnAddPhotos.addEventListener('click', openCustomizer);
   if (btnEditVideo) btnEditVideo.addEventListener('click', openCustomizer);
+
+  if (selectVideoOrientation) {
+    selectVideoOrientation.addEventListener('change', () => {
+      updateCustomizerVideoPreview();
+    });
+  }
+
+  if (btnToggleOrientation) {
+    btnToggleOrientation.addEventListener('click', () => {
+      if (!featuredVideoContainer) return;
+      const isCurrentlyPortrait = featuredVideoContainer.classList.contains('is-portrait');
+      const newIsPortrait = !isCurrentlyPortrait;
+      const newOrientation = newIsPortrait ? 'portrait' : 'landscape';
+
+      if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
+      appData.featuredVideo.orientation = newOrientation;
+      if (selectVideoOrientation) selectVideoOrientation.value = newOrientation;
+
+      const video = featuredVideoContainer.querySelector('video');
+      if (video && video.videoWidth && video.videoHeight) {
+        applyVideoOrientation(featuredVideoContainer, newIsPortrait, video.videoWidth / video.videoHeight, video.videoWidth, video.videoHeight, false);
+      } else {
+        applyVideoOrientation(featuredVideoContainer, newIsPortrait, newIsPortrait ? (9 / 16) : (16 / 9), null, null, false);
+      }
+
+      try {
+        localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
+      } catch (e) {}
+    });
+  }
 
   if (inputVideoUrl) {
     inputVideoUrl.addEventListener('input', () => {
@@ -1386,7 +1481,8 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
     appData.featuredVideo = {
       url: videoUrlToSave || defaultData.featuredVideo.url,
       title: (inputVideoTitle && inputVideoTitle.value.trim()) ? inputVideoTitle.value.trim() : defaultData.featuredVideo.title,
-      caption: (inputVideoCaption && inputVideoCaption.value.trim()) ? inputVideoCaption.value.trim() : defaultData.featuredVideo.caption
+      caption: (inputVideoCaption && inputVideoCaption.value.trim()) ? inputVideoCaption.value.trim() : defaultData.featuredVideo.caption,
+      orientation: (selectVideoOrientation && selectVideoOrientation.value) ? selectVideoOrientation.value : 'auto'
     };
 
     // 1. Save directly into persistent browser storage
