@@ -136,18 +136,18 @@ body {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 100%;
+  max-width: 1280px;
   box-sizing: border-box;
   overflow-x: hidden;
   min-height: 100vh;
-  min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  padding: 3rem 1.25rem 2rem;
+  padding: 5rem 2rem 4rem;
   margin: 0 auto;
 }
+
 
 /* ========================================================
    FLOATING TOP CONTROLS (RESPONSIVE)
@@ -238,9 +238,10 @@ body {
   box-shadow: var(--glass-shadow);
   padding: 2.5rem 2rem;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   width: 100%;
 }
+
 
 .glass-card::before {
   content: '';
@@ -609,12 +610,14 @@ body {
 /* Celebration 3-Column Grid */
 .celebration-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.75rem;
   margin-bottom: 2.5rem;
-  align-items: stretch;
+  align-items: start;
   width: 100%;
+  max-width: 1200px;
 }
+
 
 .celebration-column {
   display: flex;
@@ -639,7 +642,9 @@ body {
   padding: 2rem 1.5rem;
   position: relative;
   transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s ease;
+  height: 100%;
 }
+
 
 .showcase-card:hover {
   transform: translateY(-4px);
@@ -2122,4 +2127,58 @@ body {
   border: none;
   border-radius: 18px;
   z-index: 10;
+}
+
+/* ========================================================
+   POLAROID OVERLAY NAV ARROWS (on the image itself)
+   ======================================================== */
+.polaroid-nav-overlay {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.polaroid-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(255, 45, 117, 0.4);
+  color: #ff2d75;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255, 45, 117, 0.25);
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  backdrop-filter: blur(8px);
+}
+
+.polaroid-arrow:hover, .polaroid-arrow:active {
+  background: rgba(255, 45, 117, 0.12);
+  border-color: #ff2d75;
+  transform: translateY(-50%) scale(1.12);
+  box-shadow: 0 6px 22px rgba(255, 45, 117, 0.4);
+}
+
+.polaroid-arrow-left {
+  left: -16px;
+}
+
+.polaroid-arrow-right {
+  right: -16px;
+}
+
+/* On mobile, keep arrows inside */
+@media (max-width: 768px) {
+  .polaroid-arrow-left { left: 4px; }
+  .polaroid-arrow-right { right: 4px; }
 }

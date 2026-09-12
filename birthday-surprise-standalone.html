@@ -153,18 +153,18 @@ body {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 100%;
+  max-width: 1280px;
   box-sizing: border-box;
   overflow-x: hidden;
   min-height: 100vh;
-  min-height: -webkit-fill-available;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  padding: 3rem 1.25rem 2rem;
+  padding: 5rem 2rem 4rem;
   margin: 0 auto;
 }
+
 
 /* ========================================================
    FLOATING TOP CONTROLS (RESPONSIVE)
@@ -255,9 +255,10 @@ body {
   box-shadow: var(--glass-shadow);
   padding: 2.5rem 2rem;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   width: 100%;
 }
+
 
 .glass-card::before {
   content: '';
@@ -626,12 +627,14 @@ body {
 /* Celebration 3-Column Grid */
 .celebration-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.75rem;
   margin-bottom: 2.5rem;
-  align-items: stretch;
+  align-items: start;
   width: 100%;
+  max-width: 1200px;
 }
+
 
 .celebration-column {
   display: flex;
@@ -656,7 +659,9 @@ body {
   padding: 2rem 1.5rem;
   position: relative;
   transition: transform 0.3s var(--ease-smooth), box-shadow 0.3s ease;
+  height: 100%;
 }
+
 
 .showcase-card:hover {
   transform: translateY(-4px);
@@ -2141,9 +2146,63 @@ body {
   z-index: 10;
 }
 
+/* ========================================================
+   POLAROID OVERLAY NAV ARROWS (on the image itself)
+   ======================================================== */
+.polaroid-nav-overlay {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.polaroid-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(255, 45, 117, 0.4);
+  color: #ff2d75;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255, 45, 117, 0.25);
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+  backdrop-filter: blur(8px);
+}
+
+.polaroid-arrow:hover, .polaroid-arrow:active {
+  background: rgba(255, 45, 117, 0.12);
+  border-color: #ff2d75;
+  transform: translateY(-50%) scale(1.12);
+  box-shadow: 0 6px 22px rgba(255, 45, 117, 0.4);
+}
+
+.polaroid-arrow-left {
+  left: -16px;
+}
+
+.polaroid-arrow-right {
+  right: -16px;
+}
+
+/* On mobile, keep arrows inside */
+@media (max-width: 768px) {
+  .polaroid-arrow-left { left: 4px; }
+  .polaroid-arrow-right { right: 4px; }
+}
+
 </style>
 
-  <!-- Inlined Mobile-First Overrides (Instant Load & Cache Immunity) -->
+  <!-- Inlined Layout Overrides (Cache-Immune, Applied First) -->
   <style>
     html, body {
       width: 100% !important;
@@ -2156,6 +2215,60 @@ body {
     *, *::before, *::after {
       box-sizing: border-box !important;
     }
+
+    /* ---- PC VIEW: scroll down, proper max-width, no height clipping ---- */
+    .app-container {
+      justify-content: flex-start !important;
+      align-items: center !important;
+      padding-top: 5rem !important;
+      padding-bottom: 4rem !important;
+    }
+    .celebration-grid {
+      width: 100% !important;
+      max-width: 1200px !important;
+      align-items: start !important;
+    }
+    .celebration-column {
+      min-width: 0 !important;
+    }
+
+    /* ---- Polaroid overlay arrows on the image ---- */
+    .polaroid-nav-overlay {
+      position: relative !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 100% !important;
+    }
+    .polaroid-arrow {
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      z-index: 50 !important;
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 50% !important;
+      background: rgba(255,255,255,0.92) !important;
+      border: 2px solid rgba(255,45,117,0.4) !important;
+      color: #ff2d75 !important;
+      font-size: 1.1rem !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      box-shadow: 0 4px 16px rgba(255,45,117,0.25) !important;
+      transition: all 0.2s ease !important;
+      touch-action: manipulation !important;
+      backdrop-filter: blur(8px) !important;
+    }
+    .polaroid-arrow:hover, .polaroid-arrow:active {
+      background: rgba(255,45,117,0.15) !important;
+      transform: translateY(-50%) scale(1.12) !important;
+    }
+    .polaroid-arrow-left { left: -16px !important; }
+    .polaroid-arrow-right { right: -16px !important; }
+
+    /* ---- Mobile: stack single column ---- */
     @media (max-width: 1024px) {
       .celebration-grid {
         display: flex !important;
@@ -2165,22 +2278,21 @@ body {
         max-width: 520px !important;
         margin: 0 auto 2.5rem !important;
         gap: 1.8rem !important;
-        box-sizing: border-box !important;
       }
       .celebration-column, .showcase-card, .video-showcase-section, .video-card {
         width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;
-        box-sizing: border-box !important;
         overflow: hidden !important;
       }
+      .polaroid-arrow-left { left: 4px !important; }
+      .polaroid-arrow-right { right: 4px !important; }
     }
     @media (max-width: 768px) {
       .app-container {
         width: 100% !important;
         max-width: 100vw !important;
         padding: calc(env(safe-area-inset-top, 0px) + 4.2rem) 0.75rem calc(env(safe-area-inset-bottom, 0px) + 1.8rem) !important;
-        box-sizing: border-box !important;
         overflow-x: hidden !important;
       }
       .showcase-card {
@@ -2437,23 +2549,25 @@ body {
             <div class="card-header">
               <span class="card-icon">📸</span>
               <h3>Treasured Moments</h3>
-              <p class="card-subtext">Hover or click to flip through our favorite memories</p>
+              <p class="card-subtext">Click the arrows to flip through our favorite memories</p>
             </div>
 
-            <!-- Polaroid Stack & Carousel -->
+            <!-- Polaroid Stack & Carousel with overlay next/prev arrows on the image -->
             <div class="polaroid-wrapper">
-              <div class="polaroid-stack" id="polaroid-stack">
-                <!-- Dynamic Polaroids Injected via JS -->
+              <div class="polaroid-nav-overlay">
+                <button id="btn-prev-photo" class="polaroid-arrow polaroid-arrow-left" aria-label="Previous Photo">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="polaroid-stack" id="polaroid-stack">
+                  <!-- Dynamic Polaroids Injected via JS -->
+                </div>
+                <button id="btn-next-photo" class="polaroid-arrow polaroid-arrow-right" aria-label="Next Photo">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
               </div>
 
               <div class="gallery-navigation">
-                <button id="btn-prev-photo" class="nav-arrow" aria-label="Previous Photo">
-                  <i class="fa-solid fa-chevron-left"></i>
-                </button>
                 <div class="photo-dots" id="photo-dots"></div>
-                <button id="btn-next-photo" class="nav-arrow" aria-label="Next Photo">
-                  <i class="fa-solid fa-chevron-right"></i>
-                </button>
               </div>
 
               <button id="btn-add-photos" class="btn btn-outline-small admin-only" style="display: none;">
