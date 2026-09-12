@@ -51,6 +51,14 @@
 /* ========================================================
    GLOBAL SCROLLBAR HIDING (CLEAN SEAMLESS DISPLAY)
    ======================================================== */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+  position: relative;
+  box-sizing: border-box;
+}
+
 html, body, * {
   scrollbar-width: none !important; /* Firefox */
   -ms-overflow-style: none !important; /* IE and Edge */
@@ -128,7 +136,9 @@ body {
   position: relative;
   z-index: 10;
   width: 100%;
-  max-width: 1280px;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
   min-height: 100vh;
   min-height: -webkit-fill-available;
   display: flex;
@@ -609,10 +619,17 @@ body {
 .celebration-column {
   display: flex;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .showcase-card {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   background: rgba(255, 255, 255, 0.8);
@@ -1886,4 +1903,152 @@ body {
 .btn-pin-submit {
   color: #2e7d32;
   background: #e8f5e9;
+}
+
+/* ========================================================
+   CRITICAL MOBILE RESPONSIVE OVERRIDES (GUARANTEED FIT)
+   ======================================================== */
+@media (max-width: 1024px) {
+  .celebration-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 540px !important;
+    margin: 0 auto 2.5rem !important;
+    gap: 1.8rem !important;
+    box-sizing: border-box !important;
+  }
+
+  .celebration-column {
+    display: flex !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .showcase-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .video-showcase-section {
+    width: 100% !important;
+    max-width: 540px !important;
+    margin: 0 auto 2.5rem !important;
+    box-sizing: border-box !important;
+  }
+
+  .video-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+}
+
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+
+  .app-container {
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: calc(env(safe-area-inset-top, 0px) + 4.2rem) 0.85rem calc(env(safe-area-inset-bottom, 0px) + 1.8rem) !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  #stage-celebration, #stage-intro {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .celebration-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .celebration-column {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .showcase-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 1.6rem 1.1rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: calc(env(safe-area-inset-top, 0px) + 3.8rem) 0.65rem calc(env(safe-area-inset-bottom, 0px) + 1.5rem) !important;
+  }
+
+  .celebration-hero {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 0.3rem !important;
+  }
+
+  .hero-confetti-badge {
+    font-size: 0.78rem !important;
+    padding: 0.4rem 1rem !important;
+    max-width: 95% !important;
+    margin: 0 auto !important;
+  }
+
+  .hero-title {
+    font-size: clamp(1.4rem, 6vw, 1.9rem) !important;
+    margin-top: 0.4rem !important;
+    padding: 0 0.2rem !important;
+  }
+
+  .hero-subtitle {
+    font-size: 0.88rem !important;
+    padding: 0 0.4rem !important;
+  }
+
+  .showcase-card {
+    padding: 1.4rem 0.85rem !important;
+    border-radius: 20px !important;
+  }
+
+  .card-header h3 {
+    font-size: 1.25rem !important;
+  }
+
+  .card-subtext {
+    font-size: 0.82rem !important;
+  }
+
+  .cake-container {
+    transform: scale(0.85) !important;
+    transform-origin: center bottom !important;
+    margin: 0.2rem auto !important;
+  }
+
+  .polaroid-stack {
+    width: min(210px, 66vw) !important;
+    height: min(250px, 78vw) !important;
+  }
+
+  .envelope {
+    width: min(210px, 66vw) !important;
+    height: min(145px, 45vw) !important;
+  }
+
+  .video-card {
+    padding: 1.2rem 0.75rem !important;
+  }
 }
