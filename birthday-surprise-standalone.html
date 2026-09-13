@@ -3339,8 +3339,9 @@ body {
 
       </div>
 
-      <div class="modal-footer">
+      <div class="modal-footer" style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: flex-end;">
         <button id="btn-reset-defaults" class="btn btn-secondary">Restore Defaults</button>
+        <button id="btn-download-html" type="button" class="btn btn-outline-small" style="font-size: 0.82rem; padding: 0.5rem 0.85rem; border-radius: 12px; color: var(--primary-deep); border-color: var(--primary-pink);"><i class="fa-solid fa-file-arrow-down"></i> Save &amp; Download HTML 💾</button>
         <button id="btn-save-customizer" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Changes ✨</button>
       </div>
     </div>
@@ -3401,8 +3402,8 @@ body {
   // 1. DEFAULT DATA & STATE
   // ==========================================
   const defaultData = {
-    recipientName: 'Sweetheart',
-    senderSignature: 'Forever Yours, with all my love ❤️',
+    recipientName: 'Bejei',
+    senderSignature: 'From your TortaSeller BABI ❤️',
     letterDate: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
     letterBody: `Happy Birthday to the one who makes my everyday bloom like fresh lilies and roses! 🌸✨
 
@@ -3413,14 +3414,14 @@ May this new year of your life be blessed with endless happiness, blooming love,
 I hope this little surprise brings the biggest smile to your beautiful face! 🎂🌸🎉`,
     videos: [
       {
-        url: 'https://www.youtube.com/watch?v=nl62hhiBMOM',
+        url: 'https://res.cloudinary.com/ydwq0y2h/video/upload/v1789313829/j8beumf9fxvkhiwpaznn.mp4',
         title: 'A Special Video For Your Birthday 🎬🌸',
         caption: 'Press play to watch a heartfelt message recorded just for you ❤️',
         orientation: 'auto'
       }
     ],
     featuredVideo: {
-      url: 'https://www.youtube.com/watch?v=nl62hhiBMOM',
+      url: 'https://res.cloudinary.com/ydwq0y2h/video/upload/v1789313829/j8beumf9fxvkhiwpaznn.mp4',
       title: 'A Special Video For Your Birthday 🎬🌸',
       caption: 'Press play to watch a heartfelt message recorded just for you ❤️',
       orientation: 'auto'
@@ -3621,9 +3622,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   }
 
   // ==========================================
-  // CLOUDINARY VIDEO UPLOAD (Global Cloud CDN)
-  // Everyone who opens the Render link will see the video!
+  // CLOUDINARY VIDEO UPLOAD & RENDER BACKEND SYNC
+  // Everyone who opens the Render link or downloaded HTML will see the video!
   // ==========================================
+  const BACKEND_BASE = (window.location.origin && window.location.origin.includes('onrender.com'))
+    ? window.location.origin
+    : 'https://birthday-surprise-x7jd.onrender.com';
+
   const CLOUDINARY_CLOUD_NAME = 'ydwq0y2h';
   const CLOUDINARY_UPLOAD_PRESET = 'birthday_unsigned';
 
@@ -3633,6 +3638,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       formData.append('file', file);
       formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
       formData.append('resource_type', 'video');
+      formData.append('tags', 'birthday_surprise');
 
       const xhr = new XMLHttpRequest();
       xhr.open('POST', `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`);
@@ -3671,7 +3677,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
   // Also try local server upload as fallback
   async function uploadVideoToServer(file) {
     try {
-      const res = await fetch('/api/upload-video', { method: 'POST', body: file });
+      const res = await fetch(`${BACKEND_BASE}/api/upload-video`, { method: 'POST', body: file });
       if (res.ok) {
         const json = await res.json();
         return json.url;
@@ -3792,7 +3798,11 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       video.playsInline = true;
       video.setAttribute('playsinline', '');
       video.setAttribute('webkit-playsinline', '');
+      video.setAttribute('crossorigin', 'anonymous');
       video.preload = 'auto';
+      if (parsed.src && parsed.src.includes('res.cloudinary.com')) {
+        video.poster = parsed.src.replace(/\.[^/.]+$/, '.jpg');
+      }
 
       if (isCompact) {
         video.style.width = '100%';
@@ -3878,6 +3888,14 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
       video.addEventListener('error', () => {
         console.warn('Video failed to load:', video.src);
         playBtn.style.display = 'none';
+        targetEl.innerHTML = `
+          <div class="video-placeholder-container" style="padding:1.5rem; text-align:center;">
+            <div class="video-placeholder-icon" style="color:var(--primary-pink); font-size:2rem; margin-bottom:0.5rem;"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <strong style="font-size:1rem; margin-bottom:0.3rem; display:block; color:var(--text-heading);">Video Not Found or Expired</strong>
+            <span style="font-size:0.82rem; opacity:0.85; display:block; margin-bottom:0.8rem; color:var(--text-muted);">The video link is unavailable. You can easily upload or paste a fresh link in Creator Studio!</span>
+            <button type="button" class="btn btn-outline-small" onclick="document.getElementById('btn-customize').click()" style="font-size:0.78rem; padding:0.4rem 0.8rem; border-radius:12px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Open Creator Studio</button>
+          </div>
+        `;
       });
 
       targetEl.appendChild(video);
@@ -4460,7 +4478,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     btnBlowText.textContent = 'Light Candle Again 🕯️';
 
     // Record wish to backend
-    fetch('/api/wishes', {
+    fetch(`${BACKEND_BASE}/api/wishes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -4875,6 +4893,9 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
           const bar = document.getElementById(`upload-bar-${index}`);
           const pct = document.getElementById(`upload-percent-${index}`);
 
+          // Immediately save to IndexedDB as offline safety net
+          saveVideoToIndexedDB(file).catch(err => console.warn('IndexedDB save warning:', err));
+
           try {
             const cloudinaryUrl = await uploadVideoToCloudinary(file, (percent) => {
               if (bar) bar.style.width = percent + '%';
@@ -4889,22 +4910,34 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
               if (titleInput) titleInput.value = suggestedTitle;
             }
 
+            // Immediately persist in local state
+            if (appData.videos && appData.videos[index]) {
+              appData.videos[index].url = cloudinaryUrl;
+            }
+            if (index === 0 && appData.featuredVideo) {
+              appData.featuredVideo.url = cloudinaryUrl;
+            }
+            try {
+              localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
+            } catch (err) {}
+
             if (uploadStatus) {
               uploadStatus.innerHTML = `
                 <div style="color:#2e7d32; display:flex; align-items:center; gap:6px; margin-top:4px;">
-                  <i class="fa-solid fa-circle-check"></i> <strong>Uploaded to cloud! ✨</strong> Everyone can now see this video!
+                  <i class="fa-solid fa-circle-check"></i> <strong>Uploaded to Cloudinary! ✨</strong> Link saved permanently!
                 </div>
               `;
             }
           } catch (err) {
             console.warn('Cloudinary upload error:', err);
+            await saveVideoToIndexedDB(file);
             const localBlobUrl = URL.createObjectURL(file);
             item.url = localBlobUrl;
             if (urlInput) urlInput.value = localBlobUrl;
             if (uploadStatus) {
               uploadStatus.innerHTML = `
                 <div style="color:#d81458; margin-top:4px;">
-                  ⚠️ Cloud upload error: ${err.message}. Saved locally for now.
+                  ⚠️ Cloud upload note: ${err.message}. Saved securely to your browser offline storage!
                 </div>
               `;
             }
@@ -5132,13 +5165,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
 
     // 3. Save directly to server backend (Render full-stack)
     try {
-      await fetch('/api/surprise', {
+      await fetch(`${BACKEND_BASE}/api/surprise`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(appData)
       });
     } catch (err) {
-      // Offline / standalone mode works via localStorage
+      console.warn('Backend save error:', err);
     }
 
     btnSaveCustomizer.innerHTML = '<i class="fa-solid fa-check"></i> Saved Live! 💖';
@@ -5161,6 +5194,34 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     }
   });
 
+  // Download self-contained HTML with custom video embedded permanently
+  const btnDownloadHtml = document.getElementById('btn-download-html');
+  if (btnDownloadHtml) {
+    btnDownloadHtml.addEventListener('click', () => {
+      syncCustomizerVideosFromInputs();
+      const validVideos = customizerVideosList.filter(v => v.url && v.url.trim());
+      if (validVideos.length > 0) {
+        appData.videos = validVideos;
+        appData.featuredVideo = validVideos[0];
+      }
+      
+      let htmlContent = document.documentElement.outerHTML;
+      // Bake current appData directly into const defaultData in the downloaded HTML
+      const serializedData = JSON.stringify(appData, null, 2);
+      htmlContent = htmlContent.replace(/const defaultData = \{[\s\S]*?\n  \};/, `const defaultData = ${serializedData};`);
+      
+      const blob = new Blob(['<!DOCTYPE html>\n' + htmlContent], { type: 'text/html;charset=utf-8' });
+      const downloadUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = 'birthday-surprise.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(downloadUrl);
+    });
+  }
+
   // Load custom data directly from server, cloud database, or local storage
   async function loadInitialData() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -5179,24 +5240,31 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
 
     // 2. Try loading active saved surprise from server (Render backend)
     try {
-      const res = await fetch('/api/surprise');
+      const res = await fetch(`${BACKEND_BASE}/api/surprise`);
       if (res.ok) {
         const json = await res.json();
         if (json && json.data && json.data.recipientName) {
           const preservedVideos = (appData.videos && appData.videos.length > 0 && !appData.videos[0].url.includes('nl62hhiBMOM')) ? appData.videos : null;
           const preservedFeatured = (appData.featuredVideo && appData.featuredVideo.url && !appData.featuredVideo.url.includes('nl62hhiBMOM')) ? appData.featuredVideo : null;
+          
           appData = Object.assign({}, defaultData, json.data);
-          if (preservedVideos && (!json.data.videos || json.data.videos.length === 0)) {
+          
+          // If server has valid videos, prioritize server videos
+          if (json.data.videos && Array.isArray(json.data.videos) && json.data.videos.length > 0 && json.data.videos[0].url) {
+            appData.videos = json.data.videos;
+            appData.featuredVideo = json.data.featuredVideo || json.data.videos[0];
+          } else if (preservedVideos) {
             appData.videos = preservedVideos;
             appData.featuredVideo = preservedFeatured || preservedVideos[0];
           }
+          
           try {
             localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
           } catch (e) {}
           applyDataToUI();
         }
       } else {
-        throw new Error('Static fallback');
+        throw new Error('Server fallback');
       }
     } catch (e) {
       // 3. Direct Cloud DB fallback for GitHub Pages / Static Hosting
@@ -5207,8 +5275,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
           if (cloudData && cloudData.recipientName) {
             const preservedVideos = (appData.videos && appData.videos.length > 0 && !appData.videos[0].url.includes('nl62hhiBMOM')) ? appData.videos : null;
             const preservedFeatured = (appData.featuredVideo && appData.featuredVideo.url && !appData.featuredVideo.url.includes('nl62hhiBMOM')) ? appData.featuredVideo : null;
+            
             appData = Object.assign({}, defaultData, cloudData);
-            if (preservedVideos && (!cloudData.videos || cloudData.videos.length === 0)) {
+            
+            if (cloudData.videos && Array.isArray(cloudData.videos) && cloudData.videos.length > 0 && cloudData.videos[0].url) {
+              appData.videos = cloudData.videos;
+              appData.featuredVideo = cloudData.featuredVideo || cloudData.videos[0];
+            } else if (preservedVideos) {
               appData.videos = preservedVideos;
               appData.featuredVideo = preservedFeatured || preservedVideos[0];
             }
@@ -5240,26 +5313,31 @@ I hope this little surprise brings the biggest smile to your beautiful face! �
     if (videoParam && videoParam.trim()) {
       if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
       appData.featuredVideo.url = videoParam.trim();
+      if (!appData.videos || !appData.videos.length) appData.videos = [appData.featuredVideo];
+      else appData.videos[0].url = videoParam.trim();
     }
 
     // Check for permanently stored uploaded video (Server or IndexedDB)
     try {
       let hasLoadedVideo = false;
       try {
-        const headRes = await fetch('/api/video', { method: 'HEAD' });
+        const headRes = await fetch(`${BACKEND_BASE}/api/video`, { method: 'HEAD' });
         if (headRes.ok) {
           if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
-          appData.featuredVideo.url = '/api/video';
+          appData.featuredVideo.url = `${BACKEND_BASE}/api/video`;
+          if (appData.videos && appData.videos[0]) appData.videos[0].url = `${BACKEND_BASE}/api/video`;
           hasLoadedVideo = true;
         }
       } catch (e) {}
 
-      if (!hasLoadedVideo) {
+      // Only check IndexedDB if no video has been loaded yet or if current video is a placeholder
+      if (!hasLoadedVideo && (!appData.featuredVideo || !appData.featuredVideo.url || appData.featuredVideo.url.includes('nl62hhiBMOM'))) {
         const storedBlob = await getVideoFromIndexedDB();
         if (storedBlob) {
           const persistentUrl = URL.createObjectURL(storedBlob);
           if (!appData.featuredVideo) appData.featuredVideo = Object.assign({}, defaultData.featuredVideo);
           appData.featuredVideo.url = persistentUrl;
+          if (appData.videos && appData.videos[0]) appData.videos[0].url = persistentUrl;
         }
       }
     } catch (e) {}
