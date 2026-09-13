@@ -3625,7 +3625,7 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
   // Everyone who opens the Render link will see the video!
   // ==========================================
   const CLOUDINARY_CLOUD_NAME = 'ydwq0y2h';
-  const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
+  const CLOUDINARY_UPLOAD_PRESET = 'birthday_unsigned';
 
   function uploadVideoToCloudinary(file, onProgress) {
     return new Promise((resolve, reject) => {
@@ -5183,7 +5183,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
       if (res.ok) {
         const json = await res.json();
         if (json && json.data && json.data.recipientName) {
+          const preservedVideos = (appData.videos && appData.videos.length > 0 && !appData.videos[0].url.includes('nl62hhiBMOM')) ? appData.videos : null;
+          const preservedFeatured = (appData.featuredVideo && appData.featuredVideo.url && !appData.featuredVideo.url.includes('nl62hhiBMOM')) ? appData.featuredVideo : null;
           appData = Object.assign({}, defaultData, json.data);
+          if (preservedVideos && (!json.data.videos || json.data.videos.length === 0)) {
+            appData.videos = preservedVideos;
+            appData.featuredVideo = preservedFeatured || preservedVideos[0];
+          }
           try {
             localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
           } catch (e) {}
@@ -5199,7 +5205,13 @@ I hope this little surprise brings the biggest smile to your beautiful face! ðŸŽ
         if (cloudRes.ok) {
           const cloudData = await cloudRes.json();
           if (cloudData && cloudData.recipientName) {
+            const preservedVideos = (appData.videos && appData.videos.length > 0 && !appData.videos[0].url.includes('nl62hhiBMOM')) ? appData.videos : null;
+            const preservedFeatured = (appData.featuredVideo && appData.featuredVideo.url && !appData.featuredVideo.url.includes('nl62hhiBMOM')) ? appData.featuredVideo : null;
             appData = Object.assign({}, defaultData, cloudData);
+            if (preservedVideos && (!cloudData.videos || cloudData.videos.length === 0)) {
+              appData.videos = preservedVideos;
+              appData.featuredVideo = preservedFeatured || preservedVideos[0];
+            }
             try {
               localStorage.setItem('birthday_surprise_data', JSON.stringify(appData));
             } catch (e) {}
