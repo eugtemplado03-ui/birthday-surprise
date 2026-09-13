@@ -24,7 +24,7 @@ function loadData(filePath, defaultVal = {}) {
   try {
     if (fs.existsSync(filePath)) {
       const data = fs.readFileSync(filePath, 'utf-8');
-      return JSON.parse(data);
+      return JSON.parse(data.replace(/^\uFEFF/, ''));
     }
   } catch (err) {
     console.error(`Error loading ${filePath}:`, err.message);
